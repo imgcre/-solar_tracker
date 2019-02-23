@@ -55,7 +55,7 @@ class Mapper(object):
 					interrpt_func()
 				if forward_args:
 					self.__args[0] = arg
-				self.__raise_event()
+				#self.__raise_event()
 			wrapper = one_param_func
 
 		caller(wrapper)
