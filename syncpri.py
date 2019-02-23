@@ -55,7 +55,7 @@ class SpinMutex(object):
 
 	def release(self):
 		if not self.__val:
-			raise RuntimeError('mutex didn\'t aquired yet')
+			raise RuntimeError('mutex didnt aquired yet')
 		thread_id = _thread.get_ident()
 		if self.__restrict_owner and self.__owner != thread_id:
 			raise RuntimeError('mutex been released by other thread')
