@@ -27,7 +27,8 @@ def test_spin_mutex():
     _thread.start_new_thread(thread2, [])
 
 m = None
-x = 1.1
+x = 0
+y = 0
 tim = pyb.Timer(1)
 def test_mapper(freq=100):
     global m
@@ -35,8 +36,12 @@ def test_mapper(freq=100):
 
     def func():
         global x
-        x += 0.2
-        print(x)
+        x += 1
+        print(f'{x}/{y}')
 
-    m = cmemgr.Mapper(tim.callback, func, nargs=1, forward_args=False)
+    def int_func():
+        global y
+        y += 1
+
+    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False)
 

@@ -2,7 +2,7 @@ import syncpri
 import _thread
 
 class Mapper(object):
-	def __init__(self, caller, func, *, nargs=None, event=None, forward_args=True):
+	def __init__(self, caller, func, *, interrpt_func=None, nargs=None, event=None, forward_args=True):
 		if event is None:
 			event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
 		self.__event = event
@@ -11,6 +11,8 @@ class Mapper(object):
 		wrapper = None
 		if nargs is None:
 			def var_param_func(*args, **kw):
+				if interrpt_func is not None:
+					interrpt_func()
 				self.__args = args
 				self.__kw = kw
 				event.set()
@@ -21,6 +23,8 @@ class Mapper(object):
 			self.__kw = {}
 			self.__args = [None]
 			def one_param_func(arg):
+				if interrpt_func is not None:
+					interrpt_func()
 				if forward_args:
 					self.__args[0] = arg
 				event.set()
