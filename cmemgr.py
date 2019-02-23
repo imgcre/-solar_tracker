@@ -27,6 +27,7 @@ class Mapper(object):
 			wrapper = one_param_func
 		def internal_thread():
 			while True:
+				# TODO: the second wait been invoked case a dead lock error
 				event.wait()
 				if self.__disposed:
 					_thread.exit()
