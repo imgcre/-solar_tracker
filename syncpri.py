@@ -41,7 +41,7 @@ class SpinMutex(object):
 		self.__restrict_owner = restrict_owner
 		self.__owner = -1
 
-	def aquire(self):
+	def acquire(self):
 		# True is for acuqired
 		# TODO: critical section
 		thread_id = _thread.get_ident()
@@ -70,7 +70,7 @@ class SpinMutex(object):
 		return self.__val
 
 	def __enter__(self):
-		self.aquire()
+		self.acquire()
 
 	def __exit__(self, *args):
 		self.release()
