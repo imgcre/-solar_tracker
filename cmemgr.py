@@ -22,7 +22,7 @@ class Mapper(object):
 						continue
 
 					if mapper.__forward_args:
-						mapper.__func(*self.__args, **self.__kw)
+						mapper.__func(*mapper.__args, **mapper.__kw)
 					else:
 						mapper.__func()
 			pyb.delay(1)  # the magic code :)
