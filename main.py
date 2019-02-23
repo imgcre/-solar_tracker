@@ -39,7 +39,7 @@ def test_spin_mutex():
 # test for the thread mode
 
 
-def test_mapper_multi_interrupt(freq1=50, freq2=80):
+def test_mapper_multi_interrupt(freq1=80, freq2=120):
     global m1, m2, star_var, star_dir, sharp_var, sharp_dir
     tim1 = pyb.Timer(1)
     tim2 = pyb.Timer(2)
@@ -53,7 +53,7 @@ def test_mapper_multi_interrupt(freq1=50, freq2=80):
             star_dir = False
 
         if not star_dir:
-            star_var += '*'
+            star_var += '@'
             if len(star_var) >= 10:
                 star_dir = True
         else:
