@@ -42,7 +42,7 @@ m = None
 x = 0
 y = 0
 tim = pyb.Timer(1)
-def test_mapper(freq=10):
+def test_mapper_interrpt(freq=10):
     global m
     tim.init(freq=freq)
 
@@ -61,7 +61,7 @@ def test_mapper(freq=10):
 
 wrapper = None
 
-def test_mapper2():
+def test_mapper_thread():
     global m
 
 
