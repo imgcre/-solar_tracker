@@ -4,11 +4,8 @@ import syncpri
 import _thread
 
 
-spin_mutex = None
-
 # test for SpinMutex
 def test_spin_mutex():
-    global spin_mutex
     spin_mutex = syncpri.SpinMutex()
 
     def thread1():
@@ -29,4 +26,11 @@ def test_spin_mutex():
     _thread.start_new_thread(thread1, [])
     _thread.start_new_thread(thread2, [])
 
+m = None
+tim = pyb.Timer(1)
+def test_mapper():
+    global m
+    tim.init(freq=1)
+    x = 1.1
+    m = cmemgr.Mapper(tim.callback, lambda t: print('succeed!'), nargs=1)
 
