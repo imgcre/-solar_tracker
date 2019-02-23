@@ -12,6 +12,7 @@ class Event(object):
 	@staticmethod
 	def wait_any(events):
 		loop_cond = True
+		print(events)
 		while loop_cond:
 			for event in events:
 				if event.__val:
