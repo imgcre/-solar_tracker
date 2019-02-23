@@ -32,5 +32,10 @@ def test_mapper():
     global m
     tim.init(freq=1)
     x = 1.1
-    m = cmemgr.Mapper(tim.callback, lambda t: print('succeed!'), nargs=1)
+
+    def func():
+        x += 0.2
+        print(x)
+
+    m = cmemgr.Mapper(tim.callback, func, nargs=1, forward_args=False)
 
