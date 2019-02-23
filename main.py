@@ -24,7 +24,7 @@ def test_spin_mutex():
                 pyb.LED(1).on()
                 pyb.delay(50)
                 pyb.LED(1).off()
-                pyb.delay(50)
+            pyb.delay(50)  # for thread switch
 
     _thread.start_new_thread(thread1, [])
     _thread.start_new_thread(thread2, [])
