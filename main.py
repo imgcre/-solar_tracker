@@ -49,7 +49,8 @@ def test_mapper(freq=10):
     def func():
         global x
         x += 1
-        print(x, '/', y)
+        if x % 10 == 0:
+            print(x, '/', y)
 
     def int_func():
         global y
