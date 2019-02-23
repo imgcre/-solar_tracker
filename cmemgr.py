@@ -5,7 +5,7 @@ import _thread
 # TODO: a mapper use only one thread and one event but provide multi mapping service
 # alloc user to use the same event object
 class Mapper(object):
-	default_event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
+	__default_event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
 	__internal_thread_running = False
 	__mappers = []
 
