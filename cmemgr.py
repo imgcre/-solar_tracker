@@ -6,21 +6,44 @@ import _thread
 # alloc user to use the same event object
 class Mapper(object):
 	default_event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
+	__internal_thread_running = False
+	__mappers = []
+
+	@staticmethod
+	def __internal_thread():
+		while True:
+			syncpri.Event.wait_any(map(lambda m: m.__event, Mapper.__mappers))
+			for mapper in Mapper.__mappers:
+				if mapper.__raised:
+					mapper.__raised = False
+					if mapper.__disposed:
+						Mapper.__mappers.remove(mapper)
+						continue
+
+					if forward_args:
+						mapper.__func(*self.__args, **self.__kw)
+					else:
+						mapper.__func()
+			pyb.delay(1)  # the magic code :)
+
 
 	def __init__(self, caller, func, *, interrpt_func=None, nargs=None, event=None, forward_args=True):
 		if event is None:
-			event = Mapper.default_event
+			event = Mapper.__default_event
 		self.__event = event
 		self.__caller = caller
 		self.__disposed = False
+		self.__raised = False
+		self.__func = func
 		wrapper = None
+
 		if nargs is None:
 			def var_param_func(*args, **kw):
 				if interrpt_func is not None:
 					interrpt_func()
 				self.__args = args
 				self.__kw = kw
-				event.set()
+				self.__raise_event()
 			wrapper = var_param_func
 		elif nargs == 1:
 			# you can't create mp object when entered interrupt mode
@@ -32,23 +55,20 @@ class Mapper(object):
 					interrpt_func()
 				if forward_args:
 					self.__args[0] = arg
-				event.set()
+				self.__raise_event()
 			wrapper = one_param_func
-		def internal_thread():
-			while True:
-				event.wait()
-				if self.__disposed:
-					_thread.exit()
-					return
-				if forward_args:
-					func(*self.__args, **self.__kw)
-				else:
-					func()
-				pyb.delay(1)  # the magic code :)
+
 		caller(wrapper)
-		_thread.start_new_thread(internal_thread, [])
+		Mapper.__mappers.append(self)
+		if not Mapper.__internal_thread_running:
+			Mapper.__internal_thread_running = True
+			_thread.start_new_thread(Mapper.__internal_thread, [])
+
+	def __raise_event():
+		self.__raised = True
+		self.__event.set()
 
 	def dispose(self):
 		self.__disposed = True
 		self.__caller(None)
-		self.__event.set()  # wakeup the thread and commit suicide
+		self.__raise_event()  # wakeup the thread and commit suicide

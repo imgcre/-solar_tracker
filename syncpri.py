@@ -9,6 +9,16 @@ class Event(object):
 			mutex = _thread.allocate_lock()
 		self.__mutex = mutex
 
+	@staticmethod
+	def wait_any(events):
+		loop_cond = True
+		while loop_cond:
+			for event in events:
+				if event.__val:
+					event.wait()
+					loop_cond = False
+					break
+
 	def wait(self):
 		# sync current state with __val
 		# assume that the reason is not effect
