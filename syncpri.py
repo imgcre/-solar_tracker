@@ -5,9 +5,9 @@ class Event(object):
 	def __init__(self, initval=False, *, auto_reset=True, mutex=None):
 		self.__val = initval
 		self.__auto_reset = auto_reset
-		self.__mutex = mutex
 		if mutex is None:
-			self.__mutex = _thread.allocate_lock()
+			mutex = _thread.allocate_lock()
+		self.__mutex = mutex
 
 	def wait(self):
 		# sync current state with __val

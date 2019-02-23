@@ -4,7 +4,7 @@ import _thread
 class Mapper(object):
 	def __init__(self, caller, func, *, nargs=None, event=None, forward_args=True):
 		if event is None:
-			event = syncpri.SpinMutex(restrict_owner=False)
+			event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
 		self.__event = event
 		self.__caller = caller
 		self.__disposed = False
