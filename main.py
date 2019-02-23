@@ -55,8 +55,7 @@ def test_mapper(freq=10):
         global y
         y += 1
 
-    event = syncpri.Event()
-    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False, event=event)
+    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False)
 
 
 wrapper = None
