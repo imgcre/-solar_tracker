@@ -17,8 +17,8 @@ class Event(object):
 			while not self.__mutex.locked():
 				pass
 			self.__mutex.acquire()
+			self.__mutex.release() # FIXED
 		if self.__auto_reset:
-			print('event auto reset!')
 			self.reset()
 	# set and reset method provides reenter support
 	def set(self):
