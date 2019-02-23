@@ -42,7 +42,7 @@ m = None
 x = 0
 y = 0
 tim = pyb.Timer(1)
-def test_mapper(freq=100):
+def test_mapper(freq=10):
     global m
     tim.init(freq=freq)
 
@@ -55,7 +55,8 @@ def test_mapper(freq=100):
         global y
         y += 1
 
-    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False)
+    event = syncpri.Event()
+    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False, event=event)
 
 
 wrapper = None
