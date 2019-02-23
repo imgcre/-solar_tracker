@@ -1,3 +1,4 @@
+import pyb
 import syncpri
 import _thread
 
