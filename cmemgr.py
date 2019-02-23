@@ -9,7 +9,7 @@ class Mapper(object):
 
 	def __init__(self, caller, func, *, interrpt_func=None, nargs=None, event=None, forward_args=True):
 		if event is None:
-			event = default_event
+			event = Mapper.default_event
 		self.__event = event
 		self.__caller = caller
 		self.__disposed = False
