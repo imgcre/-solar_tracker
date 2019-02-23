@@ -42,8 +42,8 @@ class SpinMutex(object):
 		self.__owner = -1
 
 	def aquire(self):
-		# True表示被占用的状态
-		# TODO: 关键段
+		# True is for acuqired
+		# TODO: critical section
 		thread_id = _thread.get_ident()
 		if self.__val:
 			if self.__owner == thread_id:
