@@ -80,8 +80,8 @@ def test_mapper_multi_interrupt(freq=50):
             if len(sharp_var) == 0:
                 sharp_dir = False
 
-        print(sharp_var)
-        #print('           '[:-len(sharp_var)] + sharp_var)
+        #print(sharp_var)
+        print('           '[:-len(sharp_var)] + sharp_var)
 
 
         pass
