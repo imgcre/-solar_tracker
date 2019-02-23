@@ -34,6 +34,7 @@ def test_mapper():
     x = 1.1
 
     def func():
+        global x
         x += 0.2
         print(x)
 
