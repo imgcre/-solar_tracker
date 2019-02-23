@@ -29,9 +29,9 @@ def test_spin_mutex():
 m = None
 x = 1.1
 tim = pyb.Timer(1)
-def test_mapper():
+def test_mapper(freq=100):
     global m
-    tim.init(freq=100)
+    tim.init(freq=freq)
 
     def func():
         global x
