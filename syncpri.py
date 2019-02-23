@@ -15,6 +15,7 @@ class Event(object):
 		while loop_cond:
 			for event in events:
 				if event.__val:
+					print('event has been set')  # TODO
 					event.wait()
 					loop_cond = False
 					break

@@ -11,6 +11,7 @@ class Mapper(object):
 
 	@staticmethod
 	def __internal_thread():
+		print('internal thread running...')  # TODO
 		while True:
 			syncpri.Event.wait_any(map(lambda m: m.__event, Mapper.__mappers))
 			for mapper in Mapper.__mappers:
@@ -18,9 +19,10 @@ class Mapper(object):
 					mapper.__raised = False
 					if mapper.__disposed:
 						Mapper.__mappers.remove(mapper)
+						# if...exit thread
 						continue
 
-					if forward_args:
+					if mapper.__forward_args:
 						mapper.__func(*self.__args, **self.__kw)
 					else:
 						mapper.__func()
@@ -35,6 +37,7 @@ class Mapper(object):
 		self.__disposed = False
 		self.__raised = False
 		self.__func = func
+		self.__forward_args = forward_args
 		wrapper = None
 
 		if nargs is None:
