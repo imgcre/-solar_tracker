@@ -31,7 +31,7 @@ x = 1.1
 tim = pyb.Timer(1)
 def test_mapper():
     global m
-    tim.init(freq=1)
+    tim.init(freq=10)
 
     def func():
         global x
