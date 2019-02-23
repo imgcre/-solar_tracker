@@ -55,7 +55,7 @@ class Mapper(object):
 					interrpt_func()
 				if forward_args:
 					self.__args[0] = arg
-				#self.__raise_event()
+				self.__raise_event()
 			wrapper = one_param_func
 
 		caller(wrapper)
@@ -64,7 +64,7 @@ class Mapper(object):
 			Mapper.__internal_thread_running = True
 			_thread.start_new_thread(Mapper.__internal_thread, [])
 
-	def __raise_event():
+	def __raise_event(self):
 		self.__raised = True
 		self.__event.set()
 
