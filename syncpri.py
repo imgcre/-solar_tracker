@@ -1,0 +1,72 @@
+import pyb
+import _thread
+
+class Event(object):
+	def __init__(self, initval=False, *, auto_reset=True, mutex=None):
+		self.__val = initval
+		self.__auto_reset = auto_reset
+		self.__mutex = mutex
+		if mutex is None:
+			self.__mutex = _thread.allocate_lock()
+
+	def wait(self):
+		# sync current state with __val
+		if not self.__val:
+			self.reset()
+			# to make sure this thread will be blocked, not the other
+			while not self.__mutex.locked():
+				pass
+			self.__mutex.acquire()
+		if self.__auto_reset:
+			self.reset()
+	# set and reset method provides reenter support
+	def set(self):
+		self.__val = True
+		if self.__mutex.locked():
+			self.__mutex.release()
+
+	def reset(self):
+		self.__val = False
+		if not self.__mutex.locked():
+			# avoid the situation that the same thread acquire __lock twice
+			_thread.start_new_thread(self.__mutex.acquire, [])
+	@property
+	def value(self):
+		return self.__val
+
+class SpinMutex(object):
+	# aquire release locked __enter__  __leave__
+	def __init__(self, *, restrict_owner=True):
+		self.__val = False
+		self.__restrict_owner = restrict_owner
+		self.__owner = -1
+
+	def aquire(self):
+		# True表示被占用的状态
+		# TODO: 关键段
+		thread_id = _thread.get_ident()
+		if self.__val:
+			if self.__owner == thread_id:
+				raise RuntimeError('dead lock')
+			while self.__val:
+				pass
+		self.__val = True
+		self.__owner = thread_id
+
+	def release(self):
+		if not self.__val:
+			raise RuntimeError('mutex didn\'t aquired yet')
+		thread_id = _thread.get_ident()
+		if self.__restrict_owner and self.__owner != thread_id:
+			raise RuntimeError('mutex been released by other thread')
+		self.__owner = -1
+		self.__val = False
+
+	def locked(self):
+		return self.__val
+
+	def __enter__(self):
+		self.aquire()
+
+	def __exit__(self, *args):
+		self.release()
