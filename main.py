@@ -32,7 +32,11 @@ def test_spin_mutex():
 #   freq = 100: 53%
 
 # without using critical section:
-#   freq = 1:
+#   freq = 1: 52%
+#   freq = 50: 54%
+#   freq = 100: 52%
+
+# test for the thread mode
 
 m = None
 x = 0
@@ -51,6 +55,24 @@ def test_mapper(freq=100):
         global y
         y += 1
 
-    event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False, using_critical_section=False))
-    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False, event=event)
+    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False)
+
+
+wrapper = None
+
+def test_mapper2():
+    global m
+    global wrapper
+
+    def caller(func):
+        wrapper = func
+        pass
+
+    def my_func():
+        print('func being called!')
+        pass
+
+    m = cmemgr.Mapper(caller, my_func)
+
+    pass
 

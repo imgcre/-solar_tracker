@@ -11,6 +11,7 @@ class Event(object):
 
 	def wait(self):
 		# sync current state with __val
+		# assume that the reason is not effect
 		if not self.__val:
 			self.reset()
 			# to make sure this thread will be blocked, not the other
@@ -37,7 +38,7 @@ class Event(object):
 
 class SpinMutex(object):
 	# aquire release locked __enter__  __leave__
-	def __init__(self, *, restrict_owner=True, using_critical_section=True):
+	def __init__(self, *, restrict_owner=True, using_critical_section=False):
 		self.__val = False
 		self.__restrict_owner = restrict_owner
 		self.__owner = -1
