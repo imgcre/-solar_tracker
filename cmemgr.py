@@ -32,7 +32,6 @@ class Mapper(object):
 			wrapper = one_param_func
 		def internal_thread():
 			while True:
-				# TODO: the second wait been invoked case a dead lock error
 				event.wait()
 				if self.__disposed:
 					_thread.exit()
@@ -41,7 +40,7 @@ class Mapper(object):
 					func(*self.__args, **self.__kw)
 				else:
 					func()
-				pyb.wfi() # insert a delay and see what will happen
+				#pyb.delay(1) # insert a delay and see what will happen
 		caller(wrapper)
 		_thread.start_new_thread(internal_thread, [])
 	def dispose(self):
