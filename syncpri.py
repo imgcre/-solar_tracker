@@ -37,10 +37,11 @@ class Event(object):
 
 class SpinMutex(object):
 	# aquire release locked __enter__  __leave__
-	def __init__(self, *, restrict_owner=True):
+	def __init__(self, *, restrict_owner=True, using_critical_section=True):
 		self.__val = False
 		self.__restrict_owner = restrict_owner
 		self.__owner = -1
+		self.__using_critical_section = using_critical_section
 
 	def acquire(self):
 		# True is for acuqired
@@ -51,10 +52,13 @@ class SpinMutex(object):
 				raise RuntimeError('dead lock')
 			while self.__val:
 				pass
-		irq_state = pyb.disable_irq()
+		irq_state = None
+		if self.__using_critical_section:
+			irq_state = pyb.disable_irq()
 		self.__val = True
 		self.__owner = thread_id
-		pyb.enable_irq(irq_state)
+		if self.__using_critical_section:
+			pyb.enable_irq(irq_state)
 
 	def release(self):
 		if not self.__val:
@@ -62,10 +66,13 @@ class SpinMutex(object):
 		thread_id = _thread.get_ident()
 		if self.__restrict_owner and self.__owner != thread_id:
 			raise RuntimeError('mutex been released by other thread')
-		irq_state = pyb.disable_irq()
+		irq_state = None
+		if self.__using_critical_section:
+			irq_state = pyb.disable_irq()
 		self.__owner = -1
 		self.__val = False
-		pyb.enable_irq(irq_state)
+		if self.__using_critical_section:
+			pyb.enable_irq(irq_state)
 
 	def locked(self):
 		return self.__val

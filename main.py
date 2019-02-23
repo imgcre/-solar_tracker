@@ -26,6 +26,14 @@ def test_spin_mutex():
     _thread.start_new_thread(thread1, [])
     _thread.start_new_thread(thread2, [])
 
+# using critical section:
+#   freq = 1: 52%
+#   freq = 50: 52%
+#   freq = 100: 53%
+
+# without using critical section:
+#   freq = 1:
+
 m = None
 x = 0
 y = 0
@@ -43,5 +51,6 @@ def test_mapper(freq=100):
         global y
         y += 1
 
-    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False)
+    event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False, using_critical_section=False))
+    m = cmemgr.Mapper(tim.callback, func, interrpt_func=int_func, nargs=1, forward_args=False, event=event)
 
