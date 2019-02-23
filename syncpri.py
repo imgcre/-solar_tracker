@@ -13,8 +13,8 @@ class Event(object):
 		# sync current state with __val
 		# assume that the reason is not effect
 		if not self.__val:
-			if not self.__auto_reset:
-				self.reset()  # TODO: ???
+			#if not self.__auto_reset:
+			self.reset()  # TODO: ???
 			# to make sure this thread will be blocked, not the other
 			while not self.__mutex.locked():
 				pass

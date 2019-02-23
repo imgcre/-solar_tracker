@@ -40,7 +40,7 @@ class Mapper(object):
 					func(*self.__args, **self.__kw)
 				else:
 					func()
-				#pyb.delay(1) # insert a delay and see what will happen
+				pyb.delay(0) # insert a delay and see what will happen
 		caller(wrapper)
 		_thread.start_new_thread(internal_thread, [])
 	def dispose(self):
