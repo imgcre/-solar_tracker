@@ -27,11 +27,11 @@ def test_spin_mutex():
     _thread.start_new_thread(thread2, [])
 
 m = None
+x = 1.1
 tim = pyb.Timer(1)
 def test_mapper():
     global m
     tim.init(freq=1)
-    x = 1.1
 
     def func():
         global x
