@@ -11,9 +11,8 @@ class Mapper(object):
 
 	@staticmethod
 	def __internal_thread():
-		print('internal thread running...')  # TODO
 		while True:
-			syncpri.Event.wait_any(list(map(lambda m: m.__event, Mapper.__mappers)))
+			syncpri.Event.wait_any(map(lambda m: m.__event, Mapper.__mappers))
 			for mapper in Mapper.__mappers:
 				if mapper.__raised:
 					mapper.__raised = False

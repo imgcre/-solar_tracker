@@ -11,12 +11,12 @@ class Event(object):
 
 	@staticmethod
 	def wait_any(events):
+		# to avoid iterator
+		events = list(events)
 		loop_cond = True
-		print(events)
 		while loop_cond:
 			for event in events:
 				if event.__val:
-					print('event has been set')  # TODO
 					event.wait()
 					loop_cond = False
 					break
