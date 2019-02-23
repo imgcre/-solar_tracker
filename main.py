@@ -40,14 +40,14 @@ def test_spin_mutex():
 
 
 def test_mapper_multi_interrupt(freq=50):
-    global m1, m2
+    global m1, m2, star_var, star_dir, sharp_var, sharp_dir
     tim1 = pyb.Timer(1)
     tim2 = pyb.Timer(2)
     tim1.init(freq=freq)
     tim2.init(freq=freq)
+    star_var, sharp_var = None, None
     def star_animate():
-        global star_var
-        global star_dir
+        global star_var, star_dir
         if star_var is None:
             star_var = ''
             star_dir = False
@@ -66,8 +66,7 @@ def test_mapper_multi_interrupt(freq=50):
         pass
 
     def sharp_animate():
-        global sharp_var
-        global sharp_dir
+        global sharp_var, sharp_dir
         if sharp_var is None:
             sharp_var = ''
             sharp_dir = False
