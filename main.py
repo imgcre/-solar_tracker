@@ -38,6 +38,57 @@ def test_spin_mutex():
 
 # test for the thread mode
 
+
+def test_mapper_multi_interrupt(freq=50):
+    global m1, m2
+    tim1 = pyb.Timer(1)
+    tim2 = pyb.Timer(2)
+    tim1.init(freq=freq)
+    tim2.init(freq=freq)
+    def star_animate():
+        global star_var
+        global star_dir
+        if star_var is None:
+            star_var = ''
+            star_dir = False
+
+        if not star_dir:
+            star_var += '*'
+            if len(star_var) >= 10:
+                star_dir = True
+        else:
+            star_var = star_var[:-1]
+            if len(star_var) == 0:
+                star_dir = False
+
+        print(star_var)
+
+        pass
+
+    def sharp_animate():
+        global sharp_var
+        global sharp_dir
+        if sharp_var is None:
+            sharp_var = ''
+            sharp_dir = False
+
+        if not sharp_dir:
+            sharp_var += '*'
+            if len(sharp_var) >= 10:
+                sharp_dir = True
+        else:
+            sharp_var = sharp_var[:-1]
+            if len(sharp_var) == 0:
+                sharp_dir = False
+
+        print('           '[:-len(sharp_var)] + sharp_var)
+
+
+        pass
+
+    m1 = cmemgr.Mapper(tim1.callback, star_animate, nargs=1, forward_args=False)
+    m2 = cmemgr.Mapper(tim2.callback, sharp_animate, nargs=1, forward_args=False)
+
 m = None
 x = 0
 y = 0
