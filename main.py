@@ -62,15 +62,14 @@ wrapper = None
 
 def test_mapper2():
     global m
-    global wrapper
+
 
     def caller(func):
+        global wrapper
         wrapper = func
-        pass
 
     def my_func():
         print('func being called!')
-        pass
 
     m = cmemgr.Mapper(caller, my_func)
 
