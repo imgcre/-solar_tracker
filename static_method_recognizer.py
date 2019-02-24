@@ -16,9 +16,10 @@ def __decorator(origin):
 
 
 class __StaticMethodWrapper:
-    # since built-in decorator classmethod will change the type of the class
-    # but inherit the attr the class has created
+    # since @classmethod may cause a bound method we will test for
+    # but inherit the attr that the class has created
     # we should add a attr to detect whether a method is static
+    # otherwise, find a way to unbind it :)
     __is_static__ = None
 
     def __init__(self, func):
