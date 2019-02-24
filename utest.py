@@ -1,5 +1,17 @@
 import sys
 
+def ignore(func):
+    class Wrapper:
+        def __init__(self, f):
+            self.ingored = True
+            self.__func = f
+
+        def __call__(self, *args, **kwargs):
+            return self.__func(*args, **kwargs)
+    return Wrapper(func)
+
+staticmethod = ignore(staticmethod)
+
 
 class TestCase(object):
     def assert_equal(self, a, b):
