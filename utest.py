@@ -15,17 +15,13 @@ def main():
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
         # check the target class
         # create a instance for the class
-        # and call its all method by that instance
+        # and call its all method with the instance
         # use callable() to detect whether a attr is a function
-        # type?? caused by __class__ attr
         print('on class', test_case.__name__, ':')
         inst = test_case()
         for test_func in __get_method_from(test_case,
           where=lambda func: func.__name__ not in base_class_func_names):
             print('found func:', test_func.__name__)
-            continue
-        else:
-            print('found nothing :)')
 
 
 def __get_method_from(cls, *, where=lambda t: True):
