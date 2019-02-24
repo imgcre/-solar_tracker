@@ -6,12 +6,8 @@ def ignore(func):
 
 print('pre deco')
 
-@ignore
-def dummy():
-    pass
 
-print('post deco')
-
+# use setattr to changed the attr of main module!
 
 class TestCase(object):
     def assert_equal(self, a, b):

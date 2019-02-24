@@ -2,6 +2,11 @@ import utest
 import syncpri
 
 
+@utest.ignore
+def dummy():
+    pass
+
+
 class MyOwnClass(utest.TestCase):
     def test_func1(self):
         pass
