@@ -16,8 +16,11 @@ def __decorator(origin):
 
 
 class __StaticMethodWrapper:
+    __name__ = None
+
     def __init__(self, func):
         self.__func = func
+        type(self).__name__ = func.__name__
 
     def __call__(self, *args, **kwargs):
         self.__func(*args, **kwargs)
