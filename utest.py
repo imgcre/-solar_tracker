@@ -9,6 +9,7 @@ class TestCase(object):
 
 # your test suit file should be the main module
 def main():
+    base_class_funcs = __get_method_from(TestCase)
     main_module = __import__('__main__')
     for test_case in __get_attrs_form(main_module,
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
@@ -16,13 +17,19 @@ def main():
         # create a instance for the class
         # and call its all method by that instance
         # use callable() to detect whether a attr is a function
-        # type??
+        # type?? caused by __class__ attr
         print('on class', test_case.__name__, ':')
         inst = test_case()
-        for test_func in __get_attrs_form(test_case,
-          where=lambda attr: callable(attr) and not attr.__name__.startswith('__')):
+        for test_func in __get_method_from(test_case, where=lambda func: func not in base_class_funcs):
             print('found func:', test_func.__name__)
 
+
+def __get_method_from(cls, *, where=lambda t: True):
+    return __get_attrs_form(test_case,
+      where=lambda attr: callable(attr)
+        and not attr.__name__.startswith('__')
+        and attr.__name__ not in ['type']
+        and where(attr))
 
 
 def __get_attrs_form(obj, *, where=None):
