@@ -19,7 +19,7 @@ def main():
         print('on class', test_case.__name__, ':')
         inst = test_case()
         for test_func in __get_attrs_form(test_case,
-          where=lambda attr: callable(attr) and not attr.__name__.startwith('__')):
+          where=lambda attr: callable(attr) and not attr.__name__.startswith('__')):
             print(test_func.__name__)
 
 
