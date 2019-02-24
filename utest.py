@@ -14,8 +14,8 @@ def main():
     for test_case in __get_attrs_form(main_module,
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
         # check the target class
-        # create a instance for the class
-        # and call its all method with the instance
+        # create an instance for the class
+        # and call its methods which satisfied the cond with the instance
         # use callable() to detect whether a attr is a function
         print('on class', test_case.__name__, ':')
         inst = test_case()
