@@ -1,7 +1,8 @@
 import utest
+import syncpri
 
 
-class MyOwnClass():
+class MyOwnClass(object):
     pass
 
 

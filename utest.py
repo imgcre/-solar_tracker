@@ -14,5 +14,7 @@ def main():
     # when this file is as
     # we can use globals() to get all class
     # seems that globals() can only get the variables that in its own module
+
+    # TODO: get the module which called this function
     print(sys.modules)
     pass
