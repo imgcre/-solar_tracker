@@ -2,7 +2,10 @@ import sys
 
 
 def deco(func):
-    return staticmethod(func)
+    def wrapper():
+        print('hello!')
+        return func
+    return staticmethod(wrapper)
 
 main_module = __import__('__main__')
 setattr(main_module, 'staticmethod', deco)
