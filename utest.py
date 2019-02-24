@@ -18,4 +18,4 @@ def main():
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
 
-    return lambda: globals()
+    return lambda: print(globals())
