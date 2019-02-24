@@ -25,7 +25,7 @@ def main():
 
 
 def __get_method_from(cls, *, where=lambda t: True):
-    return __get_attrs_form(test_case,
+    return __get_attrs_form(cls,
       where=lambda attr: callable(attr)
         and not attr.__name__.startswith('__')
         and attr.__name__ not in ['type']
