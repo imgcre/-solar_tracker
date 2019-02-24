@@ -1,10 +1,13 @@
 import sys
 
-def ignore(func):
-    print('deco invoked')
-    return func
 
-print('pre deco')
+def deco(func):
+    return staticmethod(func)
+
+main_module = __import__('__main__')
+setattr(main_module, 'staticmethod', deco)
+
+# decorate the staticmethod
 
 
 # use setattr to changed the attr of main module!
