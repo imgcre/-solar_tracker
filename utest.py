@@ -10,11 +10,13 @@ class TestCase(object):
     pass
 
 
-def main(magic=globals()):
+def main():
     # when this file is as
     # we can use globals() to get all class
     # seems that globals() can only get the variables that in its own module
 
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
-    print(magic)
+    def func():
+        print(globals())
+        return func
