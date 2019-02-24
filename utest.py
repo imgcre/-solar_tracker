@@ -9,7 +9,7 @@ class TestCase(object):
 
 # your test suit file should be the main module
 def main():
-    base_class_funcs = __get_method_from(TestCase)
+    base_class_func_names = map(lambda func: func.__name__, __get_method_from(TestCase))
     main_module = __import__('__main__')
     for test_case in __get_attrs_form(main_module,
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
@@ -20,7 +20,8 @@ def main():
         # type?? caused by __class__ attr
         print('on class', test_case.__name__, ':')
         inst = test_case()
-        for test_func in __get_method_from(test_case, where=lambda func: func not in base_class_funcs):
+        for test_func in __get_method_from(test_case,
+          where=lambda func: func.__name__ not in base_class_func_names):
             print('found func:', test_func.__name__)
 
 
