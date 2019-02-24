@@ -3,6 +3,8 @@ import syncpri
 
 
 class MyOwnClass(utest.TestCase):
+    x = 0
+
     def test_func1(self):
         pass
 
@@ -14,6 +16,10 @@ class MyOwnClass(utest.TestCase):
         print('It`s a static method')
         pass
     pass
+
+    @classmethod
+    def change_x_to(cls, val):
+        cls.x = val
 
 
 class AnotherClass(utest.TestCase):
