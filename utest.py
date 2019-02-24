@@ -9,7 +9,7 @@ class TestCase(object):
 
 # your test suit file should be the main module
 def main():
-    base_class_func_names = map(lambda func: func.__name__, __get_method_from(TestCase))
+    base_class_func_names = list(map(lambda func: func.__name__, __get_method_from(TestCase)))
     main_module = __import__('__main__')
     for test_case in __get_attrs_form(main_module,
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
