@@ -17,6 +17,5 @@ def main():
 
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
-    def func():
-        print(globals())
-    return func
+
+    return lambda: globals()
