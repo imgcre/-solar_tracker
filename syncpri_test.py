@@ -11,6 +11,7 @@ class MyOwnClass(utest.TestCase):
 
     @staticmethod
     def static_func():
+        print('It`s a static method')
         pass
     pass
 
