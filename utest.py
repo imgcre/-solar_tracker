@@ -22,6 +22,6 @@ def main():
     main_module = __import__('__main__')
     main_attr_iter = list(map(lambda attr_name: getattr(main_module, attr_name), dir(main_module)))
     print(main_attr_iter)
-    for test_case in filter(lambda attr: issubclass(attr, TestCase), main_attr_iter):
+    for test_case in filter(lambda attr: type(attr) is type and issubclass(attr, TestCase), main_attr_iter):
         print(test_case)
 
