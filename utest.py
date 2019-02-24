@@ -23,6 +23,7 @@ def main():
         for test_func in __get_method_from(test_case,
           where=lambda func: func.__name__ not in base_class_func_names):
             print('found func:', test_func.__name__)
+            continue
         else:
             print('found nothing :)')
 
