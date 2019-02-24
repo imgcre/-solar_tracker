@@ -18,5 +18,8 @@ def main():
 
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
-    print(dir(__import__('__main__')))
-    pass
+    main_module = __import__('__main__')
+    main_attr_iter = map(lambda attr_name: getattr(main_module, attr_name), dir(main_module))
+    for test_case in filter(lambda attr: isinstance(attr, TestCase), main_attr_iter):
+        print(test_case)
+
