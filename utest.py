@@ -2,9 +2,9 @@ import sys
 
 
 def deco(func):
-    def wrapper():
+    def wrapper(*args, **kwargs):
         print('hello!')
-        return func
+        return func(*args, **kwargs)
     return staticmethod(wrapper)
 
 main_module = __import__('__main__')
