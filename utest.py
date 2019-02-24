@@ -1,29 +1,25 @@
 import sys
 from static_method_recognizer import init_for, is_static_method
 
-# TODO: checked if a method is static
-
+# init the ability to detect static method for main module
 init_for(__import__('__main__'))
 
 
-# use setattr to changed the attr of main module!
-
 class TestCase(object):
     def assert_equal(self, a, b):
-        # raise error when cond is not satisfied
+        # TODO: raise error when cond is not satisfied
         pass
 
 
-# your test suit file should be the main module
+# NOTE: your test cases should be in the main module
 def main():
     base_class_func_names = list(map(lambda func: func.__name__, __get_method_from(TestCase)))
     main_module = __import__('__main__')
     for test_case in __get_attrs_form(main_module,
       where=lambda attr: type(attr) is type and issubclass(attr, TestCase)):
-        # check the target class
-        # create an instance for the class
-        # and call its methods which satisfied the cond with the instance
-        # use callable() to detect whether a attr is a function
+        # find the target classes
+        # create an instance for each of the classes
+        # and call its inst methods
         print('on class', test_case.__name__, ':')
         inst = test_case()
         for test_func in __get_method_from(test_case,
