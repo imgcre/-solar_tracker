@@ -1,12 +1,14 @@
 
-
 def init_for(*modules):
     for module in modules:
-        setattr(module, 'staticmethod', __decorator)
+        for static_deco in (staticmethod, classmethod):
+            setattr(module, static_deco.__name__, __decorator(static_deco))
 
 
-def __decorator(func):
-    return staticmethod(__StaticWrapper(func))
+def __decorator(origin):
+    def static_wrapper(func):
+        return origin(__StaticWrapper(func))
+    return static_wrapper
 
 
 class __StaticWrapper:
