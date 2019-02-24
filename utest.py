@@ -27,7 +27,7 @@ def main():
         print('on class', test_case.__name__, ':')
         inst = test_case()
         for test_func in __get_method_from(test_case,
-          where=lambda func: func.__name__ not in base_class_func_names) and not is_static_method(func):
+          where=lambda func: func.__name__ not in base_class_func_names and not is_static_method(func)):
             print('found func:', test_func.__name__)
 
 
