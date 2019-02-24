@@ -16,11 +16,12 @@ def main():
         # create a instance for the class
         # and call its all method by that instance
         # use callable() to detect whether a attr is a function
+        # type??
         print('on class', test_case.__name__, ':')
         inst = test_case()
         for test_func in __get_attrs_form(test_case,
           where=lambda attr: callable(attr) and not attr.__name__.startswith('__')):
-            print(test_func.__name__)
+            print('found func:', test_func.__name__)
 
 
 
