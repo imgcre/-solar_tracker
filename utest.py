@@ -1,4 +1,4 @@
-
+import sys
 
 # find all method in the inherited class
 class TestCase(object):
@@ -14,5 +14,5 @@ def main():
     # when this file is as
     # we can use globals() to get all class
     # seems that globals() can only get the variables that in its own module
-    print(globals())
+    print(sys.modules)
     pass
