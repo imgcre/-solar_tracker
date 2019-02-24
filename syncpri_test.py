@@ -2,7 +2,7 @@ import utest
 import syncpri
 
 
-class MyOwnClass(object):
+class MyOwnClass(utest.TestCase):
     pass
 
 
