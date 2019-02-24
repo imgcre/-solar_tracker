@@ -3,6 +3,10 @@ import syncpri
 
 
 class MyOwnClass(utest.TestCase):
+    def test_func1(self):
+        pass
+    def __private_func(self):
+        pass
     pass
 
 
