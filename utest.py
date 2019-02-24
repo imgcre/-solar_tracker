@@ -1,16 +1,9 @@
 import sys
+from static_method_recognizer import init_for
 
+# TODO: checked if a method is static
 
-def deco(func):
-    def wrapper(*args, **kwargs):
-        print('hello!')
-        return func(*args, **kwargs)
-    return staticmethod(wrapper)
-
-main_module = __import__('__main__')
-setattr(main_module, 'staticmethod', deco)
-
-# decorate the staticmethod
+init_for(__import__('__main__'))
 
 
 # use setattr to changed the attr of main module!
