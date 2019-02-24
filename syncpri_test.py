@@ -9,8 +9,8 @@ class MyOwnClass(utest.TestCase):
     def __private_func(self):
         pass
 
-    @utest.ignore
     @staticmethod
+    @utest.ignore
     def static_func():
         print('It`s a static method')
         pass
