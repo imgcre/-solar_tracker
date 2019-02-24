@@ -7,4 +7,4 @@ class MyOwnClass(object):
 
 
 def main():
-    utest.main()()
+    utest.main()

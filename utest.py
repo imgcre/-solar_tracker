@@ -14,8 +14,9 @@ def main():
     # when this file is as
     # we can use globals() to get all class
     # seems that globals() can only get the variables that in its own module
+    # globals()'s return val is mutable
 
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
-
-    return lambda: print(globals())
+    print(dir(__import__('__main__')))
+    pass
