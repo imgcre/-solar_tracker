@@ -6,7 +6,7 @@ def init_for(*modules):
 
 
 def is_static_method(func):
-    return isinstance(func, __StaticMethodWrapper)
+    return hasattr(func, '__is_static__')
 
 
 def __decorator(origin):
@@ -16,6 +16,10 @@ def __decorator(origin):
 
 
 class __StaticMethodWrapper:
+    # since built-in decorator classmethod will change the type of the class
+    # but inherit the attr the class has created
+    # we should add a attr to detect whether a method is static
+    __is_static__ = None
 
     def __init__(self, func):
         self.__func = func
