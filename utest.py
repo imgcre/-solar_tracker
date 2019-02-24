@@ -10,7 +10,7 @@ class TestCase(object):
     pass
 
 
-def main(*, magic=globals()):
+def main(magic=globals()):
     # when this file is as
     # we can use globals() to get all class
     # seems that globals() can only get the variables that in its own module
