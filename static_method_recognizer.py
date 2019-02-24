@@ -5,15 +5,17 @@ def init_for(*modules):
             setattr(module, static_deco.__name__, __decorator(static_deco))
 
 
+def is_static_method(func):
+    return isinstance(func, __StaticMethodWrapper)
+
+
 def __decorator(origin):
     def static_wrapper(func):
-        return origin(__StaticWrapper(func))
+        return origin(__StaticMethodWrapper(func))
     return static_wrapper
 
 
-class __StaticWrapper:
-    __is_static__ = None
-
+class __StaticMethodWrapper:
     def __init__(self, func):
         self.__func = func
 
