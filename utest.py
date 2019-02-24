@@ -20,7 +20,7 @@ def main():
     # TODO: get the module which called this function
     # use dir() to get all attr from a module!
     main_module = __import__('__main__')
-    main_attr_iter = list(map(lambda attr_name: getattr(main_module, attr_name), dir(main_module)))
+    main_attr_iter = map(lambda attr_name: getattr(main_module, attr_name), dir(main_module))
     print(main_attr_iter)
     for test_case in filter(lambda attr: type(attr) is type and issubclass(attr, TestCase), main_attr_iter):
         print(test_case)
