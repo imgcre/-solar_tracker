@@ -4,6 +4,10 @@ import syncpri
 import _thread
 
 
+# todo: 2019/2/24:
+# try ro build a unit test framework
+
+
 # test for SpinMutex
 def test_spin_mutex():
     spin_mutex = syncpri.SpinMutex()
