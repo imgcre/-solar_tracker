@@ -19,4 +19,4 @@ def main():
     # use dir() to get all attr from a module!
     def func():
         print(globals())
-        return func
+    return func
