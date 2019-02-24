@@ -1,16 +1,16 @@
 import sys
 
 def ignore(func):
-    class Wrapper:
-        def __init__(self, f):
-            self.ingored = True
-            self.__func = f
+    print('deco invoked')
+    return func
 
-        def __call__(self, *args, **kwargs):
-            return self.__func(*args, **kwargs)
-    return Wrapper(func)
+print('pre deco')
 
-staticmethod = ignore(staticmethod)
+@ignore
+def dummy():
+    pass
+
+print('post deco')
 
 
 class TestCase(object):

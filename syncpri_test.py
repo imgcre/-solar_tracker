@@ -10,7 +10,6 @@ class MyOwnClass(utest.TestCase):
         pass
 
     @staticmethod
-    @utest.ignore
     def static_func():
         print('It`s a static method')
         pass
