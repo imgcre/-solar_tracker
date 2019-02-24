@@ -9,15 +9,15 @@ class Mapper(object):
 	__internal_thread_running = False
 	__mappers = []
 
-	@staticmethod
-	def __internal_thread():
+	@classmethod
+	def __internal_thread(cls):
 		while True:
-			syncpri.Event.wait_any(map(lambda m: m.__event, Mapper.__mappers))
-			for mapper in Mapper.__mappers:
+			syncpri.Event.wait_any(map(lambda m: m.__event, cls.__mappers))
+			for mapper in cls.__mappers:
 				if mapper.__raised:
 					mapper.__raised = False
 					if mapper.__disposed:
-						Mapper.__mappers.remove(mapper)
+						cls.__mappers.remove(mapper)
 						# if...exit thread
 						continue
 
@@ -30,7 +30,7 @@ class Mapper(object):
 
 	def __init__(self, caller, func, *, interrpt_func=None, nargs=None, event=None, forward_args=True):
 		if event is None:
-			event = Mapper.__default_event
+			event = type(self).__default_event
 		self.__event = event
 		self.__caller = caller
 		self.__disposed = False
@@ -61,10 +61,10 @@ class Mapper(object):
 			wrapper = one_param_func
 
 		caller(wrapper)
-		Mapper.__mappers.append(self)
-		if not Mapper.__internal_thread_running:
-			Mapper.__internal_thread_running = True
-			_thread.start_new_thread(Mapper.__internal_thread, [])
+		type(self).__mappers.append(self)
+		if not type(self).__internal_thread_running:
+			type(self).__internal_thread_running = True
+			_thread.start_new_thread(type(self).__internal_thread, [])
 
 	def __raise_event(self):
 		self.__raised = True
