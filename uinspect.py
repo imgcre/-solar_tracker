@@ -13,7 +13,7 @@ def is_inherit_from(obj, cls):
     return type(obj) is type and issubclass(obj, cls)
 
 
-def init_static_method_detect(*modules):
+def enable_static_method_detect(*modules):
     for module in ((__import__(mod) if type(mod) is str else mod for mod in modules)
                    if len(modules) else [main_module] + list(sys.modules.values())):
         for static_deco in (staticmethod, classmethod):

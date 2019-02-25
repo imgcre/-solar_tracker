@@ -1,24 +1,20 @@
 import utest
+from highord import *
 import syncpri
 
 
-class MyOwnClass(utest.TestCase):
+class TestSyncPri(utest.TestCase):
 
+    @utest.cond(equals(1))
     def test_func1(self):
-        self.assert_equal(1, 2)
+        print('cond=1 satisfied')
 
+    @utest.cond(equals(2))
     def test_func2(self):
-        self.assert_equal(3, 4)
-
-
-class AnotherClass(utest.TestCase):
-
-    def another_test(self):
-        self.assert_equal(5, 5)
-
-    def another_test2(self):
-        self.assert_equal(6, 7)
+        print('cond=2 satisfied')
 
 
 if __name__ == '__main__':
-    utest.main()
+    print('tests list:')
+    print('1. LED blink for ')
+    utest.main(1)
