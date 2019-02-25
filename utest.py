@@ -6,8 +6,7 @@ tt.init_static_method_detect(tt.main_module)
 
 
 class TestCase(object):
-    @classmethod
-    def assert_equal(cls, a, b):
+    def assert_equal(self, a, b):
         assert a == b, str(a) + 'is not equal to' + str(b)
 
 

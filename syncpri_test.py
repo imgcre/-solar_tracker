@@ -28,7 +28,7 @@ class AnotherClass(utest.TestCase):
 
 class Base:
     x = 0
-    
+
     @classmethod
     def test_func(cls):
         cls.x += 1
