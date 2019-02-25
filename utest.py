@@ -7,7 +7,8 @@ tt.init_static_method_detect(tt.main_module)
 
 class TestCase(object):
     def assert_equal(self, a, b):
-        assert a == b, str(a) + 'is not equal to' + str(b)
+        if a != b:
+            raise TestError(str(a) + ' is not equal to ' + str(b))
 
 
 class TestError(Exception):
