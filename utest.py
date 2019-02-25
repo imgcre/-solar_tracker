@@ -6,9 +6,9 @@ tt.init_static_method_detect(tt.main_module)
 
 
 class TestCase(object):
-    def assert_equal(self, a, b):
-        # TODO: raise error when cond is not satisfied
-        pass
+    @classmethod
+    def assert_equal(cls, a, b):
+        assert a == b, str(a) + 'is not equal to' + str(b)
 
 
 # NOTE: your test cases should be in the main module
