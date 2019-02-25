@@ -17,4 +17,4 @@ class TestSyncPri(utest.TestCase):
 if __name__ == '__main__':
     print('tests list:')
     print('1. LED blink for ')
-    utest.main(3)
+    utest.main()
