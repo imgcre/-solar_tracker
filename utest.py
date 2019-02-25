@@ -35,8 +35,8 @@ def main():
             except TestError as t:
                 if not error_raised:
                     error_raised = True
-                    print('on test case', test_case.__name__ + ':')
-                print('at', test_func.__name__ + ':', t.args[0])
+                    print('at', test_case.__name__ + ':')
+                print('  at', test_func.__name__ + ':', t.args[0])
                 pass
 
 

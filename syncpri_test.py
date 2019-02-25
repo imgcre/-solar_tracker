@@ -20,5 +20,5 @@ class AnotherClass(utest.TestCase):
         self.assert_equal(6, 7)
 
 
-def main():
+if __name__ == '__main__':
     utest.main()
