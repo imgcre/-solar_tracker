@@ -24,7 +24,7 @@ def main():
         # find the target classes
         # create an instance for each of the classes
         # and call its inst methods
-        print('on class', test_case.__name__, ':')
+        error_raised = False
         inst = test_case()
 
         for test_func in (func for func in __get_target_method_from(test_case)
@@ -33,7 +33,10 @@ def main():
             try:
                 test_func(inst)
             except TestError as t:
-                print('test fault at', test_func.__name__ + ':', t.args)
+                if not error_raised:
+                    error_raised = True
+                    print('on test case', test_case.__name__ + ':')
+                print('at', test_func.__name__ + ':', t.args[0])
                 pass
 
 
