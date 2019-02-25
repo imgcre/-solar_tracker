@@ -26,6 +26,7 @@ def cond(cond_expr):
 class CondWrapper:
     def __init__(self, func, cond_expr):
         self.__func = func
+        self.__name__ = func.__name__
         self.__cond_expr__ = cond_expr
 
     def __call__(self, *args, **kwargs):
