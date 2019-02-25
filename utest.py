@@ -10,6 +10,9 @@ class TestCase(object):
         assert a == b, str(a) + 'is not equal to' + str(b)
 
 
+class TestFault:
+    pass
+
 # NOTE: your test cases should be in the main module
 def main():
     # base_class_func_names = list(map(lambda func: func.__name__, __get_method_from(TestCase)))
@@ -26,6 +29,7 @@ def main():
         for test_func in (func for func in __get_target_method_from(test_case)
                           if func.__name__ not in base_class_func_names):
             print('found func:', test_func.__name__)
+            test_func(inst)
 
 
 def __get_target_method_from(cls):

@@ -5,8 +5,16 @@ import syncpri
 class MyOwnClass(utest.TestCase):
     x = 0
 
+    def __init__(self):
+        self.x = 233
+
     def test_func1(self):
-        pass
+        print('self.x =', self.x)
+        self.x = 5
+        print('setup x`s val')
+
+    def test_func2(self):
+        print('self.x =', self.x)
 
     def __private_func(self):
         pass
