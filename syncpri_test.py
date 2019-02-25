@@ -1,20 +1,38 @@
 import utest
 from highord import *
+import _thread
 import syncpri
+import pyb
 
 
 class TestSyncPri(utest.TestCase):
 
     @utest.cond(equals(1))
     def test_func1(self):
-        print('cond=1 satisfied')
+        mutex = syncpri.SpinMutex()
 
+        def low_freq():
+            with mutex:
+                pyb.LED(1).off()
+                pyb.delay(500)
+            pyb.delay(100)
 
+        def high_freq():
+            with mutex:
+                pyb.LED(1).toggle()
+            pyb.delay(50)
+
+        _thread.start_new_thread(low_freq, [])
+        _thread.start_new_thread(high_freq, [])
+
+    @utest.cond(equals(2))
     def test_func2(self):
-        print('cond=2 satisfied')
+        pass
 
 
 if __name__ == '__main__':
     print('tests list:')
-    print('1. LED blink for ')
-    utest.main(2)
+    print('1. test a SpinMutex')
+    print('2. test two SpinMutexes')
+    x = int(input('please choose: '))
+    utest.main(x)
