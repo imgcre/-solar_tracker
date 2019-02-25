@@ -30,7 +30,7 @@ class CondWrapper:
         self.__cond_expr__ = cond_expr
 
     def __call__(self, *args, **kwargs):
-        self.__func(args, kwargs)
+        self.__func(*args, **kwargs)
 
 
 # NOTE: your test cases should be in the main module
