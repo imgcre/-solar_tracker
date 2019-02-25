@@ -16,7 +16,7 @@ class TestSyncPri(utest.TestCase):
                 with mutex:
                     pyb.LED(1).off()
                     pyb.delay(500)
-                pyb.delay(100)
+                pyb.delay(500)
 
         def high_freq():
             while True:
