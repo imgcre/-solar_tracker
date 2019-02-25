@@ -10,7 +10,7 @@ class TestCase(object):
         assert a == b, str(a) + 'is not equal to' + str(b)
 
 
-class TestFault:
+class TestError(Exception):
     pass
 
 # NOTE: your test cases should be in the main module
@@ -28,8 +28,13 @@ def main():
 
         for test_func in (func for func in __get_target_method_from(test_case)
                           if func.__name__ not in base_class_func_names):
-            print('found func:', test_func.__name__)
-            test_func(inst)
+            # print('found func:', test_func.__name__)
+            try:
+                test_func(inst)
+            except TestError as t:
+                print('test fault at', test_func.__name__ + ':', t.args)
+                pass
+
 
 
 def __get_target_method_from(cls):
