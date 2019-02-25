@@ -12,15 +12,17 @@ class TestSyncPri(utest.TestCase):
         mutex = syncpri.SpinMutex()
 
         def low_freq():
-            with mutex:
-                pyb.LED(1).off()
-                pyb.delay(500)
-            pyb.delay(100)
+            while True:
+                with mutex:
+                    pyb.LED(1).off()
+                    pyb.delay(500)
+                pyb.delay(100)
 
         def high_freq():
-            with mutex:
-                pyb.LED(1).toggle()
-            pyb.delay(50)
+            while True:
+                with mutex:
+                    pyb.LED(1).toggle()
+                pyb.delay(50)
 
         _thread.start_new_thread(low_freq, [])
         _thread.start_new_thread(high_freq, [])
