@@ -26,18 +26,5 @@ class AnotherClass(utest.TestCase):
     pass
 
 
-class Base:
-    x = 0
-
-    @classmethod
-    def test_func(cls):
-        cls.x += 1
-
-
-class Child(Base):
-    def inst_test(self):
-        self.test_func()
-
-
 def main():
     utest.main()
