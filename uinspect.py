@@ -1,6 +1,21 @@
+import sys
 
-def init_for(*modules):
-    for module in modules:
+
+main_module = __import__('__main__')
+
+
+def is_public_method(attr):
+    return callable(attr) and not attr.__name__.startswith('__') and attr.__name__ not in ['type']
+
+
+# return False if obj is not a inst of class
+def is_inherit_from(obj, cls):
+    return type(obj) is type and issubclass(obj, cls)
+
+
+def init_static_method_detect(*modules):
+    for module in ((__import__(mod) if type(mod) is str else mod for mod in modules)
+                   if len(modules) else [main_module] + list(sys.modules.values())):
         for static_deco in (staticmethod, classmethod):
             setattr(module, static_deco.__name__, __decorator(static_deco))
 
