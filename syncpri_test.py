@@ -35,7 +35,7 @@ class TestSyncPri(utest.TestCase):
         TProp = namedtuple('TProp', ('mutex', 'led', 'id'))
         props = [TProp(syncpri.SpinMutex(), pyb.LED(led_id), led_id) for led_id in (1, 2, 4)]
 
-        @infinite_loop
+        @infinite_loop_thread
         def led_select():
             for prop in props:
                 others = [p for p in props if p is not prop]
@@ -43,14 +43,11 @@ class TestSyncPri(utest.TestCase):
                 pyb.delay(500)
                 [other.mutex.release() for other in others]
 
-        @infinite_loop
+        @infinite_loop_thread_for(props)
         def led_blink(prop):
             with prop.mutex:
                 prop.led.toggle()
             pyb.delay(prop.id * 25)
-
-        _thread.start_new_thread(led_select, ())
-        [_thread.start_new_thread(led_blink, [prop]) for prop in props]
 
     # TODO: test for Event class
     # set event if call a func
@@ -61,12 +58,10 @@ class TestSyncPri(utest.TestCase):
         # add func to main module
         setattr(uinspect.main_module, 'set_event', lambda: event.set())
 
-        @infinite_loop
+        @infinite_loop_thread
         def led_blink():
             with event, Indicator(1):
                 pyb.delay(1000)
-
-        _thread.start_new_thread(led_blink, [])
 
 
 if __name__ == '__main__':

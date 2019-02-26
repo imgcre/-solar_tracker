@@ -48,11 +48,21 @@ class ExitLoop(Exception):
     pass
 
 
-def infinite_loop(func):
-    def wrapper(*args, **kwargs):
-        try:
-            while True:
-                func(*args, **kwargs)
-        except ExitLoop:
-            pass
+def infinite_loop_thread(f):
+    @infinite_loop_thread_for(None)
+    def func(arg):
+        f()
+    return f
+
+
+def infinite_loop_thread_for(*args):
+    def wrapper(f):
+        def func(arg):
+            try:
+                while True:
+                    f(arg)
+            except ExitLoop:
+                pass
+        [_thread.start_new_thread(func, [arg]) for arg in args]
+        return f
     return wrapper
