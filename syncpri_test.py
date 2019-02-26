@@ -3,6 +3,7 @@ from highord import *
 import _thread
 import syncpri
 import pyb
+from ucollections import namedtuple
 
 
 class TestSyncPri(utest.TestCase):
@@ -29,22 +30,22 @@ class TestSyncPri(utest.TestCase):
 
     @utest.cond(equals(2))
     def test_multi_spin_mutex(self):
-        props = [{'mutex': syncpri.SpinMutex(), 'led': pyb.LED(led_id), 'id': led_id} for led_id in (1, 2, 4)]
+        TProp = namedtuple('TProp', ('mutex', 'led', 'id'))
+        props = [TProp(syncpri.SpinMutex(), pyb.LED(led_id), led_id) for led_id in (1, 2, 4)]
 
         def led_select():
             while True:
                 for prop in props:
                     others = [p for p in props if p is not prop]
-                    [other['mutex'].acquire() or other['led'].off() for other in others]
+                    [other.mutex.acquire() or other.led.off() for other in others]
                     pyb.delay(500)
-                    [other['mutex'].release() for other in others]
+                    [other.mutex.release() for other in others]
 
         def led_blink(prop):
             while True:
-                with prop['mutex']:
-                    prop['led'].toggle()
-                pyb.delay(prop['id'] * 25)
-            pass
+                with prop.mutex:
+                    prop.led.toggle()
+                pyb.delay(prop.id * 25)
 
         _thread.start_new_thread(led_select, [])
         [_thread.start_new_thread(led_blink, [prop]) for prop in props]
