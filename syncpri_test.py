@@ -43,7 +43,7 @@ class TestSyncPri(utest.TestCase):
                 pyb.delay(500)
                 [other.mutex.release() for other in others]
 
-        @infinite_loop_thread_for(props)
+        @infinite_loop_thread_for(*props)
         def led_blink(prop):
             with prop.mutex:
                 prop.led.toggle()
