@@ -14,14 +14,14 @@ class TestSyncPri(utest.TestCase):
     def test_func1(self):
         mutex = syncpri.SpinMutex()
 
-        @infinite_loop
+        @infinite_loop_thread
         def low_freq():
             with mutex:
                 pyb.LED(1).off()
                 pyb.delay(500)
             pyb.delay(500)
 
-        @infinite_loop
+        @infinite_loop_thread
         def high_freq():
             with mutex:
                 pyb.LED(1).toggle()
