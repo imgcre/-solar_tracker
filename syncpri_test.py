@@ -5,6 +5,7 @@ import syncpri
 import pyb
 from ucollections import namedtuple
 import uinspect
+from utilities import *
 
 
 class TestSyncPri(utest.TestCase):
@@ -13,18 +14,18 @@ class TestSyncPri(utest.TestCase):
     def test_func1(self):
         mutex = syncpri.SpinMutex()
 
+        @infinite_loop
         def low_freq():
-            while True:
-                with mutex:
-                    pyb.LED(1).off()
-                    pyb.delay(500)
+            with mutex:
+                pyb.LED(1).off()
                 pyb.delay(500)
+            pyb.delay(500)
 
+        @infinite_loop
         def high_freq():
-            while True:
-                with mutex:
-                    pyb.LED(1).toggle()
-                pyb.delay(50)
+            with mutex:
+                pyb.LED(1).toggle()
+            pyb.delay(50)
 
         _thread.start_new_thread(low_freq, [])
         _thread.start_new_thread(high_freq, [])
@@ -34,19 +35,19 @@ class TestSyncPri(utest.TestCase):
         TProp = namedtuple('TProp', ('mutex', 'led', 'id'))
         props = [TProp(syncpri.SpinMutex(), pyb.LED(led_id), led_id) for led_id in (1, 2, 4)]
 
+        @infinite_loop
         def led_select():
-            while True:
-                for prop in props:
-                    others = [p for p in props if p is not prop]
-                    [other.mutex.acquire() or other.led.off() for other in others]
-                    pyb.delay(500)
-                    [other.mutex.release() for other in others]
+            for prop in props:
+                others = [p for p in props if p is not prop]
+                [other.mutex.acquire() or other.led.off() for other in others]
+                pyb.delay(500)
+                [other.mutex.release() for other in others]
 
+        @infinite_loop
         def led_blink(prop):
-            while True:
-                with prop.mutex:
-                    prop.led.toggle()
-                pyb.delay(prop.id * 25)
+            with prop.mutex:
+                prop.led.toggle()
+            pyb.delay(prop.id * 25)
 
         _thread.start_new_thread(led_select, ())
         [_thread.start_new_thread(led_blink, [prop]) for prop in props]
@@ -60,6 +61,7 @@ class TestSyncPri(utest.TestCase):
         # add func to main module
         setattr(uinspect.main_module, 'set_event', lambda: event.set())
 
+        @infinite_loop
         def led_blink():
             event.wait()
 
