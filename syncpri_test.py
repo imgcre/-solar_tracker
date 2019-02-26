@@ -55,5 +55,5 @@ if __name__ == '__main__':
     print('tests list:')
     print('1. test for single SpinMutex')
     print('2. test for multi SpinMutexes')
-    x = int(input('please choose: '))
+    x = int(input('please choose one: '))
     utest.main(x)
