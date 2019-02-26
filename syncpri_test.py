@@ -28,40 +28,31 @@ class TestSyncPri(utest.TestCase):
         _thread.start_new_thread(high_freq, [])
 
     @utest.cond(equals(2))
-    def test_func2(self):
-        mutex1 = syncpri.SpinMutex()
-        mutex2 = syncpri.SpinMutex()
+    def test_multi_spin_mutex(self):
+        props = [{'mutex': syncpri.SpinMutex(), 'led': pyb.LED(led_id), 'id': led_id} for led_id in (1, 2, 4)]
 
-        def low_freq():
+        def led_select():
             while True:
-                with mutex1:
-                    pyb.LED(1).off()
+                for prop in props:
+                    others = [p for p in props if p is not prop]
+                    [other['mutex'].acquire() or other['led'].off() for other in others]
                     pyb.delay(500)
-                with mutex2:
-                    pyb.LED(2).off()
-                    pyb.delay(500)
+                    [other['mutex'].release() for other in others]
 
-        def led1_blink():
+        def led_blink(prop):
             while True:
-                with mutex1:
-                    pyb.LED(1).toggle()
-                pyb.delay(50)
-
-        def led2_blink():
-            while True:
-                with mutex2:
-                    pyb.LED(2).toggle()
-                pyb.delay(50)
+                with prop['mutex']:
+                    prop['led'].toggle()
+                pyb.delay(prop['id'] * 25)
             pass
 
-        _thread.start_new_thread(low_freq, [])
-        _thread.start_new_thread(led1_blink, [])
-        _thread.start_new_thread(led2_blink, [])
+        _thread.start_new_thread(led_select, [])
+        [_thread.start_new_thread(led_blink, [prop]) for prop in props]
 
 
 if __name__ == '__main__':
     print('tests list:')
-    print('1. test for one SpinMutex')
-    print('2. test for two SpinMutexes')
+    print('1. test for single SpinMutex')
+    print('2. test for multi SpinMutexes')
     x = int(input('please choose: '))
     utest.main(x)

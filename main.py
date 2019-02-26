@@ -7,29 +7,6 @@ import _thread
 # todo: 2019/2/24:
 # try ro build a unit test framework
 
-
-# test for SpinMutex
-def test_spin_mutex():
-    spin_mutex = syncpri.SpinMutex()
-
-    def thread1():
-        while True:
-            with spin_mutex:
-                pyb.LED(1).off()
-                pyb.delay(500)
-            pyb.delay(500)
-
-    def thread2():
-        while True:
-            with spin_mutex:
-                pyb.LED(1).on()
-                pyb.delay(50)
-                pyb.LED(1).off()
-            pyb.delay(50)  # for thread switch
-
-    _thread.start_new_thread(thread1, [])
-    _thread.start_new_thread(thread2, [])
-
 # using critical section:
 #   freq = 1: 52%
 #   freq = 50: 52%
