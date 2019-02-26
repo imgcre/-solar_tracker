@@ -33,7 +33,13 @@ class Event(object):
 			self.__mutex.release() # FIXED
 		if self.__auto_reset:
 			self.reset()
-	# set and reset method provides reenter support
+
+	def __enter__(self):
+		self.wait()
+
+	def __exit__(self, *args):
+		pass
+
 	def set(self):
 		self.__val = True
 		if self.__mutex.locked():
@@ -44,12 +50,12 @@ class Event(object):
 		if not self.__mutex.locked():
 			# avoid the situation that the same thread acquire __lock twice
 			_thread.start_new_thread(self.__mutex.acquire, [])
+
 	@property
 	def value(self):
 		return self.__val
 
 class SpinMutex(object):
-	# aquire release locked __enter__  __leave__
 	def __init__(self, *, restrict_owner=True, using_critical_section=False):
 		self.__val = False
 		self.__restrict_owner = restrict_owner
@@ -57,8 +63,6 @@ class SpinMutex(object):
 		self.__using_critical_section = using_critical_section
 
 	def acquire(self):
-		# True is for acuqired
-		# TODO: critical section
 		thread_id = _thread.get_ident()
 		if self.__val:
 			if self.__owner == thread_id:

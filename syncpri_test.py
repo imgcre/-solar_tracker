@@ -4,6 +4,7 @@ import _thread
 import syncpri
 import pyb
 from ucollections import namedtuple
+import uinspect
 
 
 class TestSyncPri(utest.TestCase):
@@ -47,13 +48,28 @@ class TestSyncPri(utest.TestCase):
                     prop.led.toggle()
                 pyb.delay(prop.id * 25)
 
-        _thread.start_new_thread(led_select, [])
+        _thread.start_new_thread(led_select, ())
         [_thread.start_new_thread(led_blink, [prop]) for prop in props]
+
+    # TODO: test for Event class
+    # set event if call a func
+    @utest.cond(equals(3))
+    def test_event_thread(self):
+        print('call set_event() to set the event')
+        event = syncpri.Event()
+        # add func to main module
+        setattr(uinspect.main_module, 'set_event', lambda: event.set())
+
+        def led_blink():
+            event.wait()
+
+        _thread.start_new_thread(led_blink, [])
 
 
 if __name__ == '__main__':
     print('tests list:')
     print('1. test for single SpinMutex')
     print('2. test for multi SpinMutexes')
+    print('3. test for event using original lock on thread')
     x = int(input('please choose one: '))
     utest.main(x)
