@@ -64,7 +64,7 @@ class TestSyncPri(utest.TestCase):
         @infinite_loop
         def led_blink():
             with event, Indicator(1):
-                pyb.delay(100)
+                pyb.delay(1000)
 
         _thread.start_new_thread(led_blink, [])
 
