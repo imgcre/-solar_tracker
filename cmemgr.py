@@ -2,6 +2,12 @@ import pyb
 import syncpri
 import _thread
 
+
+def map_to_thread(callback):
+	def func(f):
+		return cmemgr.Mapper(callback, f, nargs=1, forward_args=False)
+	return func
+
 # TODO: a mapper use only one thread and one event but provide multi mapping service
 # alloc user to use the same event object
 class Mapper(object):

@@ -9,12 +9,26 @@ def equals(a):
 # usage: get_item(index)(action)
 # where action is callable to handle the item or raise an error
 # eg: get_item(0)(get_item(0)(///))
-# TODO: items[0]()
-def get_item(index, action):
-    def func(x):
-        # TODO: assert
-        return action(x[__resolve(x, index)[0]])
-    return func
+def get_item(index):
+    def actor(action):
+        def func(obj):
+            # TODO: assert
+            return action(obj[__resolve(obj, index)[0]])
+        return func
+    return actor
+
+
+# TODO: support for dict
+def get_attr(item):
+    def actor(action):
+        def func(obj):
+            if type(obj) is not dict:
+                return action(getattr(obj, __resolve(obj, item)[0]))
+            else:
+                pass
+            pass
+        return func
+    return actor
 
 
 # if arg form args is callable, call arg with x as param
