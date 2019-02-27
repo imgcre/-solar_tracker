@@ -1,7 +1,6 @@
 import utest
 from highord import *
 from uinspect import main_module
-import _thread
 import cmemgr
 import pyb
 from utilities import Indicator
