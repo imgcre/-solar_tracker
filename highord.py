@@ -1,7 +1,7 @@
 
 def equals(a):
     def func(x):
-        return __resolve(x, a)[0] == x
+        return a == x
     return func
 
 
