@@ -5,13 +5,12 @@ import _thread
 
 def map_to_thread(callback, *args):
 	def func(f):
-		def func():
+		def wrapper():
 			f(*args)
-		return Mapper(callback, func, nargs=1, forward_args=False)
+		return Mapper(callback, wrapper, nargs=1, forward_args=False)
 	return func
 
-# TODO: a mapper use only one thread and one event but provide multi mapping service
-# alloc user to use the same event object
+
 class Mapper(object):
 	__default_event = syncpri.Event(mutex=syncpri.SpinMutex(restrict_owner=False))
 	__internal_thread_running = False
@@ -26,7 +25,6 @@ class Mapper(object):
 					mapper.__raised = False
 					if mapper.__disposed:
 						cls.__mappers.remove(mapper)
-						# if...exit thread
 						continue
 
 					if mapper.__forward_args:
@@ -34,7 +32,6 @@ class Mapper(object):
 					else:
 						mapper.__func()
 			pyb.delay(1)  # the magic code :)
-
 
 	def __init__(self, caller, func, *, interrpt_func=None, nargs=None, event=None, forward_args=True):
 		if event is None:
@@ -56,10 +53,11 @@ class Mapper(object):
 				self.__raise_event()
 			wrapper = var_param_func
 		elif nargs == 1:
-			# you can't create mp object when entered interrupt mode
-			# including list object, so we need a special support for it
+			# when entering interrupt mode, you cannot create the mp object
+			# required by *args, so we must provide special support for that
 			self.__kw = {}
 			self.__args = [None]
+
 			def one_param_func(arg):
 				if interrpt_func is not None:
 					interrpt_func()
