@@ -49,10 +49,7 @@ class ExitLoop(Exception):
 
 
 def infinite_loop_thread(f):
-    @infinite_loop_thread_for(None)
-    def func(arg):
-        f()
-    return f
+    return infinite_loop_thread_for(None)(lambda t: f())
 
 
 def infinite_loop_thread_for(*args):

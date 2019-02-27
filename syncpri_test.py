@@ -49,13 +49,10 @@ class TestSyncPri(utest.TestCase):
                 prop.led.toggle()
             pyb.delay(prop.id * 25)
 
-    # TODO: test for Event class
-    # set event if call a func
     @utest.cond(equals(3))
     def test_event_thread(self):
         print('call set_event() to set the event')
         event = syncpri.Event()
-        # add func to main module
         setattr(uinspect.main_module, 'set_event', lambda: event.set())
 
         @infinite_loop_thread
