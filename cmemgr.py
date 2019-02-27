@@ -3,14 +3,11 @@ import syncpri
 import _thread
 
 
-def map_to_thread(callback, *, arg=None):
+def map_to_thread(callback, *args):
 	def func(f):
-		wrapper = f
-		if arg is not None:
-			def func():
-				f(arg)
-			wrapper = func
-		return Mapper(callback, wrapper, nargs=1, forward_args=False)
+		def func():
+			f(*args)
+		return Mapper(callback, func, nargs=1, forward_args=False)
 	return func
 
 # TODO: a mapper use only one thread and one event but provide multi mapping service

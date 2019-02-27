@@ -34,11 +34,10 @@ class TestCMEMgr(utest.TestCase):
     def test_mapper_multi_interrupts(self):
         TiTuple = namedtuple('TiTuple', ('tim', 'id'))
         for info in [TiTuple(pyb.Timer(tim_id, freq=tim_id + 1), tim_id) for tim_id in (1, 2, 4)]:
-            @cmemgr.map_to_thread(info.tim.callback, arg=info.id)
+            @cmemgr.map_to_thread(info.tim.callback, info.id)
             def led_blink(led_id):
                 with Indicator(led_id):
                     pyb.delay(10)
-                print(led_id)
 
 
 if __name__ == '__main__':
