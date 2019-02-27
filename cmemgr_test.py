@@ -8,7 +8,7 @@ from utilities import Indicator
 from ucollections import namedtuple
 
 
-class TestCMEMgr:
+class TestCMEMgr(utest.TestCase):
     @utest.cond(equals(1))
     def test_mapper_single_thread(self):
         def caller(func):
