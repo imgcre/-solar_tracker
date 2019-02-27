@@ -14,7 +14,8 @@ class TestCMEMgr(utest.TestCase):
             setattr(main_module, 'invoke', func)
 
         def my_func():
-            print('func being called!')
+            with Indicator(1):
+                pyb.delay(30)
 
         cmemgr.Mapper(caller, my_func)
         print('type invoke() to call my_func')
@@ -27,7 +28,7 @@ class TestCMEMgr(utest.TestCase):
         @cmemgr.map_to_thread(tim.callback)
         def led_blink():
             with Indicator(1):
-                pyb.delay(10)
+                pyb.delay(30)
 
     @utest.cond(equals(3))
     def test_mapper_multi_interrupts(self):
@@ -36,7 +37,7 @@ class TestCMEMgr(utest.TestCase):
             @cmemgr.map_to_thread(info.tim.callback, info.id)
             def led_blink(led_id):
                 with Indicator(led_id):
-                    pyb.delay(10)
+                    pyb.delay(30)
 
 
 if __name__ == '__main__':
