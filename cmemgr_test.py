@@ -38,6 +38,7 @@ class TestCMEMgr(utest.TestCase):
             def led_blink():
                 with Indicator(info.id):
                     pyb.delay(10)
+                print(info.id)
 
 
 if __name__ == '__main__':
