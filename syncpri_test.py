@@ -27,9 +27,6 @@ class TestSyncPri(utest.TestCase):
                 pyb.LED(1).toggle()
             pyb.delay(50)
 
-        _thread.start_new_thread(low_freq, [])
-        _thread.start_new_thread(high_freq, [])
-
     @utest.cond(equals(2))
     def test_multi_spin_mutex(self):
         TProp = namedtuple('TProp', ('mutex', 'led', 'id'))
