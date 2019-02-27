@@ -33,7 +33,7 @@ class TestCMEMgr(utest.TestCase):
     @utest.cond(equals(3))
     def test_mapper_multi_interrupts(self):
         TiTuple = namedtuple('TiTuple', ('tim', 'id'))
-        for info in [TiTuple(pyb.Timer(tim_id, freq=tim_id + 1), tim_id) for tim_id in (2,)]:
+        for info in [TiTuple(pyb.Timer(tim_id, freq=tim_id + 1), tim_id) for tim_id in (4,)]:
             @cmemgr.map_to_thread(info.tim.callback)
             def led_blink():
                 with Indicator(info.id):
