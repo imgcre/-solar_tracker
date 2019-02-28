@@ -19,7 +19,7 @@ def get_item(index):
     def actor(action):
         def func(obj):
             # TODO: assert
-            return action(obj[__resolve(obj, index)[0]])
+            return action(obj[__resolve(obj, index)[0]])  # obj的类型是int
         return func
     return actor
 
