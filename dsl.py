@@ -1,21 +1,12 @@
 from highord import *
 
 
-# if called a high ord func, return a wrapper of it
-# DSLMaker = type('DSLMaker', (object,))
-def make_this():
-    attrs = dict()
-    # just simply return obj itself
-    attrs['__call__'] = lambda self, obj: obj
-    return type('DSLMaker', (object,), attrs)
-
-
-this = make_this()
-
-
 class DSLBuilder:
-    def __init__(self):
-        self.__method_chain = []
+    def __init__(self, *, other=None):
+        if other is None:
+            self.__method_chain = []
+        else:
+            self.__method_chain = other.__method_chain.copy()
 
     def __call__(self, obj):
         chain_len = len(self.__method_chain)
@@ -38,11 +29,14 @@ class DSLBuilder:
     def __make_wrapper(self, func, *, called=False):
         if called:
             self.__method_chain.append(func)
-            return self
+            return DSLBuilder(other=self)
         else:
             def wrapper(*args):
                 self.__method_chain.append(func(*args))
-                return self
+                return DSLBuilder(other=self)
             return wrapper
 
     pass
+
+
+this = DSLBuilder()
