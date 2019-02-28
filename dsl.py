@@ -18,6 +18,12 @@ class DSLBuilder:
         else:
             return obj
 
+    def __getattr__(self, item):
+        return self.__make_wrapper(get_attr(item), called=True)
+
+    def __getitem__(self, item):
+        return self.__make_wrapper(get_item(item), called=True)
+
     def __eq__(self, other):
         # return a closure that return self
         # forward the args to equals
