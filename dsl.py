@@ -1,7 +1,12 @@
 from highord import *
 
 
-class DSLBuilder:
+class DSLMetaclass(type):
+    def __new__(cls, *args, **kwargs):
+        return type.__new__(cls, *args)
+
+
+class DSLBuilder(metaclass=DSLMetaclass):
     def __init__(self, *, other=None, func=None):
         if other is None:
             self.__method_chain = []
