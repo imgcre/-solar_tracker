@@ -42,5 +42,6 @@ def get_attr(item):
 def __resolve(x, *args):
     args = list(args)
     for i in range(len(args)):
-        args[i] = args[i](x)
+        if callable(args[i]):
+            args[i] = args[i](x)
     return args
