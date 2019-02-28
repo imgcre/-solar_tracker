@@ -17,7 +17,6 @@ class DSLBuilder:
                 func = func(lambda t: t)
             for i in range(chain_len - 1):
                 func = self.__method_chain[chain_len - i - 2](func)
-            print(obj)
             return func(obj)
         else:
             return obj
