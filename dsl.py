@@ -7,7 +7,7 @@ def make_this():
     attrs = dict()
     # just simply return obj itself
     attrs['__call__'] = lambda self, obj: obj
-    return type('DSLMaker', (object,), dict=attrs)
+    return type('DSLMaker', (object,), attrs)
 
 
 this = make_this()
