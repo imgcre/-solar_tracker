@@ -14,7 +14,7 @@ class DSLBuilder:
         if chain_len:
             func = self.__method_chain[chain_len - 1]
             if not self.__terminal:
-                func = func(lambda t: t)
+                func = func(lambda t: lambda k: k)
             for i in range(chain_len - 1):
                 func = self.__method_chain[chain_len - i - 2](func)
             return func(obj)
