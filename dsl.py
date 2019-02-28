@@ -29,9 +29,6 @@ class DSLBuilder:
         # forward the args to equals
         return self.__make_wrapper(equals(other), called=True)
 
-    def __ne__(self, other):
-        return self.__make_wrapper(not_(equals(other)), called=True)
-
     def __make_wrapper(self, func, *, called=False):
         if called:
             return DSLBuilder(other=self, func=func)
