@@ -2,11 +2,11 @@ from highord import *
 
 
 class DSLBuilder:
-    def __init__(self, *, other=None):
+    def __init__(self, *, other=None, func=None):
         if other is None:
             self.__method_chain = []
         else:
-            self.__method_chain = other.__method_chain.copy()
+            self.__method_chain = other.__method_chain + [func]
 
     def __call__(self, obj):
         chain_len = len(self.__method_chain)
@@ -28,12 +28,10 @@ class DSLBuilder:
 
     def __make_wrapper(self, func, *, called=False):
         if called:
-            self.__method_chain.append(func)
-            return DSLBuilder(other=self)
+            return DSLBuilder(other=self, func=func)
         else:
             def wrapper(*args):
-                self.__method_chain.append(func(*args))
-                return DSLBuilder(other=self)
+                return DSLBuilder(other=self, func=func(*args))
             return wrapper
 
     pass
