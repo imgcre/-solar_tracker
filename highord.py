@@ -5,6 +5,12 @@ def equals(a):
     return func
 
 
+def not_(a):
+    def func(x):
+        return not __resolve(x, a)[0]
+    return func
+
+
 # get item from tuple or list
 # usage: get_item(index)(action)
 # where action is callable to handle the item or raise an error
