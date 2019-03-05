@@ -11,7 +11,7 @@ class ObjLike(object):
 
     def __setattr__(self, key, value):
         if key == '__dict':
-            object.__setattr__(self, key, value)
+            super(ObjLike, self).__setattr__(self, key, value)
         else:
             self.__dict[key] = value
 
