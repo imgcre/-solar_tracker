@@ -2,18 +2,18 @@ import pyb
 import _thread
 
 
-class ObjLike(object):
-    def __init__(self, dict_=None):
-        self.__dict = dict_
-
+class ObjLike(dict):
     def __getattr__(self, item):
-        return self.__dict[item] if item != '__dict' else self.__dict
+        try:
+            return self[item]
+        except:
+            return self.__getitem__(item)
 
     def __setattr__(self, key, value):
-        if key == '__dict':
-            super(ObjLike, self).__setattr__(key, value)
+        if type(v) == dict:
+            self[k] = self.__class__(v)
         else:
-            self.__dict[key] = value
+            self[k] = v
 
 
 class Indicator(pyb.LED):
