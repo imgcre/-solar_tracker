@@ -10,10 +10,10 @@ class ObjLike(dict):
             return self.__getitem__(item)
 
     def __setattr__(self, key, value):
-        if type(v) == dict:
-            self[k] = self.__class__(v)
+        if type(value) == dict:
+            self[key] = self.__class__(value)
         else:
-            self[k] = v
+            self[key] = value
 
 
 class Indicator(pyb.LED):
