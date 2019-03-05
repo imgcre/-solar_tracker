@@ -15,7 +15,7 @@ class Descr(object):
 class Test(object):
     d = Descr()
     def __init__(self):
-        self.d = d
+        self.d = type(self).d
 
 
 x = Test()
