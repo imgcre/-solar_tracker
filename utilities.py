@@ -13,7 +13,11 @@ class ObjLike(object):
             return self.__dict[item]
 
     def __setattr__(self, key, value):
-        self.__dict[key] = value
+        if key == '__dict':
+            super().__setattr__(self, key, value)
+        else:
+            self.__dict[key] = value
+
 
 
 class Indicator(pyb.LED):
