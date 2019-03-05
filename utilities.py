@@ -6,18 +6,11 @@ class ObjLike(object):
     def __init__(self, dict_=None):
         self.__dict = dict_ if dict_ is not None else {}
 
-    def __getattribute__(self, item):
-        if item == '__dict':
-            return super().__getattribute__(self, item)
-        else:
-            return self.__dict[item]
+    #def __getattr__(self, item):
+    #    #return self.__dict[item]
 
     def __setattr__(self, key, value):
-        if key == '__dict':
-            super().__setattr__(self, key, value)
-        else:
-            self.__dict[key] = value
-
+        super().__setattr__(key, value)
 
 
 class Indicator(pyb.LED):
