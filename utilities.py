@@ -5,7 +5,8 @@ import _thread
 class ObjLike(object):
     def __init__(self, dict_=None):
         if dict_ is not None:
-            self.__dict__.update(dict_)
+            for key, value in dict_.items():
+                setattr(self, key, value)
 
 
 class Indicator(pyb.LED):
