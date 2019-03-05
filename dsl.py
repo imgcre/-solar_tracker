@@ -1,6 +1,9 @@
 from highord import *
 
 
+# FIXME: lots of bugs
+# ...for instance: this[0].equals(this[1]), where this[1] means this[0][1] in outer scope
+# ...that isn't what we except
 class DSLBuilder:
     def __init__(self, *, other=None, func=None, terminal=True):
         if other is None:
@@ -28,8 +31,6 @@ class DSLBuilder:
         return DSLBuilder(other=self, func=get_item(item), terminal=False)
 
     def __eq__(self, other):
-        # return a closure that return self
-        # forward the args to equals
         return self.__make_wrapper(equals(other), called=True)
 
     def __make_wrapper(self, func, *, called=False):

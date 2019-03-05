@@ -2,6 +2,24 @@ import pyb
 import _thread
 
 
+class ObjLike:
+    def __init__(self, *, dict_=None):
+        self.__dict = dict_ if dict_ is not None else {}
+        pass
+
+    def __getattr__(self, item):
+        # 返回property
+        @property
+        def func(self_):
+            return self.__dict[item]
+
+        @func.setter
+        def setter(self_, value):
+            self.__dict[item] = value
+
+        return func
+
+
 class Indicator(pyb.LED):
     __nested_times = dict()
     __indicator_owners = dict()
