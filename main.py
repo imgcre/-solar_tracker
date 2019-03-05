@@ -10,3 +10,5 @@ import utilities
 class Test(object):
     def __get__(self, instance, owner):
         return 5
+
+x = Test({'test':5, 'name': 'Jhon'})
