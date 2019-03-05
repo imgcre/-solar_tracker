@@ -13,9 +13,7 @@ class Descr(object):
         return 0
 
 class Test(object):
-    d = Descr()
-    def __init__(self):
-        self.d = type(self).d
+    d = Descr() # 作为类的属性
 
 
 x = Test()
