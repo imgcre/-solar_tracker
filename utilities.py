@@ -3,8 +3,14 @@ import _thread
 
 
 class ObjLike:
-    def __init__(self, *, dict_=None):
-        self.__dict__ = dict_ if dict_ is not None else {}
+    def __init__(self, dict_=None):
+        self.__dict = dict_ if dict_ is not None else {}
+
+    def __getattr__(self, item):
+        return self.__dict[item]
+
+    def __setattr__(self, key, value):
+        self.__dict[key] = value
 
 
 class Indicator(pyb.LED):
