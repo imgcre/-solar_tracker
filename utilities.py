@@ -8,7 +8,7 @@ class ObjLike(dict):
         pass
 
     def __setattr__(self, key, value):
-        pass
+        super(ObjLike, self).__setattr__(key, value)
 
 
 class Indicator(pyb.LED):
