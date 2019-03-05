@@ -13,7 +13,8 @@ class Descr(object):
         return 0
 
 class Test(object):
-    d = Descr() # 作为类的属性
+    def __init__(self):
+        setattr(type(self), 'd', Descr())
 
 
 x = Test()
