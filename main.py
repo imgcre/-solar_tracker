@@ -13,9 +13,9 @@ class Descr(object):
         return 0
 
 class Test(object):
+    d = Descr()
     def __init__(self):
-        self.d = Descr()
+        self.d = d
 
 
-d = {'test':5, 'name': 'Jhon'}
-x = utilities.ObjLike(d)
+x = Test()
