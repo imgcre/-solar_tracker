@@ -19,9 +19,6 @@ class ObjLike:
 
         return func
 
-    def __str__(self):
-        return '233'
-
 
 class Indicator(pyb.LED):
     __nested_times = dict()
