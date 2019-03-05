@@ -4,10 +4,10 @@ import _thread
 
 class ObjLike(object):
     def __init__(self, dict_=None):
-        self.__dict = dict_ if dict_ is not None else {}
+        self.__dict__['__dict'] = dict_ if dict_ is not None else {}
 
-    #def __getattr__(self, item):
-    #    #return self.__dict[item]
+    def __getattr__(self, item):
+        return self.__dict[item]
 
     def __setattr__(self, key, value):
         super().__setattr__(key, value)
