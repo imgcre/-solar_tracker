@@ -2,11 +2,23 @@ import pyb
 import _thread
 
 
-class ObjLike(object):
+class __ObjLikeBase(object):
     def __init__(self, dict_=None):
-        if dict_ is not None:
-            for key, value in dict_.items():
-                setattr(self, key, value)
+        self.__dict = dict_
+
+    pass
+
+
+class ObjLike(__ObjLikeBase):
+    def __init__(self, dict_=None):
+        super().__init__(dict_)
+
+    def __getattr__(self, item):
+        return self.__dict[item]
+        pass
+
+    def __setattr__(self, key, value):
+        self.__dict[key] = value
 
 
 class Indicator(pyb.LED):
