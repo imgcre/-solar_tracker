@@ -2,18 +2,13 @@ import pyb
 import _thread
 
 
+# TODO try to invoke super().__setattr__()
 class ObjLike(dict):
     def __getattr__(self, item):
-        try:
-            return self[item]
-        except:
-            return self.__getitem__(item)
+        pass
 
     def __setattr__(self, key, value):
-        if type(value) == dict:
-            self[key] = self.__class__(value)
-        else:
-            self[key] = value
+        pass
 
 
 class Indicator(pyb.LED):
