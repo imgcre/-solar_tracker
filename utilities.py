@@ -23,6 +23,7 @@ __locals = {}
 def __getattr__(key):
     # tls 根据不同的线程返回不同的包装对象
     if key == 'tls':
+        print('get tls')
         thread_id = _thread.get_ident()
         if __locals.get(thread_id) is None:
             __locals[thread_id] = {}
