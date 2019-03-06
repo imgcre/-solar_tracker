@@ -2,7 +2,6 @@ import pyb
 import _thread
 
 
-# TODO try to invoke super().__setattr__()
 class ObjLike(dict):
     def __init__(self, dict_):
         super().__init__()
@@ -18,8 +17,18 @@ class ObjLike(dict):
             self.__dict[key] = value
 
 
+__locals = {}
+
+
 def __getattr__(key):
-    return 0
+    # tls 根据不同的线程返回不同的包装对象
+    if key == 'tls':
+        thread_id = _thread.get_ident()
+        if __locals.get(thread_id) is None:
+            __locals[thread_id] = {}
+        return ObjLike(__locals[thread_id])
+    else:
+        raise AttributeError
 
 
 class Indicator(pyb.LED):
