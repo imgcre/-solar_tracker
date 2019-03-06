@@ -18,7 +18,7 @@ class ObjLike(dict):
             self.__dict[key] = value
 
 
-def __getattr__(self, key):
+def __getattr__(key):
     return 0
 
 
