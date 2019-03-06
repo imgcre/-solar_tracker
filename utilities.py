@@ -18,6 +18,10 @@ class ObjLike(dict):
             self.__dict[key] = value
 
 
+def __getattr__(self, key):
+    return 0
+
+
 class Indicator(pyb.LED):
     __nested_times = dict()
     __indicator_owners = dict()
