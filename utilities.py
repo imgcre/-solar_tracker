@@ -33,8 +33,8 @@ class ThreadLocalStorage(object):
     def __getattr__(self, item):
         print('get tls attr')
         thread_id = _thread.get_ident()
-        return type(self).__locals[thread_id][item] if type(type(self).__locals[thread_id][item]) is not dict \
-            else ObjLike(type(self).__locals[thread_id][item])
+        return type(self).__locals[thread_id][item] if type(
+            type(self).__locals[thread_id][item]) is not dict else ObjLike(type(self).__locals[thread_id][item])
 
     def __setattr__(self, key, value):
         print('set tls attr')
