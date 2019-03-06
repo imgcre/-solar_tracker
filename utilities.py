@@ -8,6 +8,8 @@ class ObjLike(dict):
         self.__dict = dict_ if dict_ is not None else {}
 
     def __getattr__(self, item):
+        if self.__dict.get(item) is None:
+            self.__dict[item] = {}
         return self.__dict[item] if type(self.__dict[item]) is not dict else ObjLike(self.__dict[item])
 
     def __setattr__(self, key, value):
