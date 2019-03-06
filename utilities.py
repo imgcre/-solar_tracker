@@ -17,27 +17,20 @@ class ObjLike(dict):
             self.__dict[key] = value
 
 
-# __locals = {}
-
-
 class ThreadLocalStorage(object):
     __locals = {}
 
-    def __get__(self, instance, owner):
-        print('get tls')
+    def __getattr__(self, item):
         thread_id = _thread.get_ident()
         if type(self).__locals.get(thread_id) is None:
             type(self).__locals[thread_id] = {}
-        return ObjLike(type(self).__locals[thread_id])
+        if type(self).__locals[thread_id].get(item) is None:
+            type(self).__locals[thread_id][item] = {}
 
-    def __getattr__(self, item):
-        print('get tls attr')
-        thread_id = _thread.get_ident()
         return type(self).__locals[thread_id][item] if type(
             type(self).__locals[thread_id][item]) is not dict else ObjLike(type(self).__locals[thread_id][item])
 
     def __setattr__(self, key, value):
-        print('set tls attr')
         thread_id = _thread.get_ident()
         if type(self).__locals.get(thread_id) is None:
             type(self).__locals[thread_id] = {}
@@ -45,17 +38,6 @@ class ThreadLocalStorage(object):
 
 
 tls = ThreadLocalStorage()
-
-# def __getattr__(key):  # do not from ... import tls
-#    tls 根据不同的线程返回不同的包装对象
-#    if key == 'tls':
-#        print('get tls')
-#        thread_id = _thread.get_ident()
-#       if __locals.get(thread_id) is None:
-#           __locals[thread_id] = {}
-#       return ObjLike(__locals[thread_id])
-#  else:
-#      raise AttributeError
 
 
 class Indicator(pyb.LED):
