@@ -2,10 +2,13 @@ import pyb
 import _thread
 
 
-class ObjLike(dict):
+class ObjLike(object):
     def __init__(self, dict_):
         super().__init__()
         self.__dict = dict_ if dict_ is not None else {}
+
+    def unwrap(self):
+        return self.__dict
 
     def __getattr__(self, item):
         if self.__dict.get(item) is None:
