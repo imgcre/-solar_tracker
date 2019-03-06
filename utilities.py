@@ -4,12 +4,18 @@ import _thread
 
 # TODO try to invoke super().__setattr__()
 class ObjLike(dict):
+    def __init__(self, dict_):
+        super().__init__()
+        self.__dict = dict_ if dict_ is not None else {}
+
     def __getattr__(self, item):
-        pass
+        return self.__dict[item]
 
     def __setattr__(self, key, value):
-        print('got', value)
-        super().__setattr__(key, value)
+        if key == '__dict':
+            super().__setattr__(key, value)
+        else:
+            self.__dict[key] = value
 
 
 class Indicator(pyb.LED):
