@@ -7,7 +7,7 @@ class ObjLike(object):
         super().__init__()
         self.__dict = dict_ if dict_ is not None else {}
 
-    def unwrap(self):
+    def __repr__(self):
         return self.__dict
 
     def __getattr__(self, item):
@@ -24,6 +24,12 @@ class ObjLike(object):
 
 class ThreadLocalStorage(object):
     __locals = {}
+
+    def __repr__(self):
+        thread_id = _thread.get_ident()
+        if type(self).__locals.get(thread_id) is None:
+            type(self).__locals[thread_id] = {}
+        return type(self).__locals[thread_id]
 
     def __getattr__(self, item):
         thread_id = _thread.get_ident()
