@@ -7,4 +7,5 @@ from uinspect import *
 import highord
 import utilities
 
-
+d = {'age': 5, 'name': 'Lisa'}
+o = utilities.ObjLike(d)
