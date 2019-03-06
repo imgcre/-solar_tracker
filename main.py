@@ -6,6 +6,5 @@ from dsl import *
 from uinspect import *
 import highord
 import utilities
+from utilities import tls
 
-d = {'age': 5, 'name': 'Lisa'}
-o = utilities.ObjLike(d)
