@@ -8,7 +8,7 @@ class ObjLike(dict):
         self.__dict = dict_ if dict_ is not None else {}
 
     def __getattr__(self, item):
-        return self.__dict[item]
+        return self.__dict[item] if type(self.__dict[item]) is not dict else ObjLike(self.__dict[item])
 
     def __setattr__(self, key, value):
         if key == '__dict':
@@ -30,7 +30,20 @@ class ThreadLocalStorage(object):
             type(self).__locals[thread_id] = {}
         return ObjLike(type(self).__locals[thread_id])
 
-    
+    def __getattr__(self, item):
+        print('get tls attr')
+        thread_id = _thread.get_ident()
+        return type(self).__locals[thread_id][item] if type(type(self).__locals[thread_id][item]) is not dict \
+            else ObjLike(type(self).__locals[thread_id][item])
+
+    def __setattr__(self, key, value):
+        print('set tls attr')
+        thread_id = _thread.get_ident()
+        if type(self).__locals.get(thread_id) is None:
+            type(self).__locals[thread_id] = {}
+        type(self).__locals[thread_id][key] = value
+
+
 tls = ThreadLocalStorage()
 
 # def __getattr__(key):  # do not from ... import tls
