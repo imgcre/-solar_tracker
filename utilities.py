@@ -37,18 +37,9 @@ class ThreadLocalStorage(object):
 
     @staticmethod
     def __mapper(method):
-        def func(self, *args, **kwargs):
-            return method(self.__get_obj(), *args, **kwargs)
-        return func
+        return lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs)
 
-    # def __repr__(self):  # 路由到相应的ObjLike对象
-    #    return self.__get_obj().__repr__()
-
-    # def __getattr__(self, item):
-    #    return self.__get_obj().__getattr__(item)
-
-    # def __setattr__(self, key, value):
-    #    self.__get_obj().__setattr__(key, value)
+    map_methods(locals(), ObjLike, __mapper)
 
     def __get_obj(self):
         thread_id = _thread.get_ident()
@@ -56,8 +47,6 @@ class ThreadLocalStorage(object):
             type(self).__locals[thread_id] = {}
         return ObjLike(type(self).__locals[thread_id])
 
-
-map_methods(ThreadLocalStorage, ObjLike, ThreadLocalStorage.__mapper)
 
 tls = ThreadLocalStorage()
 
