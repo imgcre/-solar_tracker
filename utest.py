@@ -64,5 +64,6 @@ def __get_target_method_from(cls):
             if uinspect.is_public_method(attr) and not uinspect.is_static_method(attr))
 
 
+# TODO: move to utilities
 def __get_attrs_form(obj):
     return (getattr(obj, attr_name) for attr_name in dir(obj))

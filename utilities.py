@@ -2,6 +2,14 @@ import pyb
 import _thread
 
 
+# 包装器
+def map_methods(locals_, src_cls, mapper, *, exclude=('__init__',)):
+    target_cls = [local for local in locals_ if type(local) is type][0]
+    src_attrs = (getattr(src_cls, attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
+    for method in (attr for attr in src_attrs if callable(attr)):
+        setattr(target_cls, method.__name__, mapper(method))
+
+
 class ObjLike(object):
     def __init__(self, dict_):
         super().__init__()
@@ -10,6 +18,7 @@ class ObjLike(object):
     def __repr__(self):
         return self.__dict
 
+    # TODO: 让外貌只是添加了额外语法支持的字典
     def __getattr__(self, item):
         if self.__dict.get(item) is None:
             self.__dict[item] = {}
@@ -22,33 +31,39 @@ class ObjLike(object):
             self.__dict[key] = value
 
 
+# Todo: dict method support
 class ThreadLocalStorage(object):
     __locals = {}
 
-    def __repr__(self):
+    @staticmethod
+    def __mapper(method):
+        def func(self, *args, **kwargs):
+            return method(self.__get_obj(), *args, **kwargs)
+        return func
+
+    map_methods(locals(), ObjLike, __mapper)
+
+    # def __repr__(self):  # 路由到相应的ObjLike对象
+    #    return self.__get_obj().__repr__()
+
+    # def __getattr__(self, item):
+    #    return self.__get_obj().__getattr__(item)
+
+    # def __setattr__(self, key, value):
+    #    self.__get_obj().__setattr__(key, value)
+
+    def __get_obj(self):
         thread_id = _thread.get_ident()
         if type(self).__locals.get(thread_id) is None:
             type(self).__locals[thread_id] = {}
-        return type(self).__locals[thread_id]
-
-    def __getattr__(self, item):
-        thread_id = _thread.get_ident()
-        if type(self).__locals.get(thread_id) is None:
-            type(self).__locals[thread_id] = {}
-        if type(self).__locals[thread_id].get(item) is None:
-            type(self).__locals[thread_id][item] = {}
-
-        return type(self).__locals[thread_id][item] if type(
-            type(self).__locals[thread_id][item]) is not dict else ObjLike(type(self).__locals[thread_id][item])
-
-    def __setattr__(self, key, value):
-        thread_id = _thread.get_ident()
-        if type(self).__locals.get(thread_id) is None:
-            type(self).__locals[thread_id] = {}
-        type(self).__locals[thread_id][key] = value
+        return ObjLike(type(self).__locals[thread_id])
 
 
 tls = ThreadLocalStorage()
+
+
+def get_attrs_form(obj):
+    return (getattr(obj, attr_name) for attr_name in dir(obj))
 
 
 class Indicator(pyb.LED):
