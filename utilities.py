@@ -35,11 +35,8 @@ class ObjLike(object):
 class ThreadLocalStorage(object):
     __locals = {}
 
-    @staticmethod
-    def __mapper(method):
-        return lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs)
-
-    map_methods(locals(), ObjLike, __mapper)
+    map_methods(locals(), ObjLike, lambda method:
+                lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs))
 
     def __get_obj(self):
         thread_id = _thread.get_ident()
