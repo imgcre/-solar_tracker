@@ -4,6 +4,7 @@ import _thread
 
 # 包装器
 def map_methods(locals_, src_cls, mapper, *, exclude=('__init__',)):
+    print(locals_)
     target_cls = [local for local in locals_ if type(local) is type][0]
     src_attrs = (getattr(src_cls, attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
     for method in (attr for attr in src_attrs if callable(attr)):
