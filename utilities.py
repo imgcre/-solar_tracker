@@ -3,7 +3,7 @@ import _thread
 
 
 # 包装器
-def map_methods(dst_cls, src_cls, mapper, *, exclude=('__init__',)):
+def map_methods(dst_cls, src_cls, mapper, *, exclude=('__init__', '__class__')):
     src_attrs = ((getattr(src_cls, attr_name), attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
     for method, name in (attr_info for attr_info in src_attrs if callable(attr_info[0])):
         print(name)
