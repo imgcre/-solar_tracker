@@ -18,7 +18,7 @@ class ObjLike(object):
     def mapper(method):
         def func(self, *args, **kwargs):
             res = method(self.__dict, *args, **kwargs)
-            return res if type(res) is not dict else ObjLike(dict)
+            return res if type(res) is not dict else ObjLike(res)
         return func
 
     map_methods(locals(), dict, mapper)
