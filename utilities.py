@@ -13,8 +13,15 @@ def map_methods(locals_, src_cls, mapper, *, exclude=()):
 
 # TODO: 装饰器模式
 class ObjLike(object):
-    map_methods(locals(), dict, lambda method:
-                lambda self, *args, **kwargs: method(self.__dict, *args, **kwargs))
+
+    # @staticmethod  # 使用此装饰器会造成方法无法调用
+    def mapper(method):
+        def func(self, *args, **kwargs):
+            res = method(self.__dict, *args, **kwargs)
+            return res if type(res) is not dict else ObjLike(dict)
+        pass
+
+    map_methods(locals(), dict, mapper)
 
     def __init__(self, dict_):
         super().__init__()
