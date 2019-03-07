@@ -2,16 +2,20 @@ import pyb
 import _thread
 
 
-# 包装器
-def map_methods(locals_, src_cls, mapper, *, exclude=('__init__', '__class__')):
-    src_attrs = ((getattr(src_cls, attr_name), attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
+# 用于创建代理模式的工具函数
+# NOTE: 在类作用域内无法使用类名, 但此时locals()指向类作用域, 修改locals()可以操作类变量
+def map_methods(locals_, src_cls, mapper, *, exclude=()):
+    src_attrs = ((getattr(src_cls, attr_name), attr_name) for attr_name in dir(src_cls)
+                 if attr_name not in exclude + ('__init__', '__class__'))
     for method, name in (attr_info for attr_info in src_attrs if callable(attr_info[0])):
-        print(name)
         locals_[name] = mapper(method)
-        #setattr(dst_cls, name, mapper(method))
 
 
+# TODO: 装饰器模式
 class ObjLike(object):
+    map_methods(locals(), dict, lambda method:
+                lambda self, *args, **kwargs: method(self.__dict, *args, **kwargs)))
+
     def __init__(self, dict_):
         super().__init__()
         self.__dict = dict_ if dict_ is not None else {}
@@ -19,7 +23,6 @@ class ObjLike(object):
     def __repr__(self):
         return self.__dict
 
-    # TODO: 让外貌只是添加了额外语法支持的字典
     def __getattr__(self, item):
         if self.__dict.get(item) is None:
             self.__dict[item] = {}
@@ -32,10 +35,10 @@ class ObjLike(object):
             self.__dict[key] = value
 
 
-# Todo: dict method support
 class ThreadLocalStorage(object):
     __locals = {}
 
+    # 可在类作用域内直接调用函数
     map_methods(locals(), ObjLike, lambda method:
                 lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs))
 
