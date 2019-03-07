@@ -14,7 +14,7 @@ def map_methods(locals_, src_cls, mapper, *, exclude=()):
 # TODO: 装饰器模式
 class ObjLike(object):
     map_methods(locals(), dict, lambda method:
-                lambda self, *args, **kwargs: method(self.__dict, *args, **kwargs)))
+                lambda self, *args, **kwargs: method(self.__dict, *args, **kwargs))
 
     def __init__(self, dict_):
         super().__init__()
