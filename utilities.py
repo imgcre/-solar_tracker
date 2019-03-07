@@ -19,7 +19,7 @@ class ObjLike(object):
         def func(self, *args, **kwargs):
             res = method(self.__dict, *args, **kwargs)
             return res if type(res) is not dict else ObjLike(dict)
-        pass
+        return func
 
     map_methods(locals(), dict, mapper)
 
