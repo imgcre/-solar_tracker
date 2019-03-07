@@ -3,12 +3,10 @@ import _thread
 
 
 # 包装器
-def map_methods(locals_, src_cls, mapper, *, exclude=('__init__',)):
-    print(locals_)
-    target_cls = [local for local in locals_ if type(local) is type][0]
+def map_methods(dst_cls, src_cls, mapper, *, exclude=('__init__',)):
     src_attrs = (getattr(src_cls, attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
     for method in (attr for attr in src_attrs if callable(attr)):
-        setattr(target_cls, method.__name__, mapper(method))
+        setattr(dst_cls, method.__name__, mapper(method))
 
 
 class ObjLike(object):
@@ -42,8 +40,6 @@ class ThreadLocalStorage(object):
             return method(self.__get_obj(), *args, **kwargs)
         return func
 
-    map_methods(locals(), ObjLike, __mapper)
-
     # def __repr__(self):  # 路由到相应的ObjLike对象
     #    return self.__get_obj().__repr__()
 
@@ -59,6 +55,8 @@ class ThreadLocalStorage(object):
             type(self).__locals[thread_id] = {}
         return ObjLike(type(self).__locals[thread_id])
 
+
+map_methods(ThreadLocalStorage, ObjLike, ThreadLocalStorage.__mapper)
 
 tls = ThreadLocalStorage()
 
