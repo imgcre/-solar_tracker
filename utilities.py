@@ -11,9 +11,7 @@ def map_methods(locals_, src_cls, mapper, *, exclude=()):
         locals_[name] = mapper(method)
 
 
-# TODO: 装饰器模式
 class ObjLike(object):
-
     # @staticmethod  # 使用此装饰器会造成方法无法调用
     def mapper(method):
         def func(self, *args, **kwargs):
@@ -42,10 +40,10 @@ class ObjLike(object):
             self.__dict[key] = value
 
 
+# FIXME: 形如: x = tls.xxx, x.yyy = zzz 的代码可能会引入不确定的行为
 class ThreadLocalStorage(object):
     __locals = {}
 
-    # 可在类作用域内直接调用函数
     map_methods(locals(), ObjLike, lambda method:
                 lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs))
 
@@ -57,10 +55,6 @@ class ThreadLocalStorage(object):
 
 
 tls = ThreadLocalStorage()
-
-
-def get_attrs_form(obj):
-    return (getattr(obj, attr_name) for attr_name in dir(obj))
 
 
 class Indicator(pyb.LED):
