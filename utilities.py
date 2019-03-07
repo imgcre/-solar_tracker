@@ -7,7 +7,10 @@ def map_methods(dst_cls, src_cls, mapper, *, exclude=('__init__',)):
     src_attrs = (getattr(src_cls, attr_name) for attr_name in dir(src_cls) if attr_name not in exclude)
     for method in (attr for attr in src_attrs if callable(attr)):
         print(method)
-        setattr(dst_cls, method.__name__, mapper(method))
+        try:
+            setattr(dst_cls, method.__name__, mapper(method))
+        except:
+            pass
 
 
 class ObjLike(object):
