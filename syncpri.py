@@ -1,6 +1,7 @@
 import pyb
 import _thread
 
+
 class Event(object):
 	def __init__(self, initval=False, *, auto_reset=True, mutex=None):
 		self.__val = initval

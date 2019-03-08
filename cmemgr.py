@@ -3,6 +3,7 @@ import syncpri
 import _thread
 
 
+# callback is a func that accept only a param
 def map_to_thread(callback, *args):
 	def func(f):
 		def wrapper():
