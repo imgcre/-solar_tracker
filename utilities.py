@@ -7,7 +7,7 @@ def partial(func):
             kwargs_.update(kwargs)
             return func(*args + args_, **kwargs_)
         return wrapper2
-    return wrapper
+    return wrapper1
 
 
 # TODO: 直接用装饰器不好吗
