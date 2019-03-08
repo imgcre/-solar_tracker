@@ -1,7 +1,15 @@
 import pyb
 import _thread
 
+def partial(func, *args, **kwargs):
+    def wrapper(*args_, **kwargs_):
+        kwargs_.update(kwargs)
+        func(*args + args_, **kwargs_)
+        pass
+    pass
 
+
+# TODO: 直接用装饰器不好吗
 # 用于创建代理模式的工具函数
 # NOTE: 在类作用域内无法使用类名, 但此时locals()指向类作用域, 修改locals()可以操作类变量
 def map_methods(locals_, src_cls, mapper, *, exclude=()):
