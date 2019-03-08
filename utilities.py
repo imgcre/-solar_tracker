@@ -4,9 +4,8 @@ import _thread
 def partial(func, *args, **kwargs):
     def wrapper(*args_, **kwargs_):
         kwargs_.update(kwargs)
-        func(*args + args_, **kwargs_)
-        pass
-    pass
+        return func(*args + args_, **kwargs_)
+    return wrapper
 
 
 # TODO: 直接用装饰器不好吗
