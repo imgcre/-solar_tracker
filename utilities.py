@@ -1,10 +1,12 @@
 import pyb
 import _thread
 
-def partial(func, *args, **kwargs):
-    def wrapper(*args_, **kwargs_):
-        kwargs_.update(kwargs)
-        return func(*args + args_, **kwargs_)
+def partial(func):
+    def wrapper1(*args, **kwargs):
+        def wrapper2(*args_, **kwargs_):
+            kwargs_.update(kwargs)
+            return func(*args + args_, **kwargs_)
+        return wrapper2
     return wrapper
 
 
