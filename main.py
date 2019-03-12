@@ -9,13 +9,7 @@ import sys
 
 
 f = open('config.csv', 'rb')
-count = 0
-for line in f:
-    count += 1
-    if count % 1000 == 0:
-        print(line)
 
-print('OK')
 sys.exit()
 
 global_vars = ObjLike()
