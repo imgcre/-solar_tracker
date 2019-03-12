@@ -15,7 +15,7 @@ for line in f:
     if count % 100 == 0:
         print(line)
 
-
+print('OK')
 sys.exit()
 
 global_vars = ObjLike()
