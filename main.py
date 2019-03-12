@@ -20,14 +20,19 @@ class Config:
         if not line:
             return None
         items = line[:-1].split(',')
-        obj = {
-            'time': MyTime([int(item) for item in items[:-2]] + [0]),
-            'angle': {
-                'pitch': int(items[4]),
-                'yaw': float(items[5])
+        try:
+            obj = {
+                'time': MyTime([int(item) for item in items[:-2]] + [0]),
+                'angle': {
+                    'pitch': int(items[4]),
+                    'yaw': float(items[5])
+                }
             }
-        }
+        finally:
+            print(line)
         return obj
+
+    # Config.get_recent_item_pair((12, 31, 20, 2, 5))
 
     @classmethod
     def get_recent_item_pair(cls, cur_time):
