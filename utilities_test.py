@@ -22,10 +22,9 @@ class TestUtilities(utest.TestCase):
 
     @utest.cond(equals(2))
     def test_tween(self):
-        tween = Tween(init_val=0, expected_duration=1000)
+        tween = Tween(init_val=0, target_val=255, expected_duration=1000)
         tween.on_updated = pyb.LED(4).intensity
         tween.on_completed = lambda: tween.set_target(255 if tween.cur_value == 0 else 0)
-        tween.set_target(255)
 
 
 if __name__ == '__main__':

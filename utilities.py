@@ -198,13 +198,13 @@ class SoftTimer:
 # max_speed表示每毫秒的速度
 # expected_duration 单位为毫秒
 class Tween:
-    def __init__(self, *, init_val=0, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration):
+    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration):
         self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration = refresh_rate, allow_float, max_speed, expected_duration
 
         self.__cur_val = init_val
         self.__target_val, self.__speed = None, None
         self.__on_updated, self.__on_completed = None, None
-        self.set_target(self.__cur_val)
+        self.set_target(self.__cur_val if target_val is None else target_val)
 
         self.__item = SoftTimer.make().register(self.__callback, refresh_rate)
 
@@ -216,13 +216,11 @@ class Tween:
                 next_val = self.__target_val
                 self.__speed = 0
                 if self.on_updated is not None:
-                    print('completed to', next_val)
                     self.on_updated(next_val if self.__allow_float else int(next_val))
                 if self.on_completed is not None:
                     self.on_completed()
             elif self.__allow_float or int(self.__cur_val) is not int(next_val):
                 if self.on_updated is not None:
-                    print('update to', next_val)
                     self.on_updated(next_val if self.__allow_float else int(next_val))
             self.__cur_val = next_val
 
