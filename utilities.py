@@ -141,9 +141,9 @@ class STRegItem:
     def update(self, step):
         print(step)
         self.__cur_val += step
-        for _ in range(int(self.__cur_val / step)):
+        for _ in range(int(self.__cur_val / self.__target_val)):
             self.cb()
-        self.__cur_val %= step
+        self.__cur_val %= self.__target_val
 
     def dispose(self):
         self.owner.unregister(self)
