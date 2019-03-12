@@ -27,7 +27,7 @@ class Config:
                 'yaw': float(items[5])
             }
         }
-        return ObjLike(obj)
+        return obj
 
     @classmethod
     def get_recent_item_pair(cls, cur_time):
@@ -38,9 +38,9 @@ class Config:
             next_item = cls.get_item(next_line)
             if prev_line or cls.f.tell() == len(next_line):  # 循环是否第一次执行, 或者在文件首
                 prev_item = cls.get_item(prev_line)
-                if (not prev_item and next_item.time > cur_time
-                    ) or (not next_item and prev_item.time <= cur_time
-                          ) or prev_item.time <= cur_time < next_item.time:
+                if (not prev_item and next_item['time'] > cur_time
+                    ) or (not next_item and prev_item['time'] <= cur_time
+                          ) or prev_item['time'] <= cur_time < next_item['time']:
                     cls.f.seek(*(-len(next_line), 1) if not next_line else [0])
                     return prev_item, next_item
             prev_line = next_line
