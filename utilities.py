@@ -199,8 +199,7 @@ class SoftTimer:
 # expected_duration 单位为毫秒
 class Tween:
     def __init__(self, *, init_val=0, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration):
-        self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration \
-            = refresh_rate, allow_float, max_speed, expected_duration
+        self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration = refresh_rate, allow_float, max_speed, expected_duration
 
         self.__cur_val = init_val
         self.__target_val, self.__speed = None, None
