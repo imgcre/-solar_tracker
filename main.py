@@ -12,7 +12,7 @@ f = open('config.csv', 'rb')
 count = 0
 for line in f:
     count += 1
-    if count % 100 == 0:
+    if count % 1000 == 0:
         print(line)
 
 print('OK')
