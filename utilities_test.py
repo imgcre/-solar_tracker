@@ -1,5 +1,4 @@
 import utest
-from utilities import Tween
 from highord import *
 from utilities import *
 
@@ -14,7 +13,7 @@ class TestUtilities(utest.TestCase):
             obj.val[idx] += 1
 
         for i in range(3):
-            SoftTimer.default_register(partial(increase)(i), (10, 60, 100)[i])
+            SoftTimer.default_register(partial(increase)(i), (11, 63, 233)[i])
 
         def printer():
             print(obj.val)
