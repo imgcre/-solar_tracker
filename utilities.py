@@ -139,6 +139,7 @@ class STRegItem:
         self.__cur_val = 0
 
     def update(self, step):
+        print(step)
         self.__cur_val += step
         for _ in range(int(self.__cur_val / step)):
             self.cb()
