@@ -8,12 +8,13 @@ class TestUtilities(utest.TestCase):
     @utest.cond(equals(1))
     def test_soft_timer(self):
         obj = ObjLike()
-        obj.val = 0
+        obj.val = [0, 0, 0]
 
-        def increase():
-            obj.val += 1
+        def increase(idx):
+            obj.val[idx] += 1
 
-        SoftTimer.default_register(increase, 50)
+        for i in [10, 50, 100]:
+            SoftTimer.default_register(partial(increase)(i), 50)
 
         def printer():
             print(obj.val)
