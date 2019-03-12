@@ -19,7 +19,7 @@ def rtc_tick():
 
             if global_vars.get('inited') is None:
                 global_vars.inited = True
-
+                # 初始化相关代码
 
             pyb.delay(20)
     except Exception:
