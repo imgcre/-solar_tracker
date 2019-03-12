@@ -215,6 +215,7 @@ class Tween:
                 next_val = self.__target_val
                 self.__speed = 0
                 if self.on_updated is not None:
+                    print('update to', next_val)
                     self.on_updated(next_val if self.__allow_float else int(next_val))
                 if self.on_completed is not None:
                     self.on_completed()
