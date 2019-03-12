@@ -1,5 +1,7 @@
 import pyb
 import _thread
+from cmemgr import map_to_thread
+
 
 def partial(func):
     def wrapper1(*args, **kwargs):
@@ -30,7 +32,7 @@ class ObjLike(object):
 
     map_methods(locals(), dict, mapper)
 
-    def __init__(self, dict_):
+    def __init__(self, dict_=None):
         super().__init__()
         self.__dict = dict_ if dict_ is not None else {}
 
@@ -71,7 +73,7 @@ class Indicator(pyb.LED):
     __indicator_owners = dict()
 
     # TODO: const
-    def __init__(self, led_id):
+    def __init__(self, led_id=2):
         super().__init__(led_id)
         self.__led_id = led_id
         owner = type(self).__indicator_owners.get(led_id)
@@ -128,3 +130,120 @@ def infinite_loop_thread_for(*args):
         [_thread.start_new_thread(func, [arg]) for arg in args]
         return f
     return wrapper
+
+
+class STRegItem:
+    def __init__(self, cb, freq, owner):
+        self.cb, self.freq, self.owner = cb, freq, owner
+        self.__target_val = 1 / freq
+        self.__cur_val = 0
+
+    def update(self, step):
+        self.__cur_val += step
+        for _ in range(int(self.__cur_val / step)):
+            self.cb()
+        self.__cur_val %= step
+
+    def dispose(self):
+        self.owner.unregister(self)
+
+
+class SoftTimer:
+    __base_freq = 100
+    __softtimer_map = {}
+
+    @classmethod
+    def make(cls, timer_id: int = 1):
+        return SoftTimer(timer_id) if cls.__softtimer_map.get(timer_id) is None else cls.__softtimer_map[timer_id]
+
+    # 请不要在外部调用构造函数
+    def __init__(self, timer_id: int = 1):
+        if type(self).__softtimer_map.get(timer_id) is None:
+            self.__tim = pyb.Timer(timer_id, freq=type(self).__base_freq)
+            self.__step = 1 / type(self).__base_freq
+            self.__reg_items = []
+
+            @map_to_thread(self.__tim.callback)
+            def callback():
+                for item in self.__reg_items:
+                    item.update(self.__step)
+            self.__mapper = callable
+            type(self).__softtimer_map[timer_id] = self
+        else:
+            raise AssertionError
+
+    @classmethod
+    def default_register(cls, cb, freq):
+        cls.make().register(cb, freq)
+
+    @classmethod
+    def default_unregister(cls, item):
+        cls.make().unregister(item)
+
+    def register(self, cb, freq):
+        new_item = STRegItem(cb, freq, self)
+        self.__reg_items.append(new_item)
+        return new_item
+
+    def unregister(self, item: STRegItem):
+        if item not in self.__reg_items:
+            raise ValueError
+        self.__reg_items.remove(item)
+
+
+# 可以设置预期时间(单位为毫秒)刷新速度和最大速度
+# 最大速度的优先级高于预期时间
+# refresh_rate
+# max_speed = -1, 则不限速
+# max_speed表示每毫秒的速度
+# expected_duration 单位为毫秒
+class Tween:
+    def __init__(self, *, init_val=0, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration):
+        self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration \
+            = refresh_rate, allow_float, max_speed, expected_duration
+
+        self.__cur_val = init_val
+        self.__target_val, self.__speed = None, None
+        self.__on_updated, self.__on_completed = None, None
+        self.set_target(self.__cur_val)
+
+        self.__item = SoftTimer.make().register(self.__callback, refresh_rate)
+
+    def __callback(self):
+        if self.__speed != 0:
+            next_val = self.__cur_val + self.__speed * 1000 / self.__refresh_rate
+            if next_val >= self.__target_val:
+                next_val = self.__target_val
+                self.__speed = 0
+                if self.on_updated is not None:
+                    self.on_updated(next_val if self.__allow_float else int(next_val))
+                if self.on_completed is not None:
+                    self.on_completed()
+            elif self.__allow_float or int(self.__cur_val) is not int(next_val):
+                if self.on_updated is not None:
+                    self.on_updated(next_val if self.__allow_float else int(next_val))
+            self.__cur_val = next_val
+
+    @property
+    def on_updated(self):
+        return self.__on_updated
+
+    @on_updated.setter
+    def on_updated(self, value):
+        self.__on_updated = value
+
+    @property
+    def on_completed(self):
+        return self.__on_completed
+
+    @on_completed.setter
+    def on_completed(self, value):
+        self.__on_completed = value
+
+    def set_target(self, target_val):
+        self.__target_val = target_val
+        # 每毫秒步长
+        self.__speed = (target_val - self.__cur_val) / self.__expected_duration
+        if (self.__max_speed > 0) and (self.__speed > self.__max_speed):
+            self.__speed = self.__max_speed
+
