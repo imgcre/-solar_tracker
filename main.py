@@ -14,6 +14,7 @@ def rtc_tick():
     with Indicator():
         time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
         print(time_info)
+        pyb.delay(20)
 
 
 stop = rtc_tick.dispose
