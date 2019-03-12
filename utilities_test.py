@@ -13,8 +13,8 @@ class TestUtilities(utest.TestCase):
         def increase(idx):
             obj.val[idx] += 1
 
-        for i in [10, 50, 100]:
-            SoftTimer.default_register(partial(increase)(i), 50)
+        for i in range(3):
+            SoftTimer.default_register(partial(increase)(i), (10, 60, 100)[i])
 
         def printer():
             print(obj.val)
