@@ -1,8 +1,22 @@
 from pyb import *
 from cmemgr import map_to_thread
 from utilities import *
+import sys
 
 # tween
+# 编写及测试config
+# recentTime
+
+
+f = open('config.csv', 'rb')
+count = 0
+for line in f:
+    count += 1
+    if count % 100 == 0:
+        print(line)
+
+
+sys.exit()
 
 global_vars = ObjLike()
 ds3231 = I2C(1, I2C.MASTER)
