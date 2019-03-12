@@ -211,7 +211,8 @@ class Tween:
     def __callback(self):
         if self.__speed != 0:
             next_val = self.__cur_val + self.__speed * 1000 / self.__refresh_rate
-            if next_val >= self.__target_val:
+            if (self.__speed > 0 and next_val >= self.__target_val) or (
+                    self.__speed < 0 and next_val <= self.__target_val):
                 next_val = self.__target_val
                 self.__speed = 0
                 if self.on_updated is not None:
