@@ -20,11 +20,14 @@ class Config:
         if not line:
             return None
         items = line[:-1].split(',')
-        obj = ObjLike()
-        obj.time = MyTime([int(item) for item in items[:-2]] + [0])
-        obj.angle.pitch = int(items[4])  # 俯仰角
-        obj.angle.yaw = float(items[5])  # 偏航角
-        return obj
+        obj = {
+            'time': MyTime([int(item) for item in items[:-2]] + [0]),
+            'angle': {
+                'pitch': int(items[4]),
+                'yaw': float(items[5])
+            }
+        }
+        return ObjLike(obj)
 
     @classmethod
     def get_recent_item_pair(cls, cur_time):
