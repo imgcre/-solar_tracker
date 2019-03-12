@@ -40,7 +40,7 @@ class Config:
                 prev_item = cls.get_item(prev_line)
                 if (not prev_item and next_item['time'] > cur_time
                     ) or (not next_item and prev_item['time'] <= cur_time
-                          ) or prev_item['time'] <= cur_time < next_item['time']:
+                          ) or (prev_item and next_line and ['time'] <= cur_time < next_item['time']):
                     cls.f.seek(*(-len(next_line), 1) if not next_line else [0])
                     return prev_item, next_item
             prev_line = next_line
