@@ -22,14 +22,15 @@ class TestUtilities(utest.TestCase):
 
     @utest.cond(equals(2))
     def test_tween(self):
-        # 呼吸灯
-        pass
-    pass
+        tween = Tween(init_val=0, expected_duration=1000)
+        tween.on_updated = pyb.LED(4).intensity
+        tween.on_completed = lambda: tween.set_target(255 if tween.cur_value == 0 else 0)
+        tween.set_target(255)
 
 
 if __name__ == '__main__':
     print('tests list:')
-    print('1. test for single thread')
+    print('1. test for soft timer')
     print('2. test for tween')
     x = int(input('please choose one: '))
     utest.main(x)

@@ -239,6 +239,10 @@ class Tween:
     def on_completed(self, value):
         self.__on_completed = value
 
+    @property
+    def cur_value(self):
+        return self.__cur_val
+
     def set_target(self, target_val):
         self.__target_val = target_val
         # 每毫秒步长
