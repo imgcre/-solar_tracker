@@ -71,10 +71,10 @@ def rtc_tick():
             print(time_info)
 
             # 返回一个包含两个时间的元组
-            cur_time = MyTime((time_info[5], MyTime[4], MyTime[2], MyTime[1], MyTime[0]))
+            # cur_time = MyTime((time_info[5], MyTime[4], MyTime[2], MyTime[1], MyTime[0]))
             # region = MyConfig.get_region(cur_time)
             # print(region)
-            print(cur_time)
+            # print(cur_time)
 
             pyb.delay(20)
     except Exception as e:
