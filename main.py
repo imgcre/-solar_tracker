@@ -46,7 +46,7 @@ def do():
         cur_time = record_to_time(record)
         with Indicator():
             test_time = record_to_time(search(*cur_time))
-        if test_time != cur_time:
+        if test_time > cur_time:
             print('at', cur_time, '->', test_time, 'smaller' if test_time < cur_time else 'bigger')
 
 
