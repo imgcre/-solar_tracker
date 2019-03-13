@@ -41,6 +41,7 @@ class MyConfig:
         # 如果大于cur_time, 则回滚, 直到出现小于cur_time的情况，就停止
 
         print(raw_record)
+        print(raw_record['time'] > cur_time)
 
         # TODO: None 的情况
         if raw_record['time'] < cur_time:  # FIXME: 右半边为None
