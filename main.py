@@ -58,7 +58,7 @@ class MyConfig:
 
 
 ds3231 = I2C(1, I2C.MASTER)
-prev_region = None
+prev_region = ()
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
@@ -74,10 +74,10 @@ def rtc_tick():
             # print(cur_time)
             region = MyConfig.get_region(cur_time)
             print(region)
-            #if region != prev_region:
+            if region != prev_region:
                 # 准备加载新的目标值
-            #    print(region)
-            #    prev_region = region
+                print(region)
+                prev_region = region
 
             pyb.delay(20)
     except Exception as e:
