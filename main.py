@@ -8,6 +8,7 @@ import csv
 # 编写及测试config
 # recentTime
 
+# MyConfig.get_region((1,6,12,0, 0))
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
@@ -31,6 +32,7 @@ class MyConfig:
         prev_id = cls.conf.get_cur_record_id()
         cls.conf.cur_record()  # 跳过当前记录
         if cls.__parse_record(cls.conf.cur_record(move_to_next=False))['time'] > cur_time:
+            print('large, rollback')
             cls.conf.set_cur_record(prev_id)
         return [cls.__parse_record(record) for record in (cls.conf.cur_record(), cls.conf.cur_record())]
 
