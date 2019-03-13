@@ -34,6 +34,9 @@ class MyConfig:
         if raw_record['time'] > cur_time:
             print('large, rollback')
             cls.conf.prev_record()
+        if raw_record['time'] < cur_time:
+            print('step forward')
+            cls.conf.cur_record()  # 跳过一个
 
         return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
 
