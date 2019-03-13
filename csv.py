@@ -48,7 +48,7 @@ class CSV:
             else:
                 left = middle
         # 这边都是返回值等于或小于目标值的情况
-        return self.cur_record()
+        return self.cur_record(move_to_next=False)
 
     # record
     def __seek_to_start_of_record(self):
