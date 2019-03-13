@@ -26,8 +26,10 @@ test = csv.CSV('config.csv')
 
 
 def record_to_time(record):
-    return MyTime([int(item) for item in record[:-2]] + [1])
+    return MyTime([int(item) for item in record[:-2]] + [0])
 
+
+# search(1, 3, 17, 0, 1)
 
 def search(*args):
     def gt(items):
@@ -44,9 +46,8 @@ def do():
         cur_time = record_to_time(record)
         with Indicator():
             test_time = record_to_time(search(*cur_time))
-        print('t')
         if test_time != cur_time:
-            print('at', cur_time)
+            print('at', cur_time, '->', test_time)
 
 
 class Config:
