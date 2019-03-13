@@ -59,7 +59,7 @@ class MyConfig:
             'angle': {
                 'pitch': int(record[4]),
                 'yaw': float(record[5])
-            }
+            } if record else None
         }
 
 
