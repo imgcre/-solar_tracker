@@ -49,7 +49,7 @@ class MyConfig:
             while True:
                 if not cls.conf.cur_record(move_to_next=False):
                     print('meet last!')
-                    return cls.__parse_record(cls.conf.cur_record()), None
+                    return cls.__parse_record(cls.conf.prev_record()), None
                 if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
                     cls.conf.prev_record()
                     break
