@@ -11,6 +11,10 @@ import csv
 # MyConfig.get_region((1,6,12,0, 0))
 # MyConfig.get_region((1,6,11,59, 0))
 
+# MyConfig.get_region((1,6,11,39, 0))
+# {'time': (1, 6, 11, 20, 0), 'angle': {'yaw': 0.0, 'pitch': -10}}
+# ({'time': (1, 6, 11, 40, 0), 'angle': {'yaw': 0.0, 'pitch': -5}}, {'time': (1, 6, 12, 0, 0), 'angle': {'yaw': 0.0, 'pitch': 0}})
+
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
     # 以秒为单位返回大致时间差
@@ -31,15 +35,20 @@ class MyConfig:
     def get_region(cls, cur_time: MyTime):
         raw_record = cls.__parse_record(cls.conf.binary_search(lambda record: cls.__parse_record(record)['time'] > cur_time))
 
-        print(raw_record)
-        if raw_record['time'] > cur_time:
-            print('large, rollback')
-            cls.conf.prev_record()
+        # 这个是左边界, 所以如果 小于 cur_time, 则往右边直到找到大于cur_time的，然后回滚
+        # 如果大于cur_time, 则回滚, 直到出现小于cur_time的情况，就停止
 
-        cls.conf.cur_record()
-        if raw_record['time'] >= cur_time:
-            print('step forward')
+        # TODO: None 的情况
+        if raw_record['time'] < cur_time:
+            cls.conf.cur_record()  # 跳过当前记录
+            while True:
+                if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
+                    cls.conf.prev_record()
+                    break
             cls.conf.prev_record()
+        elif raw_record['time'] > cur_time:
+            while cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
+                break
 
         return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
 
