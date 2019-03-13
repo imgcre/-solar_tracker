@@ -68,7 +68,7 @@ def rtc_tick():
     try:
         with Indicator():
             time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
-            print(time_info)
+            print(time_info[0])
 
             # 返回一个包含两个时间的元组
             # cur_time = MyTime((time_info[5], MyTime[4], MyTime[2], MyTime[1], MyTime[0]))
