@@ -2,6 +2,7 @@ from pyb import *
 from cmemgr import map_to_thread
 from utilities import *
 import sys
+import csv
 
 # tween
 # 编写及测试config
@@ -18,6 +19,15 @@ class MyTime(tuple):
         for i in range(len(factors)):
             sum_ += (self[i] - other[i]) * factors[i]
         return sum_
+
+
+config = csv.CSV('config.csv')
+
+
+def search(*args):
+    def gt(items):
+        return MyTime([int(item) for item in items[:-2]] + [0]) > args
+    print(config.binary_search(gt))
 
 
 class Config:

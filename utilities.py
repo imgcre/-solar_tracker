@@ -3,9 +3,35 @@ import _thread
 from cmemgr import map_to_thread
 
 
+def seek_to_start_of_line(f):
+    while True:
+        if f.tell() == 0:  # 到达文件开头, 行首已定位
+            break
+        f.seek(-1, 1)
+        char = f.read(1)
+        if char == '\n':  # 此时已到达行首
+            break
+        # 没有找到, 继续向前查找
+        f.seek(-1, 1)
+    return f.tell()
+
+
 # 从文件中向前读取一行, 并将指针设置在所读取行的开头
-def readline_backward():
+def readline_backward(f):
+    
     pass
+
+
+# 读取当前行, 无论指针指向单行行中的哪个字符串
+# 如果forward为True, 则将指针指向下一行的第一个字符串
+# 否则指向本行的第一个字符串
+def read_cur_line(f, forward=True):
+    # 指针向前移动
+    cur_pos = seek_to_start_of_line(f)
+    res = f.readline()
+    if not forward:  # 恢复指针到行首
+        f.seek(cur_pos)
+    return res
 
 
 def partial(func):
