@@ -52,7 +52,7 @@ class CSV:
                 break
             self.__file.seek(-1, 1)
             c = self.__file.read(1)
-            if c == '\n':  # 此时已到达行首
+            if c == '\n':
                 break
             # 没有找到, 继续向前查找
             self.__file.seek(-1, 1)
