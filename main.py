@@ -8,6 +8,8 @@ import csv
 # 编写及测试config
 # recentTime
 
+# MyConfig.get_region((1,1,5,0, 0))
+
 # MyConfig.get_region((1,6,12,0, 0))
 # MyConfig.get_region((1,6,11,59, 0))
 
@@ -37,6 +39,8 @@ class MyConfig:
 
         # 这个是左边界, 所以如果 小于 cur_time, 则往右边直到找到大于cur_time的，然后回滚
         # 如果大于cur_time, 则回滚, 直到出现小于cur_time的情况，就停止
+
+        print(raw_record)
 
         # TODO: None 的情况
         if raw_record['time'] < cur_time:
