@@ -39,10 +39,9 @@ class CSV:
             left = self.set_cur_record(left)
             right = self.set_cur_record(right)
             self.set_cur_record(backup)
-            if left >= right:
+            middle = self.set_cur_record(left + (right - left) // 2)
+            if left >= right or middle == left or middle == right:
                 break
-            middle = left + (right - left) // 2
-            middle = self.set_cur_record(middle)
 
             if gt(self.cur_record(move_to_next=False)):
                 right = middle
