@@ -3,6 +3,11 @@ import _thread
 from cmemgr import map_to_thread
 
 
+# 从文件中向前读取一行, 并将指针设置在所读取行的开头
+def readline_backward():
+    pass
+
+
 def partial(func):
     def wrapper1(*args, **kwargs):
         def wrapper2(*args_, **kwargs_):

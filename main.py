@@ -10,7 +10,14 @@ import sys
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
-    pass
+    # 以秒为单位返回大致时间差
+    # 假设一个月是30天
+    def __sub__(self, other):
+        factors = [2_592_000, 86_400, 3_600, 60, 1]
+        sum_ = 0
+        for i in range(len(factors)):
+            sum_ += (self[i] - other[i]) * factors[i]
+        return sum_
 
 
 class Config:
@@ -44,6 +51,12 @@ class Config:
                     cls.f.seek(-len(prev_line), 1)
                     return prev_item, next_item
             prev_line = next_line
+
+    # 记录是有序的, 则可以二分查找
+    @classmethod
+    def search_recent_item_pair(cls, cur_time):
+        # 如果天数少于1天, 则
+        pass
 
 
 sys.exit()
