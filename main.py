@@ -78,8 +78,6 @@ def rtc_tick():
                 prev_region = region
                 print(prev_region)
                 print(prev_region)
-
-            pyb.delay(20)
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
             print(e)
