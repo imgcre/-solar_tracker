@@ -35,7 +35,11 @@ class CSV:
 
         while True:
             print('left:', left, 'right:', right)
-            if left >= right:
+            backup = self.get_cur_record_id()
+            left_id = self.set_cur_record(left)
+            right_id = self.set_cur_record(right)
+            self.set_cur_record(backup)
+            if left >= right or left_id == right_id:
                 break
             middle = left + (right - left) // 2
             middle = self.set_cur_record(middle)
