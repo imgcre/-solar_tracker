@@ -46,6 +46,7 @@ class CSV:
                 right = middle
             else:
                 left = middle
+        # 这边都是返回值等于或小于目标值的情况
         return self.cur_record()
 
     # record
