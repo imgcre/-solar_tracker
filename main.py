@@ -32,9 +32,9 @@ def record_to_time(record):
 # search(1, 3, 17, 0, 1)
 
 def search(*args):
-    def gt(items):
-        return record_to_time(items) > args
-    return config.binary_search(gt)
+    def ge(items):
+        return record_to_time(items) >= args
+    return config.binary_search(ge)
 
 
 # 刚好相等的情况的测试

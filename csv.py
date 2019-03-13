@@ -28,7 +28,7 @@ class CSV:
 
     # 请保证CSV记录满足某种有序性
     # gt: 大于目标, 则返回True
-    def binary_search(self, gt):
+    def binary_search(self, ge):
         # 检查是否落在同一条记录
         left = 0
         right = self.__file.seek(0, 2)
@@ -42,7 +42,7 @@ class CSV:
             if left >= right or middle == left or middle == right:
                 break
 
-            if gt(self.cur_record(move_to_next=False)):
+            if ge(self.cur_record(move_to_next=False)):
                 right = middle
             else:
                 left = middle
