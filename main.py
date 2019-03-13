@@ -43,7 +43,10 @@ def do():
         record = test.cur_record()
         if not record:
             break
-        cur_time = record_to_time(record)
+        cur_time = list(record_to_time(record))
+        cur_time[4] = 5  # 稍微改一点
+        cur_time = MyTime(cur_time)
+
         with Indicator():
             test_time = record_to_time(search(*cur_time))
         if test_time > cur_time:
