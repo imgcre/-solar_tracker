@@ -40,6 +40,9 @@ class Config:
                         or (not next_item and prev_item['time'] <= cur_time)
                         or (prev_item and next_line and prev_item['time'] <= cur_time < next_item['time'])):
                     x = cls.f.tell()
+                    print(next_line)
+                    cls.f.seek(*(-len(next_line), 1) if next_line else [0])
+                    print(cls.f.readline())
                     cls.f.seek(*(-len(next_line), 1) if next_line else [0])
                     print(x, '->', cls.f.tell())
                     return prev_item, next_item
