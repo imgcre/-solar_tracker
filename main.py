@@ -26,7 +26,7 @@ test = csv.CSV('config.csv')
 
 
 def record_to_time(record):
-    return MyTime([int(item) for item in record[:-2]] + [0])
+    return MyTime([int(item) for item in record[:-2]] + [1])
 
 
 def search(*args):
