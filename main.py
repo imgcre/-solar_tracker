@@ -9,6 +9,7 @@ import csv
 # recentTime
 
 # MyConfig.get_region((1,6,12,0, 0))
+# MyConfig.get_region((1,6,11,59, 0))
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
@@ -34,9 +35,11 @@ class MyConfig:
         if raw_record['time'] > cur_time:
             print('large, rollback')
             cls.conf.prev_record()
-        if raw_record['time'] < cur_time:
+
+        cls.conf.cur_record()
+        if raw_record['time'] >= cur_time:
             print('step forward')
-            cls.conf.cur_record()  # 跳过一个
+            cls.conf.prev_record()
 
         return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
 
