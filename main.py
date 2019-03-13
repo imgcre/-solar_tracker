@@ -9,6 +9,7 @@ import csv
 # recentTime
 
 # MyConfig.get_region((1,1,5,0, 0))
+# MyConfig.get_region((12,31,18,0, 0))
 
 # MyConfig.get_region((1,6,12,0, 0))
 # MyConfig.get_region((1,6,11,59, 0))
@@ -41,13 +42,13 @@ class MyConfig:
         # 如果大于cur_time, 则回滚, 直到出现小于cur_time的情况，就停止
 
         print(raw_record)
-        print(raw_record['time'] > cur_time)
 
         # TODO: None 的情况
         if raw_record['time'] < cur_time:  # FIXME: 右半边为None
             cls.conf.cur_record()  # 跳过当前记录
             while True:
                 if not cls.conf.cur_record(move_to_next=False):
+                    print('meet last!')
                     return cls.__parse_record(cls.conf.cur_record()), None
                 if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
                     cls.conf.prev_record()
@@ -55,7 +56,6 @@ class MyConfig:
             cls.conf.prev_record()
         elif raw_record['time'] > cur_time:  # FIXED: 左半边为None
             while True:
-                print(cls.conf.get_cur_record_id())
                 if cls.conf.get_cur_record_id() == 0:
                     return None, cls.__parse_record(cls.conf.cur_record())
                 if cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
