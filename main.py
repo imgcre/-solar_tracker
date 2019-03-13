@@ -34,6 +34,7 @@ class Config:
         prev_line = None
         while True:
             next_line = cls.f.readline()
+            print(next_line)
             next_item, prev_item = [cls.parse_item(line) for line in (next_line, prev_line)]
             if prev_line or cls.f.tell() == len(next_line):  # 循环是否第一次执行, 或者在文件首
                 if ((not prev_item and next_item['time'] > cur_time)
