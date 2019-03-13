@@ -44,6 +44,7 @@ def do():
         cur_time = record_to_time(record)
         with Indicator():
             test_time = record_to_time(search(*cur_time))
+        print('t')
         if test_time != cur_time:
             print('at', cur_time)
 
