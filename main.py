@@ -73,11 +73,10 @@ def rtc_tick():
             cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
             # print(cur_time)
             region = MyConfig.get_region(cur_time)
-            print(region)
             if region != prev_region:
                 # 准备加载新的目标值
-                print(region)
                 prev_region = region
+                print(prev_region)
 
             pyb.delay(20)
     except Exception as e:
