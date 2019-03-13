@@ -31,7 +31,7 @@ class Config:
 
     @classmethod
     def get_recent_item_pair(cls, cur_time):
-        prev_line = None
+        prev_line = ''
         while True:
             next_line = cls.f.readline()
             print(next_line)
@@ -41,6 +41,7 @@ class Config:
                         or (not next_item and prev_item['time'] <= cur_time)
                         or (prev_item and next_line and prev_item['time'] <= cur_time < next_item['time'])):
                     cls.f.seek(*(-len(next_line), 1) if next_line else [0])
+                    cls.f.seek(-len(prev_line), 1)
                     return prev_item, next_item
             prev_line = next_line
 
