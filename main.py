@@ -7,6 +7,7 @@ import sys
 # 编写及测试config
 # recentTime
 
+
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
     pass
@@ -16,35 +17,28 @@ class Config:
     f = open('config.csv', 'rt')
 
     @staticmethod
-    def get_item(line):
+    def parse_item(line):
         if not line:
             return None
         items = line[:-1].split(',')
-        obj = {
+        return {
             'time': MyTime([int(item) for item in items[:-2]] + [0]),
             'angle': {
                 'pitch': int(items[4]),
                 'yaw': float(items[5])
             }
         }
-        return obj
-
-    # Config.get_recent_item_pair((12, 31, 20, 2, 5))
 
     @classmethod
     def get_recent_item_pair(cls, cur_time):
-        # TODO: 到达文件尾的情况, 和文件首部的情况
         prev_line = None
         while True:
             next_line = cls.f.readline()
-            next_item = cls.get_item(next_line)
+            next_item, prev_item = [cls.parse_item(line) for line in (next_line, prev_line)]
             if prev_line or cls.f.tell() == len(next_line):  # 循环是否第一次执行, 或者在文件首
-                prev_item = cls.get_item(prev_line)
-                if (not prev_item and next_item['time'] > cur_time
-                    ) or (not next_item and prev_item['time'] <= cur_time
-                          ) or (prev_item and next_line and prev_item['time'] <= cur_time < next_item['time']):
-                    if not next_line:
-                        print('try seek :3')
+                if ((not prev_item and next_item['time'] > cur_time)
+                        or (not next_item and prev_item['time'] <= cur_time)
+                        or (prev_item and next_line and prev_item['time'] <= cur_time < next_item['time'])):
                     cls.f.seek(*(-len(next_line), 1) if next_line else [0])
                     return prev_item, next_item
             prev_line = next_line
