@@ -43,16 +43,21 @@ class MyConfig:
         print(raw_record)
 
         # TODO: None 的情况
-        if raw_record['time'] < cur_time:
+        if raw_record['time'] < cur_time:  # FIXME: 右半边为None
             cls.conf.cur_record()  # 跳过当前记录
             while True:
+                if not cls.conf.cur_record(move_to_next=False):
+                    return cls.__parse_record(cls.conf.cur_record()), None
                 if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
                     cls.conf.prev_record()
                     break
             cls.conf.prev_record()
-        elif raw_record['time'] > cur_time:
-            while cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
-                break
+        elif raw_record['time'] > cur_time:  # FIXED: 左半边为None
+            while True:
+                if cls.conf.get_cur_record_id() == 0:
+                    return None, cls.__parse_record(cls.conf.cur_record())
+                if cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
+                    break
 
         return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
 
