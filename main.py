@@ -21,6 +21,30 @@ class MyTime(tuple):
         return sum_
 
 
+# 总是会更小一点
+class MyConfig:
+    conf = csv.CSV('config.csv')
+
+    @classmethod
+    def get_region(cls, cur_time: MyTime):
+        cls.conf.binary_search(lambda record: cls.__parse_record(record)['time'] > cur_time)
+        prev_id = cls.conf.get_cur_record_id()
+        cls.conf.cur_record()  # 跳过当前记录
+        if cls.__parse_record(cls.conf.cur_record(move_to_next=False))['time'] > cur_time:
+            cls.conf.set_cur_record(prev_id)
+        return [cls.__parse_record(record) for record in (cls.conf.cur_record(), cls.conf.cur_record())]
+
+    @staticmethod
+    def __parse_record(record):
+        return {
+            'time': MyTime([int(item) for item in record[:-2]] + [0]),
+            'angle': {
+                'pitch': int(record[4]),
+                'yaw': float(record[5])
+            }
+        }
+
+
 config = csv.CSV('config.csv')
 test = csv.CSV('config.csv')
 
