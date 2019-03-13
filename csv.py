@@ -51,14 +51,11 @@ class CSV:
             if self.__file.tell() == 0:  # 到达文件开头, 行首已定位
                 break
             self.__file.seek(-1, 1)
-            char = self.__file.read(1)
-            if char == '\n':  # 此时已到达行首
+            c = self.__file.read(1)
+            if c == '\n':  # 此时已到达行首
                 break
             # 没有找到, 继续向前查找
             self.__file.seek(-1, 1)
         return self.__file.tell()
 
-
-
-    pass
 
