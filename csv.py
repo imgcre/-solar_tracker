@@ -7,10 +7,10 @@ class CSV:
 
     # 获取当前记录, 指针移到下一条记录
     def cur_record(self, *, move_to_next=True):
-        id = self.__seek_to_start_of_record()
+        rid = self.__seek_to_start_of_record()
         content = self.__file.readline()
         if not move_to_next:
-            self.__file.seek(id)
+            self.__file.seek(rid)
         return content[:-1].split(',') if content else content
 
     # 指针指向之前的记录
