@@ -30,6 +30,7 @@ class MyConfig:
     def get_region(cls, cur_time: MyTime):
         raw_record = cls.__parse_record(cls.conf.binary_search(lambda record: cls.__parse_record(record)['time'] > cur_time))
 
+        print(raw_record)
         if raw_record['time'] > cur_time:
             print('large, rollback')
             cls.conf.prev_record()
