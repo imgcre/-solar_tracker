@@ -24,14 +24,12 @@ class MyConfig:
     def get_region(cls, cur_time: MyTime):
         raw_record = cls.__parse_record(cls.conf.binary_search(
             lambda record: cls.__parse_record(record)['time'] > cur_time))
-        print(raw_record)
 
         # TODO: None 的情况
         if raw_record['time'] < cur_time:
             cls.conf.cur_record()  # 跳过当前记录
             while True:
                 if not cls.conf.cur_record(move_to_next=False):
-                    print('meet last!')
                     return [cls.__parse_record(cls.conf.prev_record()), None]
                 if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
                     cls.conf.prev_record()
@@ -75,9 +73,8 @@ def rtc_tick():
             region = MyConfig.get_region(cur_time)
             if region != prev_region:
                 # 准备加载新的目标值
+                print('region changed to', region)
                 prev_region = region
-                print(prev_region)
-                print(prev_region)
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
             print(e)
