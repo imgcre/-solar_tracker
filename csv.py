@@ -34,6 +34,7 @@ class CSV:
         right = self.__file.seek(0, 2)
 
         while True:
+            print('left:', left, 'right:', right)
             if left >= right:
                 break
             middle = left + (right - left) // 2
@@ -41,10 +42,8 @@ class CSV:
 
             if gt(self.cur_record(move_to_next=False)):
                 right = middle
-                print('right ->', middle)
             else:
                 left = middle
-                print('left ->', middle)
         return self.cur_record()
 
     # record
