@@ -31,18 +31,18 @@ def record_to_time(record):
 
 def search(*args):
     def gt(items):
-        return MyTime([int(item) for item in items[:-2]] + [0]) > args
-    print(config.binary_search(gt))
+        return record_to_time(items) > args
+    return config.binary_search(gt)
 
 
 # 刚好相等的情况的测试
 def do():
-    record = test.cur_record()
     while True:
+        record = test.cur_record()
         if not record:
             break
         cur_time = record_to_time(record)
-        test_time = record_to_time(config.binary_search(*cur_time))
+        test_time = record_to_time(search(*cur_time))
         if test_time != cur_time:
             print('at', cur_time)
 
