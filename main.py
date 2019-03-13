@@ -76,8 +76,9 @@ def rtc_tick():
             print(region)
 
             pyb.delay(20)
-    except Exception:
+    except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
+            print(e)
             pyb.delay(20)
 
 
