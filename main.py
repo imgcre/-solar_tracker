@@ -32,7 +32,7 @@ class MyConfig:
             while True:
                 if not cls.conf.cur_record(move_to_next=False):
                     print('meet last!')
-                    return cls.__parse_record(cls.conf.prev_record()), None
+                    return [cls.__parse_record(cls.conf.prev_record()), None]
                 if cls.__parse_record(cls.conf.cur_record())['time'] > cur_time:
                     cls.conf.prev_record()
                     break
@@ -40,11 +40,11 @@ class MyConfig:
         elif raw_record['time'] > cur_time:
             while True:
                 if cls.conf.get_cur_record_id() == 0:
-                    return None, cls.__parse_record(cls.conf.cur_record())
+                    return [None, cls.__parse_record(cls.conf.cur_record())]
                 if cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
                     break
 
-        return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
+        return [cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())]
 
     @staticmethod
     def __parse_record(record):
@@ -58,7 +58,7 @@ class MyConfig:
 
 
 ds3231 = I2C(1, I2C.MASTER)
-prev_region = ()
+prev_region = []
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
