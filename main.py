@@ -21,14 +21,30 @@ class MyTime(tuple):
         return sum_
 
 
-# search(1, 1, 10, 40, 5)
 config = csv.CSV('config.csv')
+test = csv.CSV('config.csv')
+
+
+def record_to_time(record):
+    return MyTime([int(item) for item in record[:-2]] + [0])
 
 
 def search(*args):
     def gt(items):
         return MyTime([int(item) for item in items[:-2]] + [0]) > args
     print(config.binary_search(gt))
+
+
+# 刚好相等的情况的测试
+def do():
+    record = test.cur_record()
+    while True:
+        if not record:
+            break
+        cur_time = record_to_time(record)
+        test_time = record_to_time(config.binary_search(*cur_time))
+        if test_time != cur_time:
+            print('at', cur_time)
 
 
 class Config:

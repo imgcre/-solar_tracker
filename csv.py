@@ -34,7 +34,6 @@ class CSV:
         right = self.__file.seek(0, 2)
 
         while True:
-            print('left:', left, 'right:', right)
             backup = self.get_cur_record_id()
             left = self.set_cur_record(left)
             right = self.set_cur_record(right)
