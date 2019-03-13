@@ -58,10 +58,12 @@ class MyConfig:
 
 
 ds3231 = I2C(1, I2C.MASTER)
+prev_region = None
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
+    global prev_region
     # [秒, 分, 时, 星期, 日, 月, 年]
     # 只需要关心: 月 日 时 分 秒
     # 求得对应的: 水平角度 俯仰角度
@@ -71,7 +73,10 @@ def rtc_tick():
             cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
             # print(cur_time)
             region = MyConfig.get_region(cur_time)
-            print(region)
+            if region != prev_region:
+                # 准备加载新的目标值
+                print(region)
+                prev_region = region
 
             pyb.delay(20)
     except Exception as e:
