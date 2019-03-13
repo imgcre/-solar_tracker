@@ -54,6 +54,7 @@ class MyConfig:
             cls.conf.prev_record()
         elif raw_record['time'] > cur_time:  # FIXED: 左半边为None
             while True:
+                print(cls.conf.get_cur_record_id())
                 if cls.conf.get_cur_record_id() == 0:
                     return None, cls.__parse_record(cls.conf.cur_record())
                 if cls.__parse_record(cls.conf.prev_record())['time'] <= cur_time:
