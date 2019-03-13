@@ -38,7 +38,7 @@ class CSV:
             if left >= right:
                 break
             middle = left + (right - left) // 2
-            self.set_cur_record(middle)
+            middle = self.set_cur_record(middle)
 
             if gt(self.cur_record(move_to_next=False)):
                 right = middle
