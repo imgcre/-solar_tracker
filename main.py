@@ -35,7 +35,7 @@ class MyConfig:
             print('large, rollback')
             cls.conf.prev_record()
 
-        return [cls.__parse_record(record) for record in (cls.conf.cur_record(), cls.conf.cur_record())]
+        return cls.__parse_record(cls.conf.cur_record()), cls.__parse_record(cls.conf.cur_record())
 
     @staticmethod
     def __parse_record(record):
