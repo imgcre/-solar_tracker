@@ -13,6 +13,7 @@ class CSV:
             self.__file.seek(id)
         return content[:-1].split(',') if content else content
 
+    # 指针指向之前的记录
     def prev_record(self):
         if self.__seek_to_start_of_record() == 0:
             return ''

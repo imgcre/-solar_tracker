@@ -28,12 +28,12 @@ class MyConfig:
 
     @classmethod
     def get_region(cls, cur_time: MyTime):
-        cls.conf.binary_search(lambda record: cls.__parse_record(record)['time'] > cur_time)
-        prev_id = cls.conf.get_cur_record_id()
-        print(cls.conf.cur_record())  # 跳过当前记录
-        if cls.__parse_record(cls.conf.cur_record(move_to_next=False))['time'] > cur_time:
+        raw_record = cls.__parse_record(cls.conf.binary_search(lambda record: cls.__parse_record(record)['time'] > cur_time))
+
+        if raw_record['time'] > cur_time:
             print('large, rollback')
-            cls.conf.set_cur_record(prev_id)
+            cls.conf.prev_record()
+
         return [cls.__parse_record(record) for record in (cls.conf.cur_record(), cls.conf.cur_record())]
 
     @staticmethod
