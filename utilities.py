@@ -198,7 +198,7 @@ class SoftTimer:
 # max_speed表示每毫秒的速度
 # expected_duration 单位为毫秒
 class Tween:
-    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration, percentage=0):
+    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration, percentage=0, auto_tick=True):
         self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration = refresh_rate, allow_float, max_speed, expected_duration
 
         self.__cur_val = init_val
@@ -208,7 +208,11 @@ class Tween:
         if percentage > 0 and target_val:
             self.__cur_val = init_val + (target_val - init_val) * percentage
 
-        self.__item = SoftTimer.make().register(self.__callback, refresh_rate)
+        if auto_tick:
+            self.__item = SoftTimer.make().register(self.__callback, refresh_rate)
+
+    def tick(self):
+        self.__callback()
 
     def __callback(self):
         if self.__speed != 0:

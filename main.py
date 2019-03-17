@@ -97,6 +97,7 @@ def rtc_tick():
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
                                            expected_duration=1000*(region[1]['time']-region[0]['time']))
+                servo_tween.tick()
 
                 if not stepper_tween:
                     # TODO
