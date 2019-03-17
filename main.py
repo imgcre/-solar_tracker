@@ -87,7 +87,12 @@ def rtc_tick():
                                         expected_duration=1000*(region[1]['time']-region[0]['time']),
                                         max_speed=0.01)
 
-                    servo_tween.on_updated = s1.angle
+                    def test(angle):
+                        print(angle)
+                        s1.angle(angle)
+                        pass
+
+                    servo_tween.on_updated = test
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
                                            expected_duration=1000*(region[1]['time']-region[0]['time']))
