@@ -10,24 +10,6 @@ import csv
 
 s1 = Servo(1)  # 接X1
 
-servo_tween = Tween(init_val=0,
-                    target_val=90,
-                    allow_float=True,
-                    expected_duration=1000,
-                    refresh_rate=10)
-
-servo_tween.on_updated = s1.angle
-
-FLAG = False
-
-
-def on_complete():
-    if not False:
-        servo_tween.set_target(-90 if servo_tween.cur_value == 90 else 90, expected_duration=1000)
-
-
-servo_tween.on_completed = on_complete
-
 sys.exit()
 
 
