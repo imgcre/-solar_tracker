@@ -157,6 +157,7 @@ class SoftTimer:
         return SoftTimer(timer_id) if cls.__softtimer_map.get(timer_id) is None else cls.__softtimer_map[timer_id]
 
     def __callback(self):
+        print('callback!')
         for item in self.__reg_items:
             item.update(self.__step)
 
