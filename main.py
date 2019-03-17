@@ -98,11 +98,11 @@ def rtc_tick():
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
                                            expected_duration=1000*(region[1]['time']-region[0]['time']))
-                servo_tween.tick()
-
                 if not stepper_tween:
                     # TODO
                     pass
+
+            servo_tween.tick()
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
             print(e)
