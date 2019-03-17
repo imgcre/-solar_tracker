@@ -21,7 +21,7 @@ class MyServo:
         cls.ch.pulse_width_percent(0.025 + (angle + 90) / 180 * 0.1)
 
 
-s1 = MyServo  # 接X1
+s1 = Servo(1)  # 接X1
 
 servo_tween = Tween(init_val=0,
                     target_val=90,
