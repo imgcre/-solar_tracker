@@ -90,7 +90,7 @@ def rtc_tick():
 
                     def test(angle):
                         print(angle)
-                        s1.angle(int(angle))
+                        # s1.angle(int(angle))
                         pass
 
                     servo_tween.on_updated = test
