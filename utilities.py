@@ -198,13 +198,15 @@ class SoftTimer:
 # max_speed表示每毫秒的速度
 # expected_duration 单位为毫秒
 class Tween:
-    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration):
+    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration, percentage=0):
         self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration = refresh_rate, allow_float, max_speed, expected_duration
 
         self.__cur_val = init_val
         self.__target_val, self.__speed = None, None
         self.__on_updated, self.__on_completed = None, None
         self.set_target(self.__cur_val if target_val is None else target_val)
+        if percentage > 0 and target_val:
+            self.__cur_val = init_val + (target_val - init_val) * percentage
 
         self.__item = SoftTimer.make().register(self.__callback, refresh_rate)
 
@@ -244,8 +246,10 @@ class Tween:
     def cur_value(self):
         return self.__cur_val
 
-    def set_target(self, target_val):
+    def set_target(self, target_val, *, expected_duration=None):
         self.__target_val = target_val
+        if expected_duration is not None:
+            self.__expected_duration = expected_duration
         # 每毫秒步长
         self.__speed = (target_val - self.__cur_val) / self.__expected_duration
         if (self.__max_speed > 0) and (self.__speed > self.__max_speed):

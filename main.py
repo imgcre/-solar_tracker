@@ -57,11 +57,15 @@ class MyConfig:
 
 ds3231 = I2C(1, I2C.MASTER)
 prev_region = []
+servo_tween = None
+stepper_tween = None
+
+s1 = Servo(1)  # 接X1
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region
+    global prev_region, servo_tween, stepper_tween
     # [秒, 分, 时, 星期, 日, 月, 年]
     # 只需要关心: 月 日 时 分 秒
     # 求得对应的: 水平角度 俯仰角度
@@ -75,6 +79,22 @@ def rtc_tick():
                 # 准备加载新的目标值
                 print('region changed to', region)
                 prev_region = region
+
+                if not servo_tween:
+                    servo_tween = Tween(init_val=0,
+                                        target_val=region[1]['angle']['pitch'],
+                                        allow_float=True,
+                                        expected_duration=1000*(region[1]['time']-region[0]['time']),
+                                        max_speed=0.01)
+
+                    servo_tween.on_updated = s1.angle
+                else:
+                    servo_tween.set_target(region[1]['angle']['pitch'],
+                                           expected_duration=1000*(region[1]['time']-region[0]['time']))
+
+                if not stepper_tween:
+                    # TODO
+                    pass
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
             print(e)
