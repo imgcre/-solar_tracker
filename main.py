@@ -5,14 +5,6 @@ import sys
 import csv
 
 
-# 36 000 00
-
-
-s1 = Servo(1)  # 接X1
-
-sys.exit()
-
-
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
     # 以秒为单位返回大致时间差
@@ -68,6 +60,8 @@ prev_region = []
 servo_tween = None
 stepper_tween = None
 
+s1 = Servo(1)  # 接X1
+
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
@@ -95,12 +89,7 @@ def rtc_tick():
                                         refresh_rate=1,
                                         auto_tick=False)
 
-                    def test(angle):
-                        print(angle)
-                        # s1.angle(int(angle))
-                        pass
-
-                    servo_tween.on_updated = test
+                    servo_tween.on_updated = s1.angle
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
                                            expected_duration=1000*(region[1]['time']-region[0]['time']))
