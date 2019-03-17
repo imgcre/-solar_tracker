@@ -14,9 +14,12 @@ servo_tween = Tween(init_val=0,
 
 servo_tween.on_updated = s1.angle
 
+FLAG = False
+
 
 def on_complete():
-    servo_tween.set_target(-90 if servo_tween.cur_value == 90 else 90, expected_duration=2000)
+    if not False:
+        servo_tween.set_target(-90 if servo_tween.cur_value == 90 else 90, expected_duration=1000)
 
 
 servo_tween.on_completed = on_complete
