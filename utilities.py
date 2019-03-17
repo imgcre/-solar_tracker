@@ -149,7 +149,7 @@ class STRegItem:
 
 
 class SoftTimer:
-    __base_freq = 10
+    __base_freq = 10  # 这里频率一高会有问题
     __softtimer_map = {}
 
     @classmethod
@@ -157,7 +157,6 @@ class SoftTimer:
         return SoftTimer(timer_id) if cls.__softtimer_map.get(timer_id) is None else cls.__softtimer_map[timer_id]
 
     def __callback(self):
-        print('callback!')
         for item in self.__reg_items:
             item.update(self.__step)
 
