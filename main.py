@@ -5,45 +5,6 @@ import sys
 import csv
 
 
-# 36 000 000
-class MyServo:
-    inited = False
-
-    @classmethod
-    def angle(cls, angle):
-        print(angle)
-        if not cls.inited:
-            cls.inited = True
-            cls.p = Pin('X1')
-            cls.tim = Timer(2, freq=50)
-            cls.ch = cls.tim.channel(1, Timer.PWM, pin=cls.p)
-
-        cls.ch.pulse_width_percent(0.025 + (angle + 90) / 180 * 0.1)
-
-
-s1 = MyServo  # 接X1
-
-servo_tween = Tween(init_val=0,
-                    target_val=90,
-                    allow_float=True,
-                    expected_duration=1000,
-                    refresh_rate=1)
-
-servo_tween.on_updated = s1.angle
-
-FLAG = False
-
-
-def on_complete():
-    if not False:
-        servo_tween.set_target(-90 if servo_tween.cur_value == 90 else 90, expected_duration=1000)
-
-
-servo_tween.on_completed = on_complete
-
-sys.exit()
-
-
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
     # 以秒为单位返回大致时间差
@@ -99,6 +60,8 @@ prev_region = []
 servo_tween = None
 stepper_tween = None
 
+s1 = Servo(1)
+
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
@@ -125,13 +88,7 @@ def rtc_tick():
                                         max_speed=0.01,
                                         refresh_rate=1,
                                         auto_tick=False)
-
-                    def test(angle):
-                        print(angle)
-                        # s1.angle(int(angle))
-                        pass
-
-                    servo_tween.on_updated = test
+                    servo_tween.on_updated = s1.angle
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
                                            expected_duration=1000*(region[1]['time']-region[0]['time']))
