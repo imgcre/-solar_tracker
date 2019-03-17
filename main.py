@@ -5,6 +5,14 @@ import sys
 import csv
 
 
+p = Pin('X1') # X1 has TIM2, CH1
+tim = Timer(2, freq=1000)
+ch = tim.channel(1, Timer.PWM, pin=p)
+ch.pulse_width_percent(50)
+
+sys.exit()
+
+
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
     # 以秒为单位返回大致时间差
@@ -88,7 +96,6 @@ def rtc_tick():
                                         max_speed=0.01,
                                         refresh_rate=1,
                                         auto_tick=False)
-
                     servo_tween.on_updated = s1.angle
                 else:
                     servo_tween.set_target(region[1]['angle']['pitch'],
@@ -96,7 +103,6 @@ def rtc_tick():
                 if not stepper_tween:
                     # TODO
                     pass
-
             servo_tween.tick()
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
