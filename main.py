@@ -10,7 +10,7 @@ class MyServo:
     inited = False
 
     @classmethod
-    def agnle(cls, angle):
+    def angle(cls, angle):
         if not cls.inited:
             cls.inited = True
             cls.p = Pin('X1')
