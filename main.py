@@ -5,22 +5,10 @@ import sys
 import csv
 
 
-# 36 000 000
-class MyServo:
-    inited = False
-
-    @classmethod
-    def agnle(cls, angle):
-        if not cls.inited:
-            cls.inited = True
-            cls.p = Pin('X1')
-            cls.tim = Timer(2, freq=50)
-            cls.ch = cls.tim.channel(1, Timer.PWM, pin=cls.p)
-
-        cls.ch.pulse_width_percent(0.025 + (angle + 90) / 180 * 0.1)
+# 36 000 00
 
 
-s1 = MyServo  # 接X1
+s1 = Servo(1)  # 接X1
 
 servo_tween = Tween(init_val=0,
                     target_val=90,
