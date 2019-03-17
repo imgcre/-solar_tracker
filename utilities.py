@@ -1,6 +1,6 @@
 import pyb
 import _thread
-from cmemgr import map_to_thread
+from cmemgr import map_to_thread, Mapper
 
 
 def partial(func):
@@ -156,6 +156,10 @@ class SoftTimer:
     def make(cls, timer_id: int = 1):
         return SoftTimer(timer_id) if cls.__softtimer_map.get(timer_id) is None else cls.__softtimer_map[timer_id]
 
+    def __callback(self):
+        for item in self.__reg_items:
+            item.update(self.__step)
+
     # 请不要在外部调用构造函数
     def __init__(self, timer_id: int = 1):
         if type(self).__softtimer_map.get(timer_id) is None:
@@ -163,11 +167,7 @@ class SoftTimer:
             self.__step = 1 / type(self).__base_freq
             self.__reg_items = []
 
-            @map_to_thread(self.__tim.callback)
-            def callback():
-                for item in self.__reg_items:
-                    item.update(self.__step)
-            self.__mapper = callable
+            self.__mapper = Mapper(self.__tim.callback, self.__callback, nargs=1, forward_args=False)
             type(self).__softtimer_map[timer_id] = self
         else:
             raise AssertionError
