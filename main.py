@@ -86,7 +86,7 @@ def rtc_tick():
                                         allow_float=True,
                                         expected_duration=1000*(region[1]['time']-region[0]['time']),
                                         max_speed=0.01,
-                                        refresh_rate=10)
+                                        refresh_rate=1)
 
                     def test(angle):
                         print(angle)
