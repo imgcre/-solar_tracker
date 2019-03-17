@@ -149,7 +149,7 @@ class STRegItem:
 
 
 class SoftTimer:
-    __base_freq = 10  # 这里频率一高会有问题
+    __base_freq = 100  # 这里频率一高会有问题
     __softtimer_map = {}
 
     @classmethod

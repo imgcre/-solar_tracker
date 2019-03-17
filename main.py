@@ -4,6 +4,25 @@ from utilities import *
 import sys
 import csv
 
+s1 = Servo(1)  # 接X1
+
+servo_tween = Tween(init_val=0,
+                    target_val=90,
+                    allow_float=True,
+                    expected_duration=1000,
+                    refresh_rate=10)
+
+servo_tween.on_updated = s1.angle
+
+
+def on_complete():
+    servo_tween.set_target(-90 if servo_tween.cur_value == 90 else 90, expected_duration=2000)
+
+
+servo_tween.on_completed = on_complete
+
+sys.exit()
+
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
@@ -59,8 +78,6 @@ ds3231 = I2C(1, I2C.MASTER)
 prev_region = []
 servo_tween = None
 stepper_tween = None
-
-s1 = Servo(1)  # 接X1
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
