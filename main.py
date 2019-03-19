@@ -104,31 +104,31 @@ inited = False
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
     global prev_region, servo_tween, stepper_tween, inited
-    #try:
-    with Indicator():
-        time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
-        cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
-        # print(cur_time)
-        region = MyConfig.get_region(cur_time)
-        if region != prev_region:
-            # 准备加载新的目标值
-            print('region changed to', region)
-            prev_region = region
-            time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+    try:
+        with Indicator():
+            time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
+            cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
+            # print(cur_time)
+            region = MyConfig.get_region(cur_time)
+            if region != prev_region:
+                # 准备加载新的目标值
+                print('region changed to', region)
+                prev_region = region
+                time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
 
-            # 快速到达目标位置
-            if not inited:
-                inited = True
-                time_diff_ms = 3000
+                # 快速到达目标位置
+                if not inited:
+                    inited = True
+                    time_diff_ms = 3000
 
-            servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
-            stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
-        stepper_tween.tick()
-        servo_tween.tick()
-    #except Exception as e:
-    #    with Indicator(1):  # 发生错误, 则闪红灯
-     #       print(e)
-    #        pyb.delay(20)
+                servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
+                stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
+            stepper_tween.tick()
+            servo_tween.tick()
+    except Exception as e:
+        with Indicator(1):  # 发生错误, 则闪红灯
+            print(e)
+            pyb.delay(20)
 
 
 stop = rtc_tick.dispose
