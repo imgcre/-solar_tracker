@@ -32,7 +32,7 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
-target = 20
+target = 60
 
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       update_with_diff=True,
@@ -42,7 +42,7 @@ stepper_tween.set_target(target, expected_duration=1000)
 
 
 def rev():
-    if stepper_tween.cur_value == 20:
+    if stepper_tween.cur_value == target:
         stepper_tween.set_target(0)
     else:
         stepper_tween.set_target(target)
