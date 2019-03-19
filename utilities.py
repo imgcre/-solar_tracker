@@ -228,7 +228,7 @@ class Tween:
                 self.__speed = 0
 
             if (self.on_updated is not None
-                and (is_reach_target_val
+                and ((is_reach_target_val and self.__unit is None)
                      or self.__unit is None
                      or self.__cur_val // self.__unit != next_val // self.__unit)):
 
