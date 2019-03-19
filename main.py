@@ -18,7 +18,7 @@ class Stepper:
         self.dir_pin = Pin(dir_name, Pin.OUT_PP)
 
     # 如果time是负数, 则反向旋转
-    def step(self, times=None, *, period=10, direction=0):
+    def step(self, times=None, *, period=2, direction=0):
         if times:
             for _ in range(abs(int(times))):
                 self.step(direction=times > 0, period=period)
