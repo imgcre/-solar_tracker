@@ -6,12 +6,33 @@ import csv
 
 # 步距角=1.8° -> 200
 
-p = Pin('X1') # X1 has TIM2, CH1
+p = Pin('X1')  # X1 has TIM2, CH1
 tim = Timer(2, freq=1600)
 ch = tim.channel(1, Timer.PWM, pin=p)
 ch.pulse_width_percent(50)
 
 sys.exit()
+
+
+class Stepper:
+    def __init__(self, step_name, dir_name):
+        self.step_pin = Pin(step_name, Pin.OUT_PP)
+        self.dir_pin = Pin(dir_name, Pin.OUT_PP)
+
+    # 如果time是负数, 则反向旋转
+    def step(self, times=None, *, period=10, direction=0):
+        if times:
+            for _ in range(abs(int(times))):
+                self.step(direction=times > 0, period=period)
+        else:
+            self.dir_pin.value(direction)
+            self.step_pin.on()
+            delay(period / 2)
+            self.step_pin.off()
+            delay(period / 2)
+
+
+stepper = Stepper('X2', 'X3')
 
 
 # (月, 日, 时, 分, 秒)
@@ -58,26 +79,31 @@ class MyConfig:
         return {
             'time': MyTime([int(item) for item in record[:-2]] + [0]),
             'angle': {
-                'pitch': int(record[4]),
-                'yaw': float(record[5])
+                'pitch': int(record[5]),
+                'yaw': float(record[4])
             } if record else None
         }
 
 
 ds3231 = I2C(1, I2C.MASTER)
 prev_region = []
-servo_tween = None
-stepper_tween = None
 
-s1 = Servo(1)  # 接X1
+servo_tween = Tween(max_speed=0.01,
+                    refresh_rate=1,
+                    auto_tick=False,
+                    on_updated=Servo(1).angle)
+
+stepper_tween = Tween(unit=1.8 / 32,  # 电机步长 -> 1.8°
+                      max_speed=9 / 1000,
+                      refresh_rate=1,
+                      auto_tick=False,
+                      update_with_diff=True,
+                      on_updated=stepper.step)
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
     global prev_region, servo_tween, stepper_tween
-    # [秒, 分, 时, 星期, 日, 月, 年]
-    # 只需要关心: 月 日 时 分 秒
-    # 求得对应的: 水平角度 俯仰角度
     try:
         with Indicator():
             time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
@@ -89,21 +115,10 @@ def rtc_tick():
                 print('region changed to', region)
                 prev_region = region
 
-                if not servo_tween:
-                    servo_tween = Tween(init_val=0,
-                                        target_val=region[1]['angle']['pitch'],
-                                        allow_float=True,
-                                        expected_duration=1000*(region[1]['time']-region[0]['time']),
-                                        max_speed=0.01,
-                                        refresh_rate=1,
-                                        auto_tick=False)
-                    servo_tween.on_updated = s1.angle
-                else:
-                    servo_tween.set_target(region[1]['angle']['pitch'],
-                                           expected_duration=1000*(region[1]['time']-region[0]['time']))
-                if not stepper_tween:
-                    # TODO
-                    pass
+                time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+                servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
+                stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
+            stepper_tween.tick()
             servo_tween.tick()
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯

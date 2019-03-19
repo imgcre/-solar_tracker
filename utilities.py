@@ -198,12 +198,16 @@ class SoftTimer:
 # max_speed表示每毫秒的速度
 # expected_duration 单位为毫秒
 class Tween:
-    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, allow_float=False, max_speed=-1, expected_duration, percentage=0, auto_tick=True):
-        self.__refresh_rate, self.__allow_float, self.__max_speed, self.__expected_duration = refresh_rate, allow_float, max_speed, expected_duration
+    def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, max_speed=-1,
+                 expected_duration=None, percentage=0, auto_tick=True, unit=None, update_with_diff=False, on_updated=None):
+        self.__refresh_rate, self.__max_speed, self.__expected_duration = refresh_rate, max_speed, expected_duration
 
         self.__cur_val = init_val
         self.__target_val, self.__speed = None, None
         self.__on_updated, self.__on_completed = None, None
+        self.on_updated = on_updated
+        self.__unit = unit
+        self.__update_with_diff = update_with_diff
         self.set_target(self.__cur_val if target_val is None else target_val)
         if percentage > 0 and target_val:
             self.__cur_val = init_val + (target_val - init_val) * percentage
@@ -217,17 +221,23 @@ class Tween:
     def __callback(self):
         if self.__speed != 0:
             next_val = self.__cur_val + self.__speed * 1000 / self.__refresh_rate
-            if (self.__speed > 0 and next_val >= self.__target_val) or (
-                    self.__speed < 0 and next_val <= self.__target_val):
+            is_reach_target_val = ((self.__speed > 0 and next_val >= self.__target_val)
+                                   or (self.__speed < 0 and next_val <= self.__target_val))
+            if is_reach_target_val:
                 next_val = self.__target_val
                 self.__speed = 0
-                if self.on_updated is not None:
-                    self.on_updated(next_val if self.__allow_float else int(next_val))
-                if self.on_completed is not None:
-                    self.on_completed()
-            elif self.__allow_float or int(self.__cur_val) is not int(next_val):
-                if self.on_updated is not None:
-                    self.on_updated(next_val if self.__allow_float else int(next_val))
+
+            if (self.on_updated is not None
+                and (is_reach_target_val
+                     or self.__unit is None
+                     or self.__cur_val // self.__unit != next_val // self.__unit)):
+                diff = next_val - self.__cur_val if self.__update_with_diff else 0
+                scale = diff // self.__unit if self.__unit is not None else diff
+                self.on_updated(scale)
+
+            if is_reach_target_val and self.on_completed is not None:  # 到达目标值
+                self.on_completed()
+
             self.__cur_val = next_val
 
     @property
@@ -255,7 +265,8 @@ class Tween:
         if expected_duration is not None:
             self.__expected_duration = expected_duration
         # 每毫秒步长
-        self.__speed = (target_val - self.__cur_val) / self.__expected_duration
+        self.__speed = (((target_val - self.__cur_val) / self.__expected_duration)
+                        if self.__expected_duration is not None else 0)
         if (self.__max_speed > 0) and (self.__speed > self.__max_speed):
             self.__speed = self.__max_speed
 
