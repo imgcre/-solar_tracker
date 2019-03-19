@@ -22,10 +22,11 @@ class Stepper:
     # 如果time是负数, 则反向旋转
     def step(self, times=None, *, period=10, direction=0):
         if times:
+            print('dir =', times)
             for _ in range(abs(int(times))):
                 self.step(direction=times > 0, period=period)
         else:
-            print('dir =', direction)
+
             self.dir_pin.value(direction)
             self.step_pin.on()
             delay(int(period / 2))
