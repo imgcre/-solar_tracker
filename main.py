@@ -77,8 +77,8 @@ class MyConfig:
         return {
             'time': MyTime([int(item) for item in record[:-2]] + [0]),
             'angle': {
-                'pitch': int(record[5]),
-                'yaw': float(record[4])
+                'pitch': float(record[5]),
+                'yaw': int(record[4])
             } if record else None
         }
 
