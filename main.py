@@ -32,27 +32,6 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
-target = 30
-
-stepper_tween = Tween(unit=1.8 / 8,  # 电机步长 -> 1.8°
-                      update_with_diff=True,
-                      on_updated=stepper.step)
-
-stepper_tween.set_target(target, expected_duration=1000)
-
-
-def rev():
-    if stepper_tween.cur_value == target:
-        stepper_tween.set_target(0)
-    else:
-        stepper_tween.set_target(target)
-    pass
-
-
-stepper_tween.on_completed = rev
-
-sys.exit()
-
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
