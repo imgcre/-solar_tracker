@@ -6,12 +6,12 @@ import csv
 
 # 步距角=1.8° -> 200
 
-p = Pin('X1')  # X1 has TIM2, CH1
-tim = Timer(2, freq=6400)
-ch = tim.channel(1, Timer.PWM, pin=p)
-ch.pulse_width_percent(50)
+# p = Pin('X1')  # X1 has TIM2, CH1
+# tim = Timer(2, freq=6400)
+# ch = tim.channel(1, Timer.PWM, pin=p)
+# ch.pulse_width_percent(50)
 
-sys.exit()
+
 
 
 class Stepper:
@@ -33,6 +33,24 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
+
+stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
+                      update_with_diff=True,
+                      on_updated=stepper.step)
+
+stepper_tween.set_target(20, expected_duration=1000)
+
+def rev():
+    if stepper_tween.cur_value == 20:
+        stepper_tween.set_target(0)
+    else:
+        stepper_tween.set_target(20)
+    pass
+
+
+stepper_tween.on_completed = rev
+
+sys.exit()
 
 
 # (月, 日, 时, 分, 秒)
