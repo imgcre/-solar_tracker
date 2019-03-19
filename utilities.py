@@ -231,10 +231,12 @@ class Tween:
                 and (is_reach_target_val
                      or self.__unit is None
                      or self.__cur_val // self.__unit != next_val // self.__unit)):
-                diff = next_val - self.__cur_val if self.__update_with_diff else 0
-                scale = diff // self.__unit if self.__unit is not None else diff
-                print(diff, scale)
-                self.on_updated(scale)
+
+                p_cur_val = self.__cur_val if self.__unit is None else self.__cur_val // self.__unit
+                p_next_val = next_val if self.__unit is None else next_val // self.__unit
+
+                diff = p_next_val - p_cur_val if self.__update_with_diff else 0
+                self.on_updated(diff)
 
             if is_reach_target_val and self.on_completed is not None:  # 到达目标值
                 self.on_completed()
