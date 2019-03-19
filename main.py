@@ -11,8 +11,6 @@ import csv
 # ch = tim.channel(1, Timer.PWM, pin=p)
 # ch.pulse_width_percent(50)
 
-sys.exit()
-
 
 class Stepper:
     def __init__(self, step_name, dir_name):
