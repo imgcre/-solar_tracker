@@ -91,17 +91,19 @@ servo_tween = Tween(max_speed=0.01,
                     auto_tick=False,
                     on_updated=Servo(1).angle)
 
-stepper_tween = Tween(unit=1.8 / 32,  # 电机步长 -> 1.8°
+stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       max_speed=9 / 1000,
                       refresh_rate=1,
                       auto_tick=False,
                       update_with_diff=True,
                       on_updated=stepper.step)
 
+inited = False
+
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween
+    global prev_region, servo_tween, stepper_tween, inited
     #try:
     with Indicator():
         time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
@@ -112,8 +114,13 @@ def rtc_tick():
             # 准备加载新的目标值
             print('region changed to', region)
             prev_region = region
-
             time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+
+            # 快速到达目标位置
+            if not inited:
+                inited = True
+                time_diff_ms = 3000
+
             servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
             stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
         stepper_tween.tick()
