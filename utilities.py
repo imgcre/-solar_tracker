@@ -233,6 +233,7 @@ class Tween:
                      or self.__cur_val // self.__unit != next_val // self.__unit)):
                 diff = next_val - self.__cur_val if self.__update_with_diff else 0
                 scale = diff // self.__unit if self.__unit is not None else diff
+                print(scale)
                 self.on_updated(scale)
 
             if is_reach_target_val and self.on_completed is not None:  # 到达目标值
