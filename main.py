@@ -28,9 +28,9 @@ class Stepper:
             print('stepped')
             self.dir_pin.value(direction)
             self.step_pin.on()
-            delay(period / 2)
+            delay(int(period / 2))
             self.step_pin.off()
-            delay(period / 2)
+            delay(int(period / 2))
 
 
 stepper = Stepper('X2', 'X3')
