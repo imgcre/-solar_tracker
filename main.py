@@ -32,7 +32,7 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
-target = 60
+target = 180
 
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       update_with_diff=True,
