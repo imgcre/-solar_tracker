@@ -6,6 +6,10 @@ import csv
 
 # 步距角=1.8° -> 20
 
+# X1 -> 舵机  -> P13
+# X2、X3 -> 步进 -> P14、P15
+# X5 X6 X7 X8
+
 
 class Stepper:
     def __init__(self, step_name, dir_name):
@@ -27,6 +31,7 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
+
 
 # (月, 日, 时, 分, 秒)
 class MyTime(tuple):
@@ -78,14 +83,12 @@ class MyConfig:
         }
 
 
-ds3231 = I2C(1, I2C.MASTER)
+inited = False
 prev_region = []
-
 servo_tween = Tween(max_speed=0.01,
                     refresh_rate=1,
                     auto_tick=False,
                     on_updated=Servo(1).angle)
-
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       max_speed=9 / 1000,
                       refresh_rate=1,
@@ -93,37 +96,40 @@ stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       update_with_diff=True,
                       on_updated=stepper.step)
 
-inited = False
 
+def main():
+    ds3231 = I2C(1, I2C.MASTER)
 
-@map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
-def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited
-    try:
-        with Indicator():
-            time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
-            cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
-            # print(cur_time)
-            region = MyConfig.get_region(cur_time)
-            if region != prev_region:
-                # 准备加载新的目标值
-                print('region changed to', region)
-                prev_region = region
-                time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+    @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
+    def rtc_tick():
+        global prev_region, servo_tween, stepper_tween, inited
+        try:
+            with Indicator():
+                time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
+                cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
+                # print(cur_time)
+                region = MyConfig.get_region(cur_time)
+                if region != prev_region:
+                    # 准备加载新的目标值
+                    print('region changed to', region)
+                    prev_region = region
+                    time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
 
-                # 快速到达目标位置
-                if not inited:
-                    inited = True
-                    time_diff_ms = 3000
+                    # 快速到达目标位置
+                    if not inited:
+                        inited = True
+                        time_diff_ms = 3000
 
-                servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
-                stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
-            stepper_tween.tick()
-            servo_tween.tick()
-    except Exception as e:
-        with Indicator(1):  # 发生错误, 则闪红灯
-            print(e)
-            pyb.delay(20)
+                    servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
+                    stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
+                stepper_tween.tick()
+                servo_tween.tick()
+        except Exception as e:
+            with Indicator(1):  # 发生错误, 则闪红灯
+                print(e)
+                pyb.delay(20)
 
+        globals()['stop'] = rtc_tick.dispose
 
-stop = rtc_tick.dispose
+    if __name__ == '__main__':
+        main()
