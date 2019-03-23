@@ -132,5 +132,6 @@ def main():
 
         globals()['stop'] = rtc_tick.dispose
 
-    if __name__ == '__main__':
-        main()
+
+if __name__ == '__main__':
+    main()
