@@ -1,7 +1,8 @@
 from pyb import *
 
-
+ch = None
 def test1():
+    global ch
     # 步进电机测试
     p = Pin('X1')  # X1 has TIM2, CH1
     tim = Timer(2, freq=400)
