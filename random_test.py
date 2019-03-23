@@ -7,10 +7,10 @@ def test1():
     while True:
         for i in range(180):
             Servo(1).angle(i - 90)
-            delay(100)
+            delay(20)
         for i in range(180):
             Servo(1).angle(90 - i)
-            delay(100)
+            delay(20)
 
 
 
