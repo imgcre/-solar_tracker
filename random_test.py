@@ -1,14 +1,17 @@
 from pyb import *
 from main import *
 
-stepper = Stepper('X2', 'X3')
-
 
 def test1():
     LED(2).on()
     while True:
-        stepper.step()
-        delay(5)
+        for i in range(180):
+            Servo(1).angle(i - 90)
+            delay(100)
+        for i in range(180):
+            Servo(1).angle(90 - i)
+            delay(100)
+
 
 
 def test2():
