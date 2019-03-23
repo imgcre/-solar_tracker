@@ -8,7 +8,8 @@ import csv
 
 # X1 -> 舵机  -> P13
 # X2、X3 -> 步进 -> P14、P15
-# X5 X6 X7 X8
+# X5 X6 X7 X8 -> ADC
+# X9 X10 X11 (SCL SDA SWQ) RTC
 
 
 class Stepper:
