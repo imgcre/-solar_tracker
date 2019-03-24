@@ -31,7 +31,7 @@ class Stepper:
             delay(int(period / 2))
 
 
-stepper = Stepper('X2', 'X3')
+# stepper = Stepper('X2', 'X3')
 
 
 # (月, 日, 时, 分, 秒)
