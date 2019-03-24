@@ -23,7 +23,6 @@ class Stepper:
             for _ in range(abs(int(times))):
                 self.step(direction=times > 0, period=period)
         else:
-
             self.dir_pin.value(direction)
             self.step_pin.on()
             delay(int(period / 2))

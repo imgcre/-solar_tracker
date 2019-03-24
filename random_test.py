@@ -18,6 +18,7 @@ def test2():
     # 步进电机测试 X2  X3
     stepper = Stepper('X2', 'X3')
     while True:
+        print('stepped')
         stepper.step()
         pyb.delay(100)
     pass
