@@ -27,7 +27,7 @@ class Stepper:
             self.dir_pin.value(direction)
             self.step_pin.on()
             delay(int(period / 2))
-            self.step_pin.off()
+            #self.step_pin.off()
             delay(int(period / 2))
 
 
