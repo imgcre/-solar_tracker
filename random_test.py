@@ -22,5 +22,11 @@ def test2():
     pass
 
 
+def test3():
+    # 读取测试
+
+    pass
+
+
 if __name__ == '__main__':
     test2()
