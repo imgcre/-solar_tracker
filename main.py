@@ -117,7 +117,7 @@ def rtc_tick():
                 servo_tween.cancel()
                 stepper_tween.cancel()
 
-            print(cur_time)
+            #print(cur_time)
             region = MyConfig.get_region(cur_time)
             if region != prev_region:
                 # 准备加载新的目标值
