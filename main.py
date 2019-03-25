@@ -100,6 +100,7 @@ stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
 
 ds3231 = I2C(1, I2C.MASTER)
 
+
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
     global prev_region, servo_tween, stepper_tween, inited
@@ -115,7 +116,7 @@ def rtc_tick():
                 servo_tween.cancel()
                 stepper_tween.cancel()
 
-            # print(cur_time)
+            print(cur_time)
             region = MyConfig.get_region(cur_time)
             if region != prev_region:
                 # 准备加载新的目标值
