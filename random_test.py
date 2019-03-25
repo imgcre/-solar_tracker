@@ -16,8 +16,20 @@ def test1():
 
 def test2():
     # 步进电机测试 X2  X3
+    # 舵机测试
+    i = -90
+    dir_ = False
     while True:
         stepper.step()
+        Servo(1).angle(i)
+        if dir_:
+            i -= 1
+            if i <= -90:
+                dir_ = False
+        else:
+            i += 1
+            if i >= 90:
+                dir_ = True
         pyb.delay(100)
     pass
 
