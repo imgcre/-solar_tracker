@@ -218,6 +218,10 @@ class Tween:
     def tick(self):
         self.__callback()
 
+    def cancel(self):
+        # 保留当前值
+        self.__speed = 0
+
     def __callback(self):
         if self.__speed != 0:
             next_val = self.__cur_val + self.__speed * 1000 / self.__refresh_rate

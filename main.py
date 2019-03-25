@@ -31,6 +31,7 @@ class Stepper:
 
 
 stepper = Stepper('X2', 'X3')
+adc_list = [ADC(Pin(pin_name)) for pin_name in ['X5', 'X6', 'X7', 'X8']]
 
 
 # (月, 日, 时, 分, 秒)
@@ -107,6 +108,14 @@ def main():
             with Indicator():
                 time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
                 cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
+                # 无条件阈值设置为1000
+                # cancel 条件: 都大于某个值, 且两两之间的差值不超过存在超过某个值
+                adc_vals = [adc.read() for adc in adc_list]
+                if all([adc_val > 1000 for adc_val in adc_vals] + [
+                        abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals]):
+                    servo_tween.cancel()
+                    stepper_tween.cancel()
+
                 # print(cur_time)
                 region = MyConfig.get_region(cur_time)
                 if region != prev_region:
