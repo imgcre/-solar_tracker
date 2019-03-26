@@ -40,11 +40,11 @@ def test2():
         for y in range(64):
             for x in range(128):
                 oled.draw_point(x, y, auto_submit=False)
-            oled.submit()
+        oled.submit()
         for y in range(64):
             for x in range(128):
                 oled.draw_point(x, y, False, auto_submit=False)
-            oled.submit()
+        oled.submit()
 
     pass
 
