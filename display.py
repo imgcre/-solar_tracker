@@ -51,7 +51,7 @@ class OLED(object):
 				if not self.__flag_modified[page][column]:
 					self.__flag_modified[page][column] = True
 					self.__flag_page[self.__fpos] = page
-					self.__flag_page[self.__fpos] = column
+					self.__flag_column[self.__fpos] = column
 					self.__fpos += 1
 				# self.__flag[page][column] = True
 		else:
@@ -60,7 +60,7 @@ class OLED(object):
 				if not self.__flag_modified[page][column]:
 					self.__flag_modified[page][column] = True
 					self.__flag_page[self.__fpos] = page
-					self.__flag_page[self.__fpos] = column
+					self.__flag_column[self.__fpos] = column
 					self.__fpos += 1
 				# self.__flag[page][column] = True
 
