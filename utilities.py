@@ -3,6 +3,18 @@ import _thread
 from cmemgr import map_to_thread, Mapper
 
 
+class Indexable:
+    def __init__(self, getter, setter):
+        self.__getter = getter
+        self.__setter = setter
+
+    def __getitem__(self, item):
+        return self.__getter(item)
+
+    def __setitem__(self, key, value):
+        return self.__setter(key, value)
+
+
 def partial(func):
     def wrapper1(*args, **kwargs):
         def wrapper2(*args_, **kwargs_):

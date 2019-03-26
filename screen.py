@@ -1,5 +1,6 @@
 from display import OLED
 from font import *
+from utilities import Indexable
 
 
 class Console(object):
@@ -22,15 +23,3 @@ class Console(object):
 			self.__buffer[item][key] = value
 
 		return Indexable(getter, setter)
-		
-
-class Indexable:
-	def __init__(self, getter, setter):
-		self.__getter = getter
-		self.__setter = setter
-
-	def __getitem__(self, item):
-		return self.__getter(item)
-
-	def __setitem__(self, key, value):
-		return self.__setter(key, value)

@@ -1,5 +1,5 @@
 from driver import SSD1306
-
+from utilities import Indexable
 
 class OLED(object):
 
@@ -68,6 +68,18 @@ class OLED(object):
 
 		if auto_submit:
 			self.submit()
+
+	def __getitem__(self, item):
+		def getter(key):
+			page = key // 8
+			column = item
+			bit_pos = key % 8
+			return self.__buffer[page][column] & (1 << bit_pos)
+
+		def setter(key, value):
+			self.draw_point(item, key, value)
+
+		return Indexable(getter, setter)
 
 	def submit(self):
 		for i in range(self.__fpos):
