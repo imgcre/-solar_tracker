@@ -9,8 +9,8 @@ class OLED(object):
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
-		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM * 2)]
-		self.__flag_column = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM * 2)]
+		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
+		self.__flag_column = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__fpos = 0
 	
 	def init(self):
@@ -46,6 +46,7 @@ class OLED(object):
 		if color:
 			if self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
+				print(page, column, self.__fpos)
 				self.__flag_page[self.__fpos] = page
 				self.__flag_page[self.__fpos] = column
 				self.__fpos += 1
