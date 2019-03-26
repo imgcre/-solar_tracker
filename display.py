@@ -35,7 +35,7 @@ class OLED(object):
 				self.draw_point(x, y, False)
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True, *, auto_submit=True):
+	def draw_point(self, x, y, color=True, *,auto_submit=True):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
