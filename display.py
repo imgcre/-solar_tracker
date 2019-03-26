@@ -9,7 +9,7 @@ class OLED(object):
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
-		self.__flag_new = [[0, 0] for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
+		self.__flag_new = [[0, 0] for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM + 1)]
 		self.__fpos = 0
 	
 	def init(self):
