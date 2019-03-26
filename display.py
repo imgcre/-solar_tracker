@@ -1,5 +1,6 @@
 from driver import SSD1306
 from utilities import Indexable
+from pyb import delay
 
 class OLED(object):
 
@@ -34,13 +35,14 @@ class OLED(object):
 		self.driver.timing_vcomh_deselect_level = SSD1306.TIMING_VCOMH_DESELECT_LEVEL_83_PERCENT_VCC
 		self.driver.charge_pump_enable = True
 		self.driver.display_on = True
+		delay(100)
 		self.clear()
 	
 	def clear(self):
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, False, auto_submit=True)
-		#self.submit()
+				self.draw_point(x, y, False, auto_submit=False)
+		self.submit()
 	
 	# color: True for white, False for black
 	def draw_point(self, x, y, color=True, *, auto_submit=True):
