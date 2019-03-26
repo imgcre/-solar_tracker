@@ -36,7 +36,14 @@ oled = OLED(I2C(2, mode=I2C.MASTER))
 def test2():
     # OLED测试
     oled.init()
-    oled.draw_point(0, 0)
+    while True:
+        for x in range(128):
+            for y in range(64):
+                oled.draw_point(x, y)
+        for x in range(128):
+            for y in range(64):
+                oled.draw_point(x, y, False)
+
     pass
 
 
