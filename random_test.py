@@ -37,7 +37,6 @@ def test2():
     # OLED测试
     oled.init()
     oled.draw_point(0, 0)
-    oled.submit()
     pass
 
 
