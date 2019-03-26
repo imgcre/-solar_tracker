@@ -12,10 +12,12 @@ class TestOLED(utest.TestCase):
     def test_random_points(self):
         oled.init()
         while True:
-            x = uos.urandom(1)[0] % 128
-            y = uos.urandom(1)[0] % 64
-            color = uos.urandom(1)[0] % 2
-            oled.draw_point(x, y, color)
+            for i in range(100):
+                x = uos.urandom(1)[0] % 128
+                y = uos.urandom(1)[0] % 64
+                color = uos.urandom(1)[0] % 2
+                oled.draw_point(x, y, color, auto_submit=False)
+            oled.submit()
         pass
 
     pass
