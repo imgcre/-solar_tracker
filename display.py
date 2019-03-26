@@ -66,11 +66,12 @@ class OLED(object):
 
 		if auto_submit:
 			self.submit()
-	
+
 	def submit(self):
 		for i in range(self.__fpos):
 			page = self.__flag_page[i]
 			column = self.__flag_column[i]
+			print(page, column)
 			self.__flag_modified[page][column] = False
 			self.driver.address_page = page
 			self.driver.address_column = column
