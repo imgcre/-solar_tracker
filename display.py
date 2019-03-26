@@ -8,7 +8,7 @@ class OLED(object):
 		
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
-		self.__flag = []
+		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 	
 	def init(self):
 		self.driver.display_on = False  # 默认
@@ -35,7 +35,7 @@ class OLED(object):
 				self.draw_point(x, y, False)
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True, *,auto_submit=True):
+	def draw_point(self, x, y, color=True, *, auto_submit=True):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
@@ -43,27 +43,21 @@ class OLED(object):
 		if color:
 			if self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
-				self.__flag.append((page, column))
+				self.__flag[page][column] = True
 		else:
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
-				self.__flag.append((page, column))
+				self.__flag[page][column] = True
 
 		if auto_submit:
 			self.submit()
 	
 	def submit(self):
-		for page, column in self.__flag:
-			self.driver.address_page = page
-			self.driver.address_column = column
-			self.driver.ram = self.__buffer[page][column]
-		self.__flag.clear()
-
-		# for page in range(SSD1306.PAGE_NUM):
-		#	for column in range(SSD1306.COLUMN_NUM):
-		#		if self.__flag[page][column]:
-		#			self.__flag[page][column] = False
-		#			self.driver.address_page = page
-		#			self.driver.address_column = column
-		#			self.driver.ram = self.__buffer[page][column]
+		for page in range(SSD1306.PAGE_NUM):
+			for column in range(SSD1306.COLUMN_NUM):
+				if self.__flag[page][column]:
+					self.__flag[page][column] = False
+					self.driver.address_page = page
+					self.driver.address_column = column
+					self.driver.ram = self.__buffer[page][column]
 
