@@ -5,7 +5,9 @@ class OLED(object):
 
 	def __init__(self, prot):
 		self.driver = SSD1306(prot)
-		
+		self.width = SSD1306.COLUMN_NUM
+		self.height = SSD1306.PAGE_NUM * 8
+
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
@@ -77,11 +79,3 @@ class OLED(object):
 			self.driver.ram = self.__buffer[page][column]
 		self.__fpos = 0
 		pass
-		# for page in range(SSD1306.PAGE_NUM):
-		#	for column in range(SSD1306.COLUMN_NUM):
-		#		if self.__flag[page][column]:
-		#			self.__flag[page][column] = False
-		#			self.driver.address_page = page
-		#			self.driver.address_column = column
-		#			self.driver.ram = self.__buffer[page][column]
-
