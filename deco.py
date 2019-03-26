@@ -13,7 +13,7 @@ def aip(*, default=None, name=None, require=None, state_assume=None):
 
 			if require is not None:
 				require_post = [require] if type(require) not in (tuple, list) else require
-				print(require_post)
+				print(require_post[0](False))
 				assert not all([predict(value) for predict in require_post]), 'illegal AIP assignment'
 
 			func(self, value)
