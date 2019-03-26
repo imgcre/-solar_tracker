@@ -74,7 +74,7 @@ class OLED(object):
 			page = key // 8
 			column = item
 			bit_pos = key % 8
-			return self.__buffer[page][column] & (1 << bit_pos)
+			return bool(self.__buffer[page][column] & (1 << bit_pos))
 
 		def setter(key, value):
 			self.draw_point(item, key, value)
