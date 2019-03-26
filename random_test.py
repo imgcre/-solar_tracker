@@ -1,20 +1,8 @@
 from pyb import *
 from main import *
-
+from display import *
 
 def test1():
-    # 舵机测试
-    LED(2).on()
-    while True:
-        for i in range(180):
-            Servo(1).angle(i - 90)
-            delay(20)
-        for i in range(180):
-            Servo(1).angle(90 - i)
-            delay(20)
-
-
-def test2():
     adc_x5 = ADC(Pin('X5'))
     adc_x6 = ADC(Pin('X6'))
     adc_x7 = ADC(Pin('X7'))
@@ -40,9 +28,16 @@ def test2():
     pass
 
 
-def test3():
-    # 读取测试
+# Y9 SCL
+# Y10 SDA
 
+oled = OLED(I2C(2, mode=I2C.MASTER))
+
+def test2():
+    # OLED测试
+    oled.init()
+    oled.draw_point(0, 0)
+    oled.submit()
     pass
 
 
