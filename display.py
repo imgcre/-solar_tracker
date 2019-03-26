@@ -9,6 +9,8 @@ class OLED(object):
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
+
+		self.__flag_modified = [[False for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__flag_column = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__fpos = 0
@@ -46,17 +48,20 @@ class OLED(object):
 		if color:
 			if self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
-				print(page, column, self.__fpos)
-				self.__flag_page[self.__fpos] = page
-				self.__flag_page[self.__fpos] = column
-				self.__fpos += 1
+				if not self.__flag_modified[page][column]:
+					self.__flag_modified[page][column] = True
+					self.__flag_page[self.__fpos] = page
+					self.__flag_page[self.__fpos] = column
+					self.__fpos += 1
 				# self.__flag[page][column] = True
 		else:
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
-				self.__flag_column[self.__fpos] = page
-				self.__flag_column[self.__fpos] = column
-				self.__fpos += 1
+				if not self.__flag_modified[page][column]:
+					self.__flag_modified[page][column] = True
+					self.__flag_page[self.__fpos] = page
+					self.__flag_page[self.__fpos] = column
+					self.__fpos += 1
 				# self.__flag[page][column] = True
 
 		if auto_submit:
@@ -66,6 +71,7 @@ class OLED(object):
 		for i in range(self.__fpos):
 			page = self.__flag_page[i]
 			column = self.__flag_column[i]
+			self.__flag_modified[page][column] = False
 			self.driver.address_page = page
 			self.driver.address_column = column
 			self.driver.ram = self.__buffer[page][column]
