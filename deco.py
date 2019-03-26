@@ -2,7 +2,8 @@
 def aip(*, default=None, name=None, require=None, state_assume=None):
 	def decorator(func):
 		private_name = '__' + func.__name__ if name is None else name
-
+		print(private_name)
+		
 		def getter(self):
 			# 判断是否可在当前状态下访问该属性, 下同
 			assert state_assume is None or state_assume(self), 'unexcepted AIP access state'
@@ -11,7 +12,6 @@ def aip(*, default=None, name=None, require=None, state_assume=None):
 		def setter(self, value):
 			assert state_assume is None or state_assume(self), 'unexcepted AIP access state'
 
-			# micropy不支持reduce高阶函数, 故用此法
 			if require is not None:
 				require_post = [require] if type(require) not in (tuple, list) else require
 				assert not all([predict(value) for predict in require_post]), 'illegal AIP assignment'
