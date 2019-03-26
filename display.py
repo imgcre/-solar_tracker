@@ -35,7 +35,7 @@ class OLED(object):
 				self.draw_point(x, y, False)
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True):
+	def draw_point(self, x, y, color=True, *, auto_submit=True):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
@@ -48,6 +48,9 @@ class OLED(object):
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
 				self.__flag[page][column] = True
+
+		if auto_submit:
+			self.submit()
 	
 	def submit(self):
 		for page in range(SSD1306.PAGE_NUM):
