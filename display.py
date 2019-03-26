@@ -12,7 +12,7 @@ class OLED(object):
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 
-		self.__flag_modified = [[False for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
+		self.__flag_modified = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__flag_column = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__fpos = 0
