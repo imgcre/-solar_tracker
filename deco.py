@@ -14,7 +14,7 @@ def aip(*, default=None, name=None, require=None, state_assume=None):
 			# micropy不支持reduce高阶函数, 故用此法
 			if require is not None:
 				require_post = [require] if type(require) not in (tuple, list) else require
-				assert sum([predict(value) for predict in require_post]) != len(require_post), 'illegal AIP assignment'
+				assert not all([predict(value) for predict in require_post]), 'illegal AIP assignment'
 
 			func(self, value)
 			setattr(self, private_name, value)
