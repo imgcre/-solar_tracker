@@ -26,7 +26,7 @@ class Console(object):
 						print(cur_page, cur_column)
 						self.__display.draw_column(cur_page, cur_column, column)
 						cur_column += 1
-						if cur_column > self.width:
+						if cur_column > self.width * HALF_WIDTH_MIN_WIDTH:
 							cur_column = 0
 							cur_page += 1
 
