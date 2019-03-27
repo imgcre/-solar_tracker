@@ -1,9 +1,9 @@
-from utilities import ThreadLocalStorage
+from utilities import ThreadLocalStorage, ObjLike
 
 
 class Context:
     def __init__(self, *, enter_func=None, exit_func=None):
-        self.__tls = ThreadLocalStorage()
+        self.__tls = ObjLike()  # ThreadLocalStorage()
         self.__tls.nest_count = 0
         self.__enter_func = enter_func
         self.__exit_func = exit_func
