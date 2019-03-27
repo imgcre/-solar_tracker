@@ -18,7 +18,7 @@ class Console(object):
 
 		def setter(key, value):
 			cur_page = item
-			cur_column = value * 6
+			cur_column = key * 6
 			self.__buffer[item][key] = value
 			with self.__display.session:
 				for char in value:
