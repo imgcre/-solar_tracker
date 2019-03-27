@@ -87,6 +87,7 @@ class OLED(object):
 			# TODO 判断是否不需要赋值
 			if prev_page is not None and prev_column is not None:
 				if prev_page == page and prev_column + 1 == column:
+					print('meet between')
 					assign_addr = False
 			if assign_addr:
 				self.driver.address_page = page
