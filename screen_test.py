@@ -18,14 +18,21 @@ class TestConsole(utest.TestCase):
         console[1][1] = 'Current Time:'
 
 
+# [2][1] 是两位整数
+cur_num = 0
+
+
 @key_handler('Y5')
 def key1():
-    print('key1 pressed!')
+    global cur_num
+    cur_num += 1
+    console[1][1] = "%02d" % cur_num
 
 
 @key_handler('Y6')
 def key2():
-    print('key2 pressed!')
+    cur_num -= 1
+    console[1][1] = "%02d" % cur_num
 
 
 @key_handler('Y7')
