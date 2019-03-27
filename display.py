@@ -82,6 +82,7 @@ class OLED(object):
 
 	def submit(self):
 		for i in range(self.__fpos):
+			print('dealing', i)
 			page = self.__flag_page[i]
 			column = self.__flag_column[i]
 			self.__flag_modified[page][column] = False
