@@ -86,7 +86,7 @@ class OLED(object):
 			assign_addr = True
 			# TODO 判断是否不需要赋值
 			if prev_page is not None and prev_column is not None:
-				if prev_page == page and prev_column + 1 == column or prev_page + 1 == page and column == 0:
+				if prev_page == page and prev_column + 1 == column:
 					assign_addr = False
 			if assign_addr:
 				self.driver.address_page = page
