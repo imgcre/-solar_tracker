@@ -35,11 +35,10 @@ class OLED(object):
 		self.driver.charge_pump_enable = True
 		self.driver.display_on = True
 	
-	def clear(self):
-		print('clearing')
+	def clear(self, color=False):
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, False, auto_submit=False, force=True)
+				self.draw_point(x, y, color, auto_submit=False, force=True)
 		self.submit()
 	
 	# color: True for white, False for black
