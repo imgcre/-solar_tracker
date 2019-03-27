@@ -26,7 +26,6 @@ class Console(object):
 				print(self.reverse.nest_count)
 				for char in value:
 					for column in HALF_WIDTH_MIN[char]:
-						print(cur_page, cur_column)
 						if self.reverse.nest_count > 0:
 							column ^= 0xff
 						self.__display.draw_column(cur_page, cur_column, column)
