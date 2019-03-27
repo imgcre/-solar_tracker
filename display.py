@@ -38,11 +38,11 @@ class OLED(object):
 	def clear(self, color=False):
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, color, auto_submit=False, force=True)
+				self.draw_point(x, y, color, auto_submit=False, force_refresh=True)
 		self.submit()
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True, *, auto_submit=True, force=False):
+	def draw_point(self, x, y, color=True, *, auto_submit=True, force_refresh=False):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
@@ -55,7 +55,7 @@ class OLED(object):
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
 				changed = True
-		if (force or changed) and not self.__flag_modified[page][column]:
+		if (force_refresh or changed) and not self.__flag_modified[page][column]:
 			self.__flag_modified[page][column] = True
 			self.__flag_page[self.__fpos] = page
 			self.__flag_column[self.__fpos] = column
@@ -84,7 +84,6 @@ class OLED(object):
 			column = self.__flag_column[i]
 			self.__flag_modified[page][column] = False
 			assign_addr = True
-			# TODO 判断是否不需要赋值
 			if prev_page is not None and prev_column is not None:
 				if prev_page == page and prev_column + 1 == column:
 					assign_addr = False
