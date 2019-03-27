@@ -13,16 +13,16 @@ class TestOLED(utest.TestCase):
     def test_random_points(self):
         oled.clear()
         while True:
-            with oled.session:
-                for i in range(64):
-                    oled[i][63-i] = 0
-                for i in range(64):
-                    oled[i][i] = 1
-            with oled.session:
-                for i in range(64):
-                    oled[i][i] = 0
-                for i in range(64):
-                    oled[i][63-i] = 1
+            #with oled.session:
+            for i in range(64):
+                oled[i][63-i] = 0
+            for i in range(64):
+                oled[i][i] = 1
+            #with oled.session:
+            for i in range(64):
+                oled[i][i] = 0
+            for i in range(64):
+                oled[i][63-i] = 1
 
 
 if __name__ == '__main__':
