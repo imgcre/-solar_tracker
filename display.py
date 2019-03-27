@@ -35,12 +35,11 @@ class OLED(object):
 		self.driver.timing_vcomh_deselect_level = SSD1306.TIMING_VCOMH_DESELECT_LEVEL_83_PERCENT_VCC
 		self.driver.charge_pump_enable = True
 		self.driver.display_on = True
-		self.clear()
 	
 	def clear(self):
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, False, auto_submit=False)
+				self.draw_point(x, y, True, auto_submit=False)
 		self.submit()
 	
 	# color: True for white, False for black
