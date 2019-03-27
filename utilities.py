@@ -6,7 +6,7 @@ from pyb import *
 
 def key_handler(pin_name):
     def wrapper(func):
-        @map_to_thread(partial(ExtInt)(Pin(pin_name), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
+        @map_to_thread(partial(ExtInt)(Pin(pin_name), ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP))
         def f():
             delay(10)
             func()
