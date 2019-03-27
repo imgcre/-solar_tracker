@@ -37,6 +37,7 @@ class OLED(object):
 		self.driver.display_on = True
 	
 	def clear(self):
+		print('clearing')
 		for y in range(64):
 			for x in range(128):
 				self.draw_point(x, y, False, auto_submit=False)
