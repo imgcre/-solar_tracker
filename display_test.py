@@ -5,12 +5,13 @@ from pyb import *
 import uos
 
 oled = OLED(I2C(2, mode=I2C.MASTER))
-oled.init()
+
 
 
 class TestOLED(utest.TestCase):
     @utest.cond(equals(1))
     def test_random_points(self):
+        oled.init()
         # while True:
         #    for i in range(100):
         #        x = uos.urandom(1)[0] % 128
