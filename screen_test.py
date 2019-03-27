@@ -23,5 +23,20 @@ def key1():
     print('key1 pressed!')
 
 
+@key_handler('Y6')
+def key2():
+    print('key2 pressed!')
+
+
+@key_handler('Y7')
+def key3():
+    print('key3 pressed!')
+
+
+@key_handler('Y8')
+def key4():
+    print('key4 pressed!')
+
+
 if __name__ == '__main__':
     utest.main()
