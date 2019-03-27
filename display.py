@@ -44,8 +44,9 @@ class OLED(object):
 		self.driver.timing_vcomh_deselect_level = SSD1306.TIMING_VCOMH_DESELECT_LEVEL_83_PERCENT_VCC
 		self.driver.charge_pump_enable = True
 		self.driver.display_on = True
-	
-	def clear(self, color=False):
+
+	# fast_mode 记录那些不为黑色的列
+	def clear(self, color=False, fast_mode=False):
 		for y in range(64):
 			for x in range(128):
 				self.__draw_point(x, y, color, auto_submit=False, force_refresh=True)
