@@ -50,7 +50,7 @@ class Event(object):
 		self.__val = False
 		if not self.__mutex.locked():
 			# avoid the situation that the same thread acquire __lock twice
-			if type(self) is SpinMutex:
+			if type(self.__mutex) is SpinMutex:
 				self.__mutex.acquire(dummy=True)
 			else:
 				_thread.start_new_thread(self.__mutex.acquire, [])
