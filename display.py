@@ -11,7 +11,6 @@ class OLED(object):
 
 		# buffer[页][列]
 		self.__buffer = [[0 for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
-		# self.__flag = [[True for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 
 		self.__flag_modified = [[False for _ in range(SSD1306.COLUMN_NUM)] for _ in range(SSD1306.PAGE_NUM)]
 		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
@@ -40,25 +39,23 @@ class OLED(object):
 		print('clearing')
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, False, auto_submit=False)
+				self.draw_point(x, y, False, auto_submit=False, force=True)
 		self.submit()
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True, *, auto_submit=True):
+	def draw_point(self, x, y, color=True, *, auto_submit=True, force=False):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
 		changed = False
 		if color:
-			if self.__buffer[page][column] & (1 << bit_pos) == 0:
+			if force or self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
 				changed = True
-				# self.__flag[page][column] =  True
 		else:
-			if self.__buffer[page][column] & (1 << bit_pos) != 0:
+			if force or self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
 				changed = True
-				# self.__flag[page][column] = True
 		if changed and not self.__flag_modified[page][column]:
 			self.__flag_modified[page][column] = True
 			self.__flag_page[self.__fpos] = page
@@ -86,6 +83,7 @@ class OLED(object):
 			page = self.__flag_page[i]
 			column = self.__flag_column[i]
 			self.__flag_modified[page][column] = False
+			# TODO 判断是否不需要赋值
 			self.driver.address_page = page
 			self.driver.address_column = column
 			self.driver.ram = self.__buffer[page][column]
