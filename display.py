@@ -48,25 +48,22 @@ class OLED(object):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
-		
+		changed = False
 		if color:
 			if self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
-				if not self.__flag_modified[page][column]:
-					self.__flag_modified[page][column] = True
-					self.__flag_page[self.__fpos] = page
-					self.__flag_column[self.__fpos] = column
-					self.__fpos += 1
+				changed = True
 				# self.__flag[page][column] =  True
 		else:
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
-				if not self.__flag_modified[page][column]:
-					self.__flag_modified[page][column] = True
-					self.__flag_page[self.__fpos] = page
-					self.__flag_column[self.__fpos] = column
-					self.__fpos += 1
+				changed = True
 				# self.__flag[page][column] = True
+		if changed and not self.__flag_modified[page][column]:
+			self.__flag_modified[page][column] = True
+			self.__flag_page[self.__fpos] = page
+			self.__flag_column[self.__fpos] = column
+			self.__fpos += 1
 
 		if auto_submit:
 			self.submit()
