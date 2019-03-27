@@ -49,14 +49,14 @@ class OLED(object):
 		bit_pos = y % 8
 		changed = False
 		if color:
-			if force or self.__buffer[page][column] & (1 << bit_pos) == 0:
+			if self.__buffer[page][column] & (1 << bit_pos) == 0:
 				self.__buffer[page][column] |= 1 << bit_pos
 				changed = True
 		else:
-			if force or self.__buffer[page][column] & (1 << bit_pos) != 0:
+			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
 				changed = True
-		if changed and not self.__flag_modified[page][column]:
+		if force or (changed and not self.__flag_modified[page][column]):
 			self.__flag_modified[page][column] = True
 			self.__flag_page[self.__fpos] = page
 			self.__flag_column[self.__fpos] = column
@@ -78,14 +78,21 @@ class OLED(object):
 		return Indexable(getter, setter)
 
 	def submit(self):
+		prev_page = None
+		prev_column = None
 		for i in range(self.__fpos):
-			print('dealing', i)
 			page = self.__flag_page[i]
 			column = self.__flag_column[i]
 			self.__flag_modified[page][column] = False
+			assign_addr = True
 			# TODO 判断是否不需要赋值
-			self.driver.address_page = page
-			self.driver.address_column = column
+			if prev_page is not None and prev_column is not None:
+				if prev_page == page and prev_column + 1 == column:
+					assign_addr = False
+			if assign_addr:
+				self.driver.address_page = page
+				self.driver.address_column = column
+			prev_page, prev_column = page, column
 			self.driver.ram = self.__buffer[page][column]
 		self.__fpos = 0
 		pass
