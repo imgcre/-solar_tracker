@@ -68,11 +68,13 @@ class ThreadLocalStorage(object):
     map_methods(locals(), ObjLike, lambda method:
                 lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs))
 
-    def __init__(self):
-        self.__locals = {}
+    #def __init__(self):
+    #    self.__locals = {}
 
     def __get_obj(self):
         thread_id = _thread.get_ident()
+        if self.__locals is None:
+            self.__locals = {}
         if self.__locals.get(thread_id) is None:
             self.__locals[thread_id] = {}
         return ObjLike(self.__locals[thread_id])
