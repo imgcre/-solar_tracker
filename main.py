@@ -87,6 +87,7 @@ class MyConfig:
         }
 
 
+# TODO: 改回用软件定时器的owo
 inited = False
 prev_region = []
 servo_tween = Tween(max_speed=0.01,
