@@ -11,6 +11,9 @@ import csv
 # X5 X6 X7 X8 -> ADC
 # X9 X10 X11 (SCL SDA SWQ) RTC
 
+# Y5 Y6 Y7 Y8 按钮
+#
+
 
 class Stepper:
     def __init__(self, step_name, dir_name):

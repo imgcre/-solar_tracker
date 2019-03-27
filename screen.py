@@ -11,8 +11,6 @@ class Console(object):
 		self.height = display.height // HALF_WIDTH_MIN_HEIGHT
 		self.__buffer = [[' ' for _ in range(self.height)] for _ in range(self.width)]
 		self.reverse = Context()
-		# 没有在上下文中, 则自动更新
-		pass
 
 	def __getitem__(self, item):
 		def getter(key):
@@ -35,3 +33,7 @@ class Console(object):
 							cur_page += 1
 
 		return Indexable(getter, setter)
+
+	@property
+	def session(self):
+		return self.__display.session
