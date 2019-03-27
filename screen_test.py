@@ -18,9 +18,9 @@ class TestConsole(utest.TestCase):
         console[1][1] = 'Current Time:'
 
 
-#@key_handler('Y5')
-#def key1():
-#    print('key1 pressed!')
+@key_handler('Y5')
+def key1():
+    print('key1 pressed!')
 
 
 @key_handler('Y6')
