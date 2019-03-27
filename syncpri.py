@@ -46,11 +46,16 @@ class Event(object):
 		if self.__mutex.locked():
 			self.__mutex.release()
 
+	def __acquire_func(self):
+		self.__mutex.acquire()
+		_thread.exit()
+
 	def reset(self):
 		self.__val = False
 		if not self.__mutex.locked():
 			# avoid the situation that the same thread acquire __lock twice
-			_thread.start_new_thread(self.__mutex.acquire, [])
+			_thread.start_new_thread(self.__acquire_func, [])
+
 
 	@property
 	def value(self):
