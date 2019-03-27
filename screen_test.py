@@ -13,8 +13,9 @@ class TestConsole(utest.TestCase):
     def test_random_points(self):
         oled.clear()
         console[0][0] = 'Current Time:'
-        #with console.reverse:
-        console[1][0] = '03/27 19:00'
+        with console.reverse:
+            console[1][0] = '03/27 19:00'
+        console[2][0] = 'end'
 
 
 if __name__ == '__main__':
