@@ -8,14 +8,13 @@ oled = OLED(I2C(2, mode=I2C.MASTER))
 console = Console(oled)
 oled.init()
 
+# 四个按钮: 上 左 右 确定
 
 class TestConsole(utest.TestCase):
     def test_random_points(self):
         oled.clear()
-        console[0][0] = 'Current Time:'
-        with console.reverse:
-            console[1][0] = '03/27 19:00'
-        console[2][0] = 'end'
+        console[1][1] = 'Current Time:'
+
 
 
 if __name__ == '__main__':
