@@ -65,16 +65,17 @@ class ObjLike(object):
 
 # FIXME: 形如: x = tls.xxx, x.yyy = zzz 的代码可能会引入不确定的行为
 class ThreadLocalStorage(object):
-    __locals = {}
+    def __init__(self):
+        self.__locals = {}
 
     map_methods(locals(), ObjLike, lambda method:
                 lambda self, *args, **kwargs: method(self.__get_obj(), *args, **kwargs))
 
     def __get_obj(self):
         thread_id = _thread.get_ident()
-        if type(self).__locals.get(thread_id) is None:
-            type(self).__locals[thread_id] = {}
-        return ObjLike(type(self).__locals[thread_id])
+        if self.__locals.get(thread_id) is None:
+            self.__locals[thread_id] = {}
+        return ObjLike(self.__locals[thread_id])
 
 
 tls = ThreadLocalStorage()

@@ -1,9 +1,10 @@
 from driver import SSD1306
 from utilities import Indexable
 from pyb import delay
+from context import *
+
 
 class OLED(object):
-
 	def __init__(self, prot):
 		self.driver = SSD1306(prot)
 		self.width = SSD1306.COLUMN_NUM
@@ -16,7 +17,16 @@ class OLED(object):
 		self.__flag_page = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__flag_column = [-1 for _ in range(SSD1306.COLUMN_NUM * SSD1306.PAGE_NUM)]
 		self.__fpos = 0
-	
+		self.__context = Context(exit_func=self.__session_exit)
+
+	@property
+	def session(self):
+		return self.__context
+
+	def __session_exit(self):
+		if self.__context.nest_count == 0:
+			self.submit()
+
 	def init(self):
 		self.driver.display_on = False  # 默认
 		self.driver.address_column = 0  # 默认
@@ -38,11 +48,11 @@ class OLED(object):
 	def clear(self, color=False):
 		for y in range(64):
 			for x in range(128):
-				self.draw_point(x, y, color, auto_submit=False, force_refresh=True)
+				self.__draw_point(x, y, color, auto_submit=False, force_refresh=True)
 		self.submit()
 	
 	# color: True for white, False for black
-	def draw_point(self, x, y, color=True, *, auto_submit=True, force_refresh=False):
+	def __draw_point(self, x, y, color=True, *, auto_submit=True, force_refresh=False):
 		page = y // 8
 		column = x
 		bit_pos = y % 8
@@ -72,7 +82,7 @@ class OLED(object):
 			return bool(self.__buffer[page][column] & (1 << bit_pos))
 
 		def setter(key, value):
-			self.draw_point(item, key, value)
+			self.__draw_point(item, key, value, auto_submit=self.__context.nest_count == 0)
 
 		return Indexable(getter, setter)
 
