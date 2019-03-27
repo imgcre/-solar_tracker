@@ -1,7 +1,17 @@
 import pyb
 import _thread
-from cmemgr import map_to_thread, Mapper
+from cmemgr import *
+from pyb import *
 
+
+def key_handler(pin_name):
+    def wrapper(func):
+        @map_to_thread(partial(ExtInt)(Pin(pin_name), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
+        def f():
+            delay(10)
+            func()
+        return f
+    return wrapper
 
 class Indexable:
     def __init__(self, getter, setter):

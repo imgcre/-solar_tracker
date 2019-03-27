@@ -21,7 +21,6 @@ class Console(object):
 			cur_column = key * 6
 			self.__buffer[item][key] = value
 			with self.__display.session:
-				print(self.reverse.nest_count)
 				for char in value:
 					for column in HALF_WIDTH_MIN[char]:
 						if self.reverse.nest_count > 0:

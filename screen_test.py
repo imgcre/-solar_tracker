@@ -18,9 +18,8 @@ class TestConsole(utest.TestCase):
         console[1][1] = 'Current Time:'
 
 
-@map_to_thread(partial(ExtInt)(Pin('Y5'), ExtInt.IRQ_FALLING, Pin.PULL_UP))
+@key_handler('Y5')
 def key1():
-    delay(10)  # 消抖
     print('key1 pressed!')
 
 
