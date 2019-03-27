@@ -26,16 +26,14 @@ cur_num = 0
 def key1():
     global cur_num
     cur_num -= 1
-    print("%02d" % cur_num)
-    console[2][1] = "%02d" % cur_num
+    console[2][1] = str(cur_num)
 
 
 @key_handler('Y6')
 def key2():
     global cur_num
     cur_num += 1
-    print("%02d" % cur_num)
-    console[2][1] = "%02d" % cur_num
+    console[2][1] = str(cur_num)
 
 
 @key_handler('Y7')
