@@ -22,8 +22,8 @@ class Console(object):
 			self.__buffer[item][key] = value
 			with self.__display.session:
 				for char in value:
-					print(HALF_WIDTH_MIN[char])
 					for column in HALF_WIDTH_MIN[char]:
+						print(cur_page, cur_column)
 						self.__display.draw_column(cur_page, cur_column, column)
 						cur_column += 1
 						if cur_column > self.width:
