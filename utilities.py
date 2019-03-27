@@ -9,7 +9,8 @@ def key_handler(pin_name):
         @map_to_thread(partial(ExtInt)(Pin(pin_name), ExtInt.IRQ_FALLING, pyb.Pin.PULL_UP))
         def f():
             delay(10)
-            func()
+            if Pin(pin_name).value() == 0:
+                func()
         return f
     return wrapper
 
