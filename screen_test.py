@@ -23,9 +23,9 @@ def key1():
     print('key1 pressed!')
 
 
-@key_handler('Y6')
-def key2():
-    print('key2 pressed!')
+#@key_handler('Y6')
+#def key2():
+#    print('key2 pressed!')
 
 
 #@key_handler('Y7')
