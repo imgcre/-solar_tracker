@@ -74,6 +74,14 @@ class OLED(object):
 		if auto_submit:
 			self.submit()
 
+	def draw_column(self, page, column, data):
+		if self.__buffer[page][column] != data:
+			self.__buffer[page][column] = data
+			self.__flag_modified[page][column] = True
+			self.__flag_page[self.__fpos] = page
+			self.__flag_column[self.__fpos] = column
+			self.__fpos += 1
+
 	def __getitem__(self, item):
 		def getter(key):
 			page = key // 8

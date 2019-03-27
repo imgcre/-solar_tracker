@@ -4,10 +4,7 @@ from utilities import Indexable
 
 
 class Console(object):
-	def __init__(self, display):
-		# 用字库把屏幕抽象成字符点阵
-		# 整除, 右边的部分就不要了XD
-		# 使用数组语法来访问字符
+	def __init__(self, display: OLED):
 		self.__display = display
 		self.width = display.width // HALF_WIDTH_MIN_WIDTH
 		self.height = display.height // HALF_WIDTH_MIN_HEIGHT
@@ -20,6 +17,16 @@ class Console(object):
 			return self.__buffer[item][key]
 
 		def setter(key, value):
+			cur_page = item
+			cur_column = value * 6
 			self.__buffer[item][key] = value
+			with self.__display.session:
+				for char in value:
+					for column in HALF_WIDTH_MIN[char]:
+						self.__display.draw_column(cur_page, cur_column, column)
+						cur_column += 1
+						if cur_column > self.width:
+							cur_column = 0
+							cur_page += 1
 
 		return Indexable(getter, setter)
