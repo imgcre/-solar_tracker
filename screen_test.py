@@ -34,7 +34,7 @@ def key1():
 def key2():
     global cur_num
     cur_num += 1
-    print(cur_num)
+    print(cur_num, "%02d" % (cur_num,))
     console[2][1] = "%02d" % (cur_num,)
 
 
