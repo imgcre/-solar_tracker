@@ -57,7 +57,7 @@ class OLED(object):
 					self.__flag_page[self.__fpos] = page
 					self.__flag_column[self.__fpos] = column
 					self.__fpos += 1
-				# self.__flag[page][column] = True
+				# self.__flag[page][column] =  True
 		else:
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
