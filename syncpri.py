@@ -46,15 +46,14 @@ class Event(object):
 		if self.__mutex.locked():
 			self.__mutex.release()
 
-	def __acquire_func(self):
-		self.__mutex.acquire()
-		_thread.exit()
-
 	def reset(self):
 		self.__val = False
 		if not self.__mutex.locked():
 			# avoid the situation that the same thread acquire __lock twice
-			_thread.start_new_thread(self.__acquire_func, [])
+			if type(self) is SpinMutex:
+				self.__mutex.acquire(dummy=True)
+			else:
+				_thread.start_new_thread(self.__mutex.acquire, [])
 
 
 	@property
@@ -68,20 +67,23 @@ class SpinMutex(object):
 		self.__owner = -1
 		self.__using_critical_section = using_critical_section
 
-	def acquire(self):
-		thread_id = _thread.get_ident()
-		if self.__val:
-			if self.__owner == thread_id:
-				raise RuntimeError('dead lock')
-			while self.__val:
-				pass
-		irq_state = None
-		if self.__using_critical_section:
-			irq_state = pyb.disable_irq()
-		self.__val = True
-		self.__owner = thread_id
-		if self.__using_critical_section:
-			pyb.enable_irq(irq_state)
+	def acquire(self, dummy=False):
+		if dummy:
+			self.__val = True
+		else:
+			thread_id = _thread.get_ident()
+			if self.__val:
+				if self.__owner == thread_id:
+					raise RuntimeError('dead lock')
+				while self.__val:
+					pass
+			irq_state = None
+			if self.__using_critical_section:
+				irq_state = pyb.disable_irq()
+			self.__val = True
+			self.__owner = thread_id
+			if self.__using_critical_section:
+				pyb.enable_irq(irq_state)
 
 	def release(self):
 		if not self.__val:
