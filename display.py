@@ -55,7 +55,7 @@ class OLED(object):
 			if self.__buffer[page][column] & (1 << bit_pos) != 0:
 				self.__buffer[page][column] &= ~(1 << bit_pos)
 				changed = True
-		if force or (changed and not self.__flag_modified[page][column]):
+		if (force or changed) and not self.__flag_modified[page][column]:
 			self.__flag_modified[page][column] = True
 			self.__flag_page[self.__fpos] = page
 			self.__flag_column[self.__fpos] = column
