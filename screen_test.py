@@ -36,7 +36,8 @@ def key1():
 def key2():
     global cur_num
     cur_num += 1
-    console[2][1] = str(cur_num)
+    print('key2 pressed!')
+    # console[2][1] = str(cur_num)
 
 
 @key_handler('Y7')
@@ -51,4 +52,4 @@ def key4():
 
 if __name__ == '__main__':
     utest.main()
-    Mapper.run(use_main_thread=True)
+    Mapper.run(use_main_thread=False)
