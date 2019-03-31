@@ -20,14 +20,16 @@ class Console(object):
 		def setter(key, value, flag=False):
 			if not flag:
 				# 对context进行处理
+				s = str(value)
 				if self.padding.nest_count > 0:
+					args, kwargs = self.padding.cur_args
 					padding_char = ' '
 					try:
-						padding_char = self.padding.cur_args[1]['char']
+						padding_char = kwargs['char']
 					except Exception:
 						pass
-					value = padding_char * self.padding.cur_args[0][0] + str(value)
-				setter(key, value, flag=True)
+					value = padding_char * (len(s) - args[0]) + s
+				setter(key, s, flag=True)
 			else:
 				cur_page = item
 				cur_column = key * 6
