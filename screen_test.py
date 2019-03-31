@@ -28,8 +28,8 @@ class TestConsole(utest.TestCase):
 
 
 # [2][1] 是两位整数
-cur_time = [0, 0, 0, 0]
-max_val = [12, 30, 24, 60]
+cur_time = [1, 1, 0, 0]
+val_borders = [(1, 12), (1, 30), 24, 60]
 cur_sel = -1
 
 
@@ -72,7 +72,11 @@ def key2():
 def key3():
     if cur_sel >= 0:
         cur_time[cur_sel] += 1
-        cur_time[cur_sel] %= max_val[cur_sel]
+        if type(val_borders[cur_sel]) is tuple:
+            min_val, max_val = val_borders[cur_sel]
+            cur_time[cur_sel] = (cur_time[cur_sel] - min_val) % (max_val - min_val + 1) + min_val
+        else:
+            cur_time[cur_sel] %= val_borders[cur_sel]
         redraw()
 
 
