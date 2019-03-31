@@ -20,10 +20,10 @@ class TestConsole(utest.TestCase):
         console[2][3] = '/'
         console[2][9] = ':'
         with console.padding(2, char='0'):
-            console[2][1] = cur_num
-            console[2][4] = cur_num
-            console[2][7] = cur_num
-            console[2][10] = cur_num
+            console[2][1] = 3
+            console[2][4] = 31
+            console[2][7] = 23
+            console[2][10] = 0
 
 
 # [2][1] 是两位整数
