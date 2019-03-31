@@ -14,22 +14,11 @@ oled.init()
 # 四个按钮: 上 左 右 确定
 
 
-class TestConsole(utest.TestCase):
-    def test_random_points(self):
-        oled.clear()
-        console[1][1] = 'Current Time:'
-        console[2][3] = '/'
-        console[2][9] = ':'
-        with console.padding(2, char='0'):
-            console[2][1] = 3
-            console[2][4] = 31
-            console[2][7] = 23
-            console[2][10] = 0
 
 
 # [2][1] 是两位整数
 cur_time = [1, 1, 0, 0]
-val_borders = [(1, 12), (1, 30), 24, 60]
+val_borders = [(1, 12), (1, 30), 23, 59]
 cur_sel = -1
 
 
@@ -40,6 +29,11 @@ def redraw():
             cc.append(console.reverse)
         with cc:
             console[2][1 + 3 * i] = cur_time[i]
+
+
+class TestConsole(utest.TestCase):
+    def test_random_points(self):
+        redraw()
 
 
 cur_num = 0
@@ -65,11 +59,6 @@ def key1():
 
 @key_handler('Y6')
 def key2():
-    pass
-
-
-@key_handler('Y7')
-def key3():
     if cur_sel >= 0:
         cur_time[cur_sel] += 1
         cur_border = val_borders[cur_sel]
@@ -78,13 +67,21 @@ def key3():
         redraw()
 
 
+@key_handler('Y7')
+def key3():
+    global cur_sel
+    cur_sel += 1
+    cur_sel %= 4
+    redraw()
+
+
 # 切换
 # sel = 0, 1, 2, 3
 @key_handler('Y8')
 def key4():
+    # 确认
     global cur_sel
-    cur_sel += 1
-    cur_sel %= 4
+    cur_sel = -1
     redraw()
 
 
