@@ -25,10 +25,11 @@ cur_num = 0
 
 @key_handler('Y5')
 def key1():
-    global cur_num
-    cur_num -= 1
+    print('key1 pressed!')
+    # global cur_num
+    # cur_num -= 1
     # print(cur_num)
-    console[2][1] = str(cur_num)
+    # console[2][1] = str(cur_num)
 
 
 @key_handler('Y6')
