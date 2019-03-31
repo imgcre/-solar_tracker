@@ -72,11 +72,9 @@ def key2():
 def key3():
     if cur_sel >= 0:
         cur_time[cur_sel] += 1
-        if type(val_borders[cur_sel]) is tuple:
-            min_val, max_val = val_borders[cur_sel]
-            cur_time[cur_sel] = (cur_time[cur_sel] - min_val) % (max_val - min_val + 1) + min_val
-        else:
-            cur_time[cur_sel] %= val_borders[cur_sel]
+        cur_border = val_borders[cur_sel]
+        min_val, max_val = cur_border if type(cur_border) is tuple else (0, cur_border)
+        cur_time[cur_sel] = (cur_time[cur_sel] - min_val) % (max_val - min_val + 1) + min_val
         redraw()
 
 
