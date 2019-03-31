@@ -29,6 +29,7 @@ class TestConsole(utest.TestCase):
 
 # [2][1] 是两位整数
 cur_time = [0, 0, 0, 0]
+max_val = [12, 30, 24, 60]
 cur_sel = -1
 
 
@@ -69,7 +70,10 @@ def key2():
 
 @key_handler('Y7')
 def key3():
-    redraw()
+    if cur_sel > 0:
+        cur_time[cur_sel] += 1
+        cur_time[cur_sel] %= max_val
+        redraw()
 
 
 # 切换
