@@ -27,7 +27,7 @@ cur_num = 0
 def key1():
     global cur_num
     cur_num -= 1
-    print(cur_num)
+    # print(cur_num)
     console[2][1] = str(cur_num)
 
 
