@@ -70,9 +70,9 @@ def key2():
 
 @key_handler('Y7')
 def key3():
-    if cur_sel > 0:
+    if cur_sel >= 0:
         cur_time[cur_sel] += 1
-        cur_time[cur_sel] %= max_val
+        cur_time[cur_sel] %= max_val[cur_sel]
         redraw()
 
 
