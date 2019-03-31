@@ -19,7 +19,6 @@ class Mapper(object):
 
 	@classmethod
 	def __internal_thread(cls):
-		_thread.stack_size(400)
 		while True:
 			syncpri.Event.wait_any(map(lambda m: m.__event, cls.__mappers))
 			for mapper in cls.__mappers:
@@ -70,9 +69,18 @@ class Mapper(object):
 
 		caller(wrapper)
 		type(self).__mappers.append(self)
-		if not type(self).__internal_thread_running:
-			type(self).__internal_thread_running = True
-			_thread.start_new_thread(type(self).__internal_thread, [])
+		# if not type(self).__internal_thread_running:
+		#	type(self).__internal_thread_running = True
+		#	_thread.start_new_thread(type(self).__internal_thread, [])
+
+	@classmethod
+	def run(cls, *, use_main_thread=False):
+		if use_main_thread:
+			cls.__internal_thread()
+		else:
+			if not cls.__internal_thread_running:
+				cls.__internal_thread_running = True
+				_thread.start_new_thread(cls.__internal_thread, [])
 
 	def __raise_event(self):
 		self.__raised = True

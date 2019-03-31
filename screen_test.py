@@ -4,6 +4,7 @@ from display import *
 from pyb import *
 from screen import *
 from utilities import *
+from cmemgr import Mapper
 
 oled = OLED(I2C(2, mode=I2C.MASTER))
 console = Console(oled)
@@ -49,3 +50,4 @@ def key4():
 
 if __name__ == '__main__':
     utest.main()
+    Mapper.run(use_main_thread=True)
