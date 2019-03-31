@@ -42,14 +42,16 @@ def key1():
 def key2():
     global cur_num
     cur_num -= 1
-    console[2][1] = padding(cur_num)
+    with console.padding(2, char='0'):
+        console[2][1] = cur_num
 
 
 @key_handler('Y7')
 def key3():
     global cur_num
     cur_num += 1
-    console[2][1] = padding(cur_num)
+    with console.padding(2, char='0'):
+        console[2][1] = cur_num
 
 
 @key_handler('Y8')
