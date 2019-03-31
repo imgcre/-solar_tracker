@@ -34,7 +34,7 @@ cur_sel = -1
 
 def redraw():
     for i in range(4):
-        cc = ContextChain()
+        cc = ContextChain([console.padding(2, char='0')])
         if cur_sel == i:
             cc.append(console.reverse)
         with cc:
@@ -64,17 +64,11 @@ def key1():
 
 @key_handler('Y6')
 def key2():
-    global cur_num
-    cur_num -= 1
-    with console.padding(2, char='0'):
-        console[2][1] = cur_num
+    pass
 
 
 @key_handler('Y7')
 def key3():
-    global cur_sel
-    cur_sel += 1
-    cur_sel %= 4
     redraw()
 
 
@@ -82,8 +76,10 @@ def key3():
 # sel = 0, 1, 2, 3
 @key_handler('Y8')
 def key4():
-    # 重绘
-    print('key4 pressed!')
+    global cur_sel
+    cur_sel += 1
+    cur_sel %= 4
+    redraw()
 
 
 if __name__ == '__main__':
