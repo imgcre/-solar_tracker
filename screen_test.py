@@ -19,16 +19,15 @@ oled.clear()
 # [2][1] 是两位整数
 cur_time = [1, 1, 0, 0, 0]
 val_borders = [(1, 12), (1, 30), 23, 59, 59]
+separator = ['/', ' ', ':', ':']
 cur_sel = -1
 
 
 def redraw():
     with console.session:
         console[1][1] = 'Current Time:'
-        console[2][3] = '/'
-        console[2][6] = ' '
-        console[2][9] = ':'
-        console[2][12] = ':'
+        for i in range(len(separator)):
+            console[2][(i + 1) * 3] = separator[i]
         for i in range(len(cur_time)):
             cc = ContextChain([console.padding(2, char='0')])
             if cur_sel == i:
