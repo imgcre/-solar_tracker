@@ -23,16 +23,7 @@ class TestConsole(utest.TestCase):
 cur_num = 0
 
 
-
-
-@key_handler('Y6')
-def key2():
-    global cur_num
-    cur_num += 1
-    print('key2 pressed!')
-    # console[2][1] = str(cur_num)
-
-
+# 这个按键应该是物理上坏了
 @key_handler('Y5')
 def key1():
     print('key1 pressed!')
@@ -42,9 +33,18 @@ def key1():
     # console[2][1] = str(cur_num)
 
 
+@key_handler('Y6')
+def key2():
+    global cur_num
+    cur_num -= 1
+    console[2][1] = str(cur_num)
+
+
 @key_handler('Y7')
 def key3():
-    print('key3 pressed!')
+    global cur_num
+    cur_num += 1
+    console[2][1] = str(cur_num)
 
 
 @key_handler('Y8')
