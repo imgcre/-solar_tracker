@@ -17,6 +17,8 @@ class TestConsole(utest.TestCase):
     def test_random_points(self):
         oled.clear()
         console[1][1] = 'Current Time:'
+        console[2][3] = '/'
+        console[2][9] = ':'
 
 
 # [2][1] 是两位整数
@@ -36,6 +38,9 @@ def key1():
     # cur_num -= 1
     # print(cur_num)
     # console[2][1] = str(cur_num)
+
+# 只允许往上调整时间
+# 月 日 时 分
 
 
 @key_handler('Y6')
