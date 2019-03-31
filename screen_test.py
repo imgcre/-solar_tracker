@@ -23,6 +23,11 @@ class TestConsole(utest.TestCase):
 cur_num = 0
 
 
+def padding(num, min_len=2):
+    s = str(num)
+    return '0' * (2 - len(s)) + s
+
+
 # 这个按键应该是物理上坏了
 @key_handler('Y5')
 def key1():
@@ -37,14 +42,14 @@ def key1():
 def key2():
     global cur_num
     cur_num -= 1
-    console[2][1] = "%02d" % cur_num
+    console[2][1] = padding(cur_num)
 
 
 @key_handler('Y7')
 def key3():
     global cur_num
     cur_num += 1
-    console[2][1] = "%02d" % cur_num
+    console[2][1] = padding(cur_num)
 
 
 @key_handler('Y8')
