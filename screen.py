@@ -9,7 +9,7 @@ class Console(object):
 		self.__display = display
 		self.width = display.width // HALF_WIDTH_MIN_WIDTH
 		self.height = display.height // HALF_WIDTH_MIN_HEIGHT
-		self.__buffer = [[' ' for _ in range(self.height)] for _ in range(self.width)]
+		self.__buffer = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 		self.reverse = Context()
 		self.padding = Context()  # padding(size, *, char=' ')
 
