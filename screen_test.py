@@ -10,7 +10,7 @@ from context import ContextChain
 oled = OLED(I2C(2, mode=I2C.MASTER))
 console = Console(oled)
 oled.init()
-
+oled.clear()
 # 四个按钮: 上 左 右 确定
 
 
@@ -23,12 +23,17 @@ cur_sel = -1
 
 
 def redraw():
-    for i in range(4):
-        cc = ContextChain([console.padding(2, char='0')])
-        if cur_sel == i:
-            cc.append(console.reverse)
-        with cc:
-            console[2][1 + 3 * i] = cur_time[i]
+    with console.session:
+        console[1][1] = 'Current Times:'
+        console[2][3] = '/'
+        console[2][6] = ' '
+        console[2][9] = ':'
+        for i in range(4):
+            cc = ContextChain([console.padding(2, char='0')])
+            if cur_sel == i:
+                cc.append(console.reverse)
+            with cc:
+                console[2][1 + 3 * i] = cur_time[i]
 
 
 class TestConsole(utest.TestCase):
