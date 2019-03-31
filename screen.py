@@ -28,7 +28,7 @@ class Console(object):
 						padding_char = kwargs['char']
 					except Exception:
 						pass
-					value = padding_char * (len(s) - args[0]) + s
+					s = padding_char * (len(s) - args[0]) + s
 				setter(key, s, flag=True)
 			else:
 				cur_page = item
