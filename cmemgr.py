@@ -19,7 +19,7 @@ class Mapper(object):
 
 	@classmethod
 	def __internal_thread(cls):
-		_thread.stack_size(800)
+		_thread.stack_size(1600)
 		while True:
 			syncpri.Event.wait_any(map(lambda m: m.__event, cls.__mappers))
 			for mapper in cls.__mappers:
