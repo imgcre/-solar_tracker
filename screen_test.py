@@ -54,4 +54,4 @@ def key4():
 
 if __name__ == '__main__':
     utest.main()
-    Mapper.run(use_main_thread=False)
+    Mapper.run(use_main_thread=True)
