@@ -34,3 +34,13 @@ class Context:
         return self.__nest_count
 
     pass
+
+
+class ContextChain(list):
+    def __enter__(self):
+        for i in range(len(self)):
+            self[i].__enter__()
+
+    def __exit__(self, *args):
+        for i in range(len(self)):
+            self[-(i+1)].__exit__()

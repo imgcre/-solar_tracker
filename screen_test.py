@@ -5,6 +5,7 @@ from pyb import *
 from screen import *
 from utilities import *
 from cmemgr import Mapper
+from context import ContextChain
 
 oled = OLED(I2C(2, mode=I2C.MASTER))
 console = Console(oled)
@@ -27,6 +28,19 @@ class TestConsole(utest.TestCase):
 
 
 # [2][1] 是两位整数
+cur_time = [0, 0, 0, 0]
+cur_sel = -1
+
+
+def redraw():
+    for i in range(4):
+        cc = ContextChain()
+        if cur_sel == i:
+            cc.append(console.reverse)
+        with cc:
+            console[2][1 + 3 * i] = cur_time[i]
+
+
 cur_num = 0
 
 
@@ -58,14 +72,17 @@ def key2():
 
 @key_handler('Y7')
 def key3():
-    global cur_num
-    cur_num += 1
-    with console.padding(2, char='0'):
-        console[2][1] = cur_num
+    global cur_sel
+    cur_sel += 1
+    cur_sel %= 4
+    redraw()
 
 
+# 切换
+# sel = 0, 1, 2, 3
 @key_handler('Y8')
 def key4():
+    # 重绘
     print('key4 pressed!')
 
 
