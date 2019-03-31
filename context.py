@@ -20,7 +20,7 @@ class Context:
 
     def __exit__(self, *args):
         self.arg_chain.pop()
-        self.cur_args = self.arg_chain[-1]
+        self.cur_args = self.arg_chain[-1] if len(self.arg_chain) > 0 else None
         self.__nest_count -= 1
         if self.__exit_func is not None:
             self.__exit_func()
