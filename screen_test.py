@@ -17,18 +17,19 @@ oled.clear()
 
 
 # [2][1] 是两位整数
-cur_time = [1, 1, 0, 0]
-val_borders = [(1, 12), (1, 30), 23, 59]
+cur_time = [1, 1, 0, 0, 0]
+val_borders = [(1, 12), (1, 30), 23, 59, 59]
 cur_sel = -1
 
 
 def redraw():
     with console.session:
-        console[1][1] = 'Current Times:'
+        console[1][1] = 'Current Time:'
         console[2][3] = '/'
         console[2][6] = ' '
         console[2][9] = ':'
-        for i in range(4):
+        console[2][12] = ':'
+        for i in range(len(cur_time)):
             cc = ContextChain([console.padding(2, char='0')])
             if cur_sel == i:
                 cc.append(console.reverse)
@@ -76,7 +77,7 @@ def key2():
 def key3():
     global cur_sel
     cur_sel += 1
-    cur_sel %= 4
+    cur_sel %= len(cur_time)
     redraw()
 
 
