@@ -26,7 +26,7 @@ class Console(object):
 						padding_char = self.padding.cur_args[1]['char']
 					except Exception:
 						pass
-					value = padding_char * self.padding.cur_args[0][0] + value
+					value = padding_char * self.padding.cur_args[0][0] + str(value)
 				setter(key, value, flag=True)
 			else:
 				cur_page = item
