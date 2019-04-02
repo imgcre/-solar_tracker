@@ -134,13 +134,16 @@ def rtc_tick():
 
                 # print(cur_time)
                 region = MyConfig.get_region(cur_time)
-                if region != prev_region or fast_move_mode:
+                is_region_changed = region != prev_region
+                if is_region_changed or fast_move_mode:
+
                     time_diff_ms = 3000
+                    none_fast_mode_time_diff = 1000 * (region[1]['time'] - region[0]['time'])
                     # 准备加载新的目标值
                     if not fast_move_mode:
                         print('region changed to', region)
                         prev_region = region
-                        time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+                        time_diff_ms = none_fast_mode_time_diff
 
                     target_pitch = region[1]['angle']['pitch']
                     target_yaw = region[1]['angle']['yaw']
@@ -158,12 +161,17 @@ def rtc_tick():
                         target_pitch = src_pitch + (target_pitch - src_pitch) * rate
                         target_yaw = src_yaw + (target_yaw - src_yaw) * rate
                         fast_move_mode = False
-                        # TODO: add target
                         pass
 
-                    # TODO: 快速从设置前时间的值变到当前时间的值
                     servo_tween.set_target(target_pitch, expected_duration=time_diff_ms)
                     stepper_tween.set_target(target_yaw, expected_duration=time_diff_ms)
+
+                    if fast_move_mode and is_region_changed:
+                        servo_tween.append_target(region[1]['angle']['pitch'],
+                                                  expected_duration=none_fast_mode_time_diff)
+                        servo_tween.append_target(region[1]['angle']['yaw'],
+                                                  expected_duration=none_fast_mode_time_diff)
+
                 stepper_tween.tick()
                 servo_tween.tick()
     except Exception as e:

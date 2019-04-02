@@ -232,6 +232,7 @@ class Tween:
         self.on_updated = on_updated
         self.__unit = unit
         self.__update_with_diff = update_with_diff
+        self.__queue = []
         self.set_target(self.__cur_val if target_val is None else target_val)
         if percentage > 0 and target_val:
             self.__cur_val = init_val + (target_val - init_val) * percentage
@@ -266,10 +267,13 @@ class Tween:
                 diff = p_next_val - p_cur_val if self.__update_with_diff else 0
                 self.on_updated(diff)
 
-            if is_reach_target_val and self.on_completed is not None:  # 到达目标值
-                self.on_completed()
-
             self.__cur_val = next_val
+
+            if is_reach_target_val and self.on_completed is not None:  # 到达目标值
+                if len(self.__queue) > 0:
+                    self.set_target(*self.__queue[0][0], **self.__queue[0][1])
+                self.__queue.remove(self.__queue[0])
+                self.on_completed()
 
     @property
     def on_updated(self):
@@ -301,3 +305,9 @@ class Tween:
         if (self.__max_speed > 0) and (self.__speed > self.__max_speed):
             self.__speed = self.__max_speed
 
+    # 追加目标值
+    def append_target(self, *args, **kwargs):
+        if self.__speed == 0:
+            self.set_target(*args, **kwargs)
+        else:
+            self.__queue.append((args, kwargs))
