@@ -14,9 +14,6 @@ oled.clear()
 # 四个按钮: 上 左 右 确定
 
 
-
-
-# [2][1] 是两位整数
 cur_time = [1, 1, 0, 0, 0]
 val_borders = [(1, 12), (1, 30), 23, 59, 59]
 separator = ['/', ' ', ':', ':']
@@ -34,32 +31,6 @@ def redraw():
                 cc.append(console.reverse)
             with cc:
                 console[2][1 + 3 * i] = cur_time[i]
-
-
-class TestConsole(utest.TestCase):
-    def test_random_points(self):
-        redraw()
-
-
-cur_num = 0
-
-
-def padding(num, min_len=2):
-    s = str(num)
-    return '0' * (2 - len(s)) + s
-
-
-# 这个按键应该是物理上坏了
-@key_handler('Y5')
-def key1():
-    print('key1 pressed!')
-    # global cur_num
-    # cur_num -= 1
-    # print(cur_num)
-    # console[2][1] = str(cur_num)
-
-# 只允许往上调整时间
-# 月 日 时 分
 
 
 @key_handler('Y6')
@@ -80,8 +51,6 @@ def key3():
     redraw()
 
 
-# 切换
-# sel = 0, 1, 2, 3
 @key_handler('Y8')
 def key4():
     # 确认
@@ -91,5 +60,18 @@ def key4():
 
 
 if __name__ == '__main__':
-    utest.main()
+    redraw()
     Mapper.run(use_main_thread=True)
+
+
+# 这个按键应该是物理上坏了
+@key_handler('Y5')
+def key1():
+    print('key1 pressed!')
+    # global cur_num
+    # cur_num -= 1
+    # print(cur_num)
+    # console[2][1] = str(cur_num)
+
+# 只允许往上调整时间
+# 月 日 时 分
