@@ -96,15 +96,11 @@ inited = False
 fast_move_mode = False
 
 
-def test(angle):
-    Servo(1).angle(angle)
-    print(angle)
-
 prev_region = []
 servo_tween = Tween(max_speed=0.01,
                     #refresh_rate=1,
                     #auto_tick=False,
-                    on_updated=test)
+                    on_updated=Servo(1).angle)
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       max_speed=9 / 1000,
                       #refresh_rate=1,
