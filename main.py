@@ -93,6 +93,8 @@ class MyConfig:
 
 # TODO: 改回用软件定时器的owo
 inited = False
+fast_move_mode = False
+
 prev_region = []
 servo_tween = Tween(max_speed=0.01,
                     refresh_rate=1,
@@ -113,7 +115,7 @@ cur_time_disp = [1, 1, 0, 0, 0]
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode
     try:
         with Indicator():
             if cur_sel < 0:
@@ -132,19 +134,35 @@ def rtc_tick():
 
                 # print(cur_time)
                 region = MyConfig.get_region(cur_time)
-                if region != prev_region:
+                if region != prev_region or fast_move_mode:
+                    time_diff_ms = 3000
                     # 准备加载新的目标值
-                    print('region changed to', region)
-                    prev_region = region
-                    time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+                    if not fast_move_mode:
+                        print('region changed to', region)
+                        prev_region = region
+                        time_diff_ms = 1000 * (region[1]['time'] - region[0]['time'])
+
+                    target_pitch = region[1]['angle']['pitch']
+                    target_yaw = region[1]['angle']['yaw']
+                    src_pitch = region[0]['angle']['pitch']
+                    src_yaw = region[0]['angle']['yaw']
 
                     # 快速到达目标位置
                     if not inited:
                         inited = True
-                        time_diff_ms = 3000
 
-                    servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
-                    stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
+                    if fast_move_mode:
+                        # (当前时间 - 起始时间) / (目标时间 - 起始时间)
+                        rate = (cur_time - region[0]['time']) / (region[1]['time'] - region[0]['time'])
+                        target_pitch = src_pitch + (target_pitch - src_pitch) * rate
+                        target_yaw = src_yaw + (target_yaw - src_yaw) * rate
+                        fast_move_mode = False
+                        # TODO: add target
+                        pass
+
+                    # TODO: 快速从设置前时间的值变到当前时间的值
+                    servo_tween.set_target(target_pitch, expected_duration=time_diff_ms)
+                    stepper_tween.set_target(target_yaw, expected_duration=time_diff_ms)
                 stepper_tween.tick()
                 servo_tween.tick()
     except Exception as e:
@@ -166,7 +184,7 @@ separator = ['/', ' ', ':', ':']
 
 def redraw():
     with console.session:
-        console[1][1] = 'Current Time:'
+        console[1][1] = 'Time:'
         for i in range(len(separator)):
             console[2][(i + 1) * 3] = separator[i]
         for i in range(len(cur_time_disp)):
@@ -175,6 +193,11 @@ def redraw():
                 cc.append(console.reverse)
             with cc:
                 console[2][1 + 3 * i] = cur_time_disp[i]
+        console[3][1] = 'Pitch:'
+        console[4][1] = 'Yaw:'
+        with console.padding(4):
+            console[3][8] = str(servo_tween.cur_value)[:4]
+            console[4][8] = str(servo_tween.cur_value)[:4]
 
 
 # 调整当前时间
@@ -201,10 +224,11 @@ def key3():
 @key_handler('Y8')
 def key4():
     # 确认
-    global cur_sel
+    global cur_sel, fast_move_mode
     ds3231.mem_write(ustruct.pack('bbbbbbb', *[b // 10 * 16 + b % 10 for b in [
         cur_time_disp[4], cur_time_disp[3], cur_time_disp[2], 0, cur_time_disp[1], cur_time_disp[0], 0]]), 104, 0)
     cur_sel = -1
+    fast_move_mode = True
     redraw()
     # 向iic写入当前时间
     # 记得先转成bcd
