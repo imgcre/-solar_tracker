@@ -150,6 +150,7 @@ def rtc_tick():
                     # 快速到达目标位置
                     if not inited:
                         inited = True
+                        time_diff_ms = 3000
 
                     if fast_move_mode:
                         # (当前时间 - 起始时间) / (目标时间 - 起始时间)
