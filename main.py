@@ -193,11 +193,11 @@ def redraw():
                 cc.append(console.reverse)
             with cc:
                 console[2][1 + 3 * i] = cur_time_disp[i]
-        console[3][1] = 'Pitch:'
-        console[4][1] = 'Yaw:'
+        console[4][1] = 'Pitch:'
+        console[5][1] = 'Yaw:'
         with console.padding(4):
-            console[3][8] = str(servo_tween.cur_value)[:4]
             console[4][8] = str(servo_tween.cur_value)[:4]
+            console[5][8] = str(servo_tween.cur_value)[:4]
 
 
 # 调整当前时间
