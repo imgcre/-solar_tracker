@@ -207,7 +207,7 @@ def redraw():
             # servo_tween.cur_value
             # console[4][8] = str(servo_tween.cur_value)[:4]
             console[4][8] = '%.2f' % servo_tween.cur_value
-            console[5][8] = str(stepper_tween.cur_value)[:4]
+            console[5][8] = '%.2f' % stepper_tween.cur_value
 
 
 # 调整当前时间
