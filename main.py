@@ -145,6 +145,10 @@ def rtc_tick():
                     src_pitch = region[0]['angle']['pitch']
                     src_yaw = region[0]['angle']['yaw']
 
+                    if is_region_changed:
+                        print('region changed to', region)
+                        prev_region = region
+
                     # 快速到达目标位置
                     if not inited:
                         inited = True
@@ -157,8 +161,6 @@ def rtc_tick():
                         target_yaw = src_yaw + (target_yaw - src_yaw) * rate
                         fast_move_mode = False
                     else:
-                        print('region changed to', region)
-                        prev_region = region
                         time_diff_ms = none_fast_mode_time_diff
 
                     servo_tween.set_target(target_pitch, expected_duration=time_diff_ms)
