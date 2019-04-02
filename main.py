@@ -6,6 +6,7 @@ import sys
 from cmemgr import Mapper
 from context import ContextChain
 import csv
+import ustruct
 
 # 步距角=1.8° -> 20
 
@@ -201,8 +202,12 @@ def key3():
 def key4():
     # 确认
     global cur_sel
+    ds3231.mem_write(ustruct.pack('bbbbbbb', *[b // 10 * 16 + b % 10 for b in [
+        cur_time_disp[4], cur_time_disp[3], cur_time_disp[2], 0, cur_time_disp[1], cur_time_disp[0], 0]]), 104, 0)
     cur_sel = -1
     redraw()
+    # 向iic写入当前时间
+    # 记得先转成bcd
 
 
 redraw()
