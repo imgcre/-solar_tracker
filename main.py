@@ -190,7 +190,6 @@ oled.clear()
 val_borders = [(1, 12), (1, 30), 23, 59, 59]
 separator = ['/', ' ', ':', ':']
 
-
 def redraw():
     with console.session:
         console[1][1] = 'Time:'
@@ -204,8 +203,10 @@ def redraw():
                 console[2][1 + 3 * i] = cur_time_disp[i]
         console[4][1] = 'Pitch:'
         console[5][1] = 'Yaw:'
-        with console.padding(4):
-            console[4][8] = str(servo_tween.cur_value)[:4]
+        with console.padding(7):
+            # servo_tween.cur_value
+            # console[4][8] = str(servo_tween.cur_value)[:4]
+            console[4][8] = '%.2f' % servo_tween.cur_value
             console[5][8] = str(stepper_tween.cur_value)[:4]
 
 
