@@ -140,11 +140,6 @@ def rtc_tick():
                     time_diff_ms = 3000
                     none_fast_mode_time_diff = 1000 * (region[1]['time'] - region[0]['time'])
                     # 准备加载新的目标值
-                    if not fast_move_mode:
-                        print('region changed to', region)
-                        prev_region = region
-                        time_diff_ms = none_fast_mode_time_diff
-
                     target_pitch = region[1]['angle']['pitch']
                     target_yaw = region[1]['angle']['yaw']
                     src_pitch = region[0]['angle']['pitch']
@@ -153,7 +148,7 @@ def rtc_tick():
                     # 快速到达目标位置
                     if not inited:
                         inited = True
-                        time_diff_ms = 3000
+                        fast_move_mode = True
 
                     if fast_move_mode:
                         # (当前时间 - 起始时间) / (目标时间 - 起始时间)
@@ -161,7 +156,10 @@ def rtc_tick():
                         target_pitch = src_pitch + (target_pitch - src_pitch) * rate
                         target_yaw = src_yaw + (target_yaw - src_yaw) * rate
                         fast_move_mode = False
-                        pass
+                    else:
+                        print('region changed to', region)
+                        prev_region = region
+                        time_diff_ms = none_fast_mode_time_diff
 
                     servo_tween.set_target(target_pitch, expected_duration=time_diff_ms)
                     stepper_tween.set_target(target_yaw, expected_duration=time_diff_ms)
