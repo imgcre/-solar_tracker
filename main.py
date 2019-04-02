@@ -198,7 +198,7 @@ def redraw():
         console[5][1] = 'Yaw:'
         with console.padding(4):
             console[4][8] = str(servo_tween.cur_value)[:4]
-            console[5][8] = str(servo_tween.cur_value)[:4]
+            console[5][8] = str(stepper_tween.cur_value)[:4]
 
 
 # 调整当前时间
