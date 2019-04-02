@@ -233,6 +233,7 @@ class Tween:
         self.__unit = unit
         self.__update_with_diff = update_with_diff
         self.__queue = []
+        self.cancelled = False
         self.set_target(self.__cur_val if target_val is None else target_val)
         if percentage > 0 and target_val:
             self.__cur_val = init_val + (target_val - init_val) * percentage
@@ -246,6 +247,7 @@ class Tween:
     def cancel(self):
         # 保留当前值
         self.__speed = 0
+        self.cancelled = True
 
     def __callback(self):
         if self.__speed != 0:
@@ -296,6 +298,7 @@ class Tween:
         return self.__cur_val
 
     def set_target(self, target_val, *, expected_duration=None):
+        self.cancelled = False
         self.__target_val = target_val
         if expected_duration is not None:
             self.__expected_duration = expected_duration

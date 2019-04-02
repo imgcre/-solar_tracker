@@ -125,25 +125,32 @@ def rtc_tick():
                 redraw()
                 # 无条件阈值设置为1000
                 # cancel 条件: 都大于某个值, 且两两之间的差值不超过存在超过某个值
+
+                # print(cur_time)
+                region = MyConfig.get_region(cur_time)
+                target_pitch = region[1]['angle']['pitch']
+                target_yaw = region[1]['angle']['yaw']
+                src_pitch = region[0]['angle']['pitch']
+                src_yaw = region[0]['angle']['yaw']
+
                 adc_vals = [adc.read() for adc in adc_list]
-                if all([adc_val > 1000 for adc_val in adc_vals] + [
-                        abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals]):
+
+                cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
+                    abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
+
+                if cancel_cond:
                     print('canceled')
                     servo_tween.cancel()
                     stepper_tween.cancel()
 
-                # print(cur_time)
-                region = MyConfig.get_region(cur_time)
+                continue_cond = not cancel_cond and servo_tween.cancelled
+
                 is_region_changed = region != prev_region
                 if is_region_changed or fast_move_mode:
 
                     time_diff_ms = 3000
                     none_fast_mode_time_diff = 1000 * (region[1]['time'] - region[0]['time'])
                     # 准备加载新的目标值
-                    target_pitch = region[1]['angle']['pitch']
-                    target_yaw = region[1]['angle']['yaw']
-                    src_pitch = region[0]['angle']['pitch']
-                    src_yaw = region[0]['angle']['yaw']
 
                     if is_region_changed:
                         print('region changed to', region)
@@ -154,12 +161,14 @@ def rtc_tick():
                         inited = True
                         fast_move_mode = True
 
+                    rate = (cur_time - region[0]['time']) / (region[1]['time'] - region[0]['time'])
+
                     if fast_move_mode:
-                        # (当前时间 - 起始时间) / (目标时间 - 起始时间)
-                        rate = (cur_time - region[0]['time']) / (region[1]['time'] - region[0]['time'])
                         target_pitch = src_pitch + (target_pitch - src_pitch) * rate
                         target_yaw = src_yaw + (target_yaw - src_yaw) * rate
                         fast_move_mode = False
+                    elif continue_cond:
+                        time_diff_ms = int(none_fast_mode_time_diff * (1 - rate))
                     else:
                         time_diff_ms = none_fast_mode_time_diff
 
