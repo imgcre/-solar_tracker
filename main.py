@@ -95,13 +95,13 @@ class MyConfig:
 inited = False
 prev_region = []
 servo_tween = Tween(max_speed=0.01,
-                    refresh_rate=1,
-                    auto_tick=False,
+                    # refresh_rate=1,
+                    # auto_tick=False,
                     on_updated=Servo(1).angle)
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       max_speed=9 / 1000,
-                      refresh_rate=1,
-                      auto_tick=False,
+                      # refresh_rate=1,
+                      # auto_tick=False,
                       update_with_diff=True,
                       on_updated=stepper.step)
 
@@ -145,8 +145,8 @@ def rtc_tick():
 
                     servo_tween.set_target(region[1]['angle']['pitch'], expected_duration=time_diff_ms)
                     stepper_tween.set_target(region[1]['angle']['yaw'], expected_duration=time_diff_ms)
-                stepper_tween.tick()
-                servo_tween.tick()
+                # stepper_tween.tick()
+                # servo_tween.tick()
     except Exception as e:
         with Indicator(1):  # 发生错误, 则闪红灯
             print(e)
