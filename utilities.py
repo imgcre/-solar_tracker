@@ -266,7 +266,7 @@ class Tween:
                 p_cur_val = self.__cur_val if self.__unit is None else self.__cur_val // self.__unit
                 p_next_val = next_val if self.__unit is None else next_val // self.__unit
 
-                diff = p_next_val - p_cur_val if self.__update_with_diff else 0
+                diff = p_next_val - p_cur_val if self.__update_with_diff else p_next_val
                 self.on_updated(diff)
 
             self.__cur_val = next_val
