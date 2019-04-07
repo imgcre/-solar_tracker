@@ -233,7 +233,7 @@ def redraw():
             avg = 0
             for val in adc_vals:
                 avg += val
-            avg / len(adc_vals)
+            avg /= len(adc_vals)
             console[6][8] = '%.1f' % avg
 
 
