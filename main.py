@@ -115,7 +115,7 @@ ds3231 = I2C(1, I2C.MASTER)
 cur_sel = -1
 cur_time_disp = [1, 1, 0, 0, 0]
 adc_avg = 0
-adc_s2 = 0
+adc_s = 0
 adc_vals = [0, 0, 0, 0]
 
 
@@ -135,20 +135,26 @@ def s2(*args):
     s2_val /= len(args)
     return s2_val
 
+def s(*args):
+    return s2(*args) ** 0.5
+
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s2, adc_vals
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s, adc_vals
     try:
         with Indicator():
 
             adc_vals = [adc.read() for adc in adc_list]
             adc_vals[3] *= 2  # 权值
             adc_avg = avg(*adc_vals)
-            adc_s2 = s2(*adc_vals)
+            adc_s = s(*adc_vals)
             print(adc_vals)
-            cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
-                abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
+
+            cancel_cond = adc_avg > 3000
+
+            #cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
+            #    abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
 
             # 只要满足亮度的条件，就什么也不做
             if cancel_cond:
@@ -248,14 +254,14 @@ def redraw():
         console[3][1] = 'Pitch:'
         console[4][1] = 'Yaw:'
         console[5][1] = 'Avg-R:'
-        console[6][1] = 'S2-R:'
+        console[6][1] = 'S-R:'
         with console.padding(7):
             # servo_tween.cur_value
             # console[4][8] = str(servo_tween.cur_value)[:4]
             console[3][8] = '%.2f' % servo_tween.cur_value
             console[4][8] = '%.2f' % stepper_tween.cur_value
             console[5][8] = '%.1f' % adc_avg
-            console[6][8] = '%.1f' % adc_s2
+            console[6][8] = '%.1f' % adc_s
         # 调整当前时间
 
 
