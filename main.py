@@ -114,16 +114,36 @@ stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
 ds3231 = I2C(1, I2C.MASTER)
 cur_sel = -1
 cur_time_disp = [1, 1, 0, 0, 0]
-adc_vals = [0, 0, 0, 0]
+adc_avg = 0
+adc_s2 = 0
+
+
+def avg(*args):
+    avg_val = 0
+    for arg in args:
+        avg_val += arg
+    avg_val /= len(args)
+    return avg_val
+
+
+def s2(*args):
+    avg_val = avg(*args)
+    s2_val = 0
+    for arg in args:
+        s2_val += (avg_val - arg) ** 2
+    s2_val /= len(args)
+    return s2_val
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_vals
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s2
     try:
         with Indicator():
 
             adc_vals = [adc.read() for adc in adc_list]
+            adc_avg = avg(adc_vals)
+            adc_s2 = s2(adc_vals)
 
             cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
                 abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
@@ -211,34 +231,32 @@ oled.clear()
 val_borders = [(1, 12), (1, 30), 23, 59, 59]
 separator = ['/', ' ', ':', ':']
 
+
 def redraw():
     with console.session:
-        console[1][1] = 'Time:'
+        console[0][1] = 'Time:'
         for i in range(len(separator)):
-            console[2][(i + 1) * 3] = separator[i]
+            console[1][(i + 1) * 3] = separator[i]
         for i in range(len(cur_time_disp)):
             cc = ContextChain([console.padding(2, char='0')])
             if cur_sel == i:
                 cc.append(console.reverse)
             with cc:
-                console[2][1 + 3 * i] = cur_time_disp[i]
-        console[4][1] = 'Pitch:'
-        console[5][1] = 'Yaw:'
-        console[6][1] = 'Avg-R:'
+                console[1][1 + 3 * i] = cur_time_disp[i]
+        console[3][1] = 'Pitch:'
+        console[4][1] = 'Yaw:'
+        console[5][1] = 'Avg-R:'
+        console[6][1] = 'S2-R:'
         with console.padding(7):
             # servo_tween.cur_value
             # console[4][8] = str(servo_tween.cur_value)[:4]
-            console[4][8] = '%.2f' % servo_tween.cur_value
-            console[5][8] = '%.2f' % stepper_tween.cur_value
-            avg = 0
-            for val in adc_vals:
-                avg += val
-            avg /= len(adc_vals)
-            console[6][8] = '%.1f' % avg
-
-
-
+            console[3][8] = '%.2f' % servo_tween.cur_value
+            console[4][8] = '%.2f' % stepper_tween.cur_value
+            console[5][8] = '%.1f' % adc_avg
+            console[6][8] = '%.1f' % adc_s2
         # 调整当前时间
+
+
 @key_handler('Y6')
 def key2():
     if cur_sel >= 0:
