@@ -223,17 +223,19 @@ class SoftTimer:
 # expected_duration 单位为毫秒
 class Tween:
     def __init__(self, *, init_val=0, target_val=None, refresh_rate=50, max_speed=-1,
-                 expected_duration=None, percentage=0, auto_tick=True, unit=None, update_with_diff=False, on_updated=None):
+                 expected_duration=None, percentage=0, auto_tick=True, unit=None, update_with_diff=False, on_updated=None, on_completed=None):
         self.__refresh_rate, self.__max_speed, self.__expected_duration = refresh_rate, max_speed, expected_duration
 
         self.__cur_val = init_val
         self.__target_val, self.__speed = None, None
         self.__on_updated, self.__on_completed = None, None
         self.on_updated = on_updated
+        self.on_completed = on_completed
         self.__unit = unit
         self.__update_with_diff = update_with_diff
         self.__queue = []
         self.cancelled = False
+        self.__paused = False
         self.set_target(self.__cur_val if target_val is None else target_val)
         if percentage > 0 and target_val:
             self.__cur_val = init_val + (target_val - init_val) * percentage
@@ -249,8 +251,16 @@ class Tween:
         self.__speed = 0
         self.cancelled = True
 
+    def pause(self):
+        self.__paused = True
+        pass
+
+    def continue_(self):
+        self.__paused = False
+        pass
+
     def __callback(self):
-        if self.__speed != 0:
+        if self.__speed != 0 and not self.__paused:
             next_val = self.__cur_val + self.__speed * 1000 / self.__refresh_rate
             is_reach_target_val = ((self.__speed > 0 and next_val >= self.__target_val)
                                    or (self.__speed < 0 and next_val <= self.__target_val))
@@ -299,6 +309,7 @@ class Tween:
 
     def set_target(self, target_val, *, expected_duration=None):
         self.cancelled = False
+        self.__paused = False
         self.__target_val = target_val
         if expected_duration is not None:
             self.__expected_duration = expected_duration

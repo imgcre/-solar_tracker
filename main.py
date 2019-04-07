@@ -96,18 +96,22 @@ inited = False
 fast_move_mode = False
 
 
+def fast_mode_ct():
+    fast_move_mode = False
+    pass
+
 prev_region = []
 servo_tween = Tween(max_speed=0.01,
                     #refresh_rate=1,
                     #auto_tick=False,
-                    on_updated=Servo(1).angle)
+                    on_updated=Servo(1).angle,
+                    on_completed=fast_mode_ct)
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
                       max_speed=9 / 1000,
                       #refresh_rate=1,
                       #auto_tick=False,
                       update_with_diff=True,
                       on_updated=stepper.step)
-
 
 ds3231 = I2C(1, I2C.MASTER)
 cur_sel = -1
@@ -119,7 +123,28 @@ def rtc_tick():
     global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode
     try:
         with Indicator():
-            if cur_sel < 0:
+
+            adc_vals = [adc.read() for adc in adc_list]
+
+            cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
+                abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
+
+            # 只要满足亮度的条件，就什么也不做
+            if cancel_cond:
+                print('canceled')
+                if fast_move_mode:
+                    servo_tween.pause()
+                    stepper_tween.pause()
+                else:
+                    servo_tween.cancel()
+                    stepper_tween.cancel()
+            elif fast_move_mode:
+                servo_tween.continue_()
+                stepper_tween.continue_()
+
+            continue_cond = not cancel_cond and servo_tween.cancelled
+
+            if cur_sel < 0 and not servo_tween.cancelled:  # 没有调时间的情况
                 time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
                 cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
                 cur_time_disp = list(cur_time)
@@ -133,18 +158,6 @@ def rtc_tick():
                 target_yaw = region[1]['angle']['yaw']
                 src_pitch = region[0]['angle']['pitch']
                 src_yaw = region[0]['angle']['yaw']
-
-                adc_vals = [adc.read() for adc in adc_list]
-
-                cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
-                    abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
-
-                if cancel_cond:
-                    print('canceled')
-                    servo_tween.cancel()
-                    stepper_tween.cancel()
-
-                continue_cond = not cancel_cond and servo_tween.cancelled
 
                 is_region_changed = region != prev_region
                 if is_region_changed or fast_move_mode:
@@ -160,14 +173,13 @@ def rtc_tick():
                     # 快速到达目标位置
                     if not inited:
                         inited = True
-                        fast_move_mode = True
+                        fast_move_mode = True  # 快速移动模式
 
                     rate = (cur_time - region[0]['time']) / (region[1]['time'] - region[0]['time'])
 
                     if fast_move_mode:
                         target_pitch = src_pitch + (target_pitch - src_pitch) * rate
                         target_yaw = src_yaw + (target_yaw - src_yaw) * rate
-                        fast_move_mode = False
                     elif continue_cond:
                         time_diff_ms = int(none_fast_mode_time_diff * (1 - rate))
                     else:
