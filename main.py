@@ -116,6 +116,7 @@ cur_sel = -1
 cur_time_disp = [1, 1, 0, 0, 0]
 adc_avg = 0
 adc_s2 = 0
+adc_vals = [0, 0, 0, 0]
 
 
 def avg(*args):
@@ -137,15 +138,15 @@ def s2(*args):
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s2
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s2, adc_vals
     try:
         with Indicator():
 
             adc_vals = [adc.read() for adc in adc_list]
-            adc_vals[3] *= 3  # 权值
+            adc_vals[3] *= 2  # 权值
             adc_avg = avg(*adc_vals)
             adc_s2 = s2(*adc_vals)
-
+            print(adc_vals)
             cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
                 abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
 
