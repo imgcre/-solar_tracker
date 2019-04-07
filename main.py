@@ -152,7 +152,7 @@ def rtc_tick():
             adc_s = s(*adc_vals)
             print(adc_vals)
 
-            cancel_cond = adc_avg > 3000 # and adc_s < 1000
+            cancel_cond = adc_avg > 3000  # and adc_s < 1000
 
             # 只要满足亮度的条件，就什么也不做
             if cancel_cond:
@@ -169,11 +169,11 @@ def rtc_tick():
 
             continue_cond = not cancel_cond and servo_tween.cancelled
 
-            if cur_sel < 0 and not servo_tween.cancelled:  # 没有调时间的情况
+            if cur_sel < 0:  # 没有调时间的情况
                 time_info = [(b & 0x0f) + (b >> 4) * 10 for b in ds3231.mem_read(7, 104, 0)]
                 cur_time = MyTime((time_info[5], time_info[4], time_info[2], time_info[1], time_info[0]))
                 cur_time_disp = list(cur_time)
-                redraw()
+                redraw()  # 重绘OLED
                 # 无条件阈值设置为1000
                 # cancel 条件: 都大于某个值, 且两两之间的差值不超过存在超过某个值
 
