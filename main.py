@@ -142,6 +142,7 @@ def rtc_tick():
         with Indicator():
 
             adc_vals = [adc.read() for adc in adc_list]
+            adc_vals[3] *= 3  # 权值
             adc_avg = avg(*adc_vals)
             adc_s2 = s2(*adc_vals)
 
