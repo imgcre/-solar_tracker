@@ -22,7 +22,7 @@ def key3():
 
 @key_handler('Y8')
 def key4():
-    print('key4 pressed')
+    print('key4 pressed ')
     servo_tween.set_target(90, expected_duration=3000)
 
 
