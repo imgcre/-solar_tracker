@@ -142,8 +142,8 @@ def rtc_tick():
         with Indicator():
 
             adc_vals = [adc.read() for adc in adc_list]
-            adc_avg = avg(adc_vals)
-            adc_s2 = s2(adc_vals)
+            adc_avg = avg(*adc_vals)
+            adc_s2 = s2(*adc_vals)
 
             cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
                 abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
