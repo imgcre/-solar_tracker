@@ -185,7 +185,7 @@ def rtc_tick():
                 src_yaw = region[0]['angle']['yaw']
 
                 is_region_changed = region != prev_region
-                if is_region_changed or fast_move_mode or not cancel_cond:
+                if not cancel_cond and (is_region_changed or fast_move_mode):
                     print('here!')
                     time_diff_ms = 3000
                     none_fast_mode_time_diff = 1000 * (region[1]['time'] - region[0]['time'])
