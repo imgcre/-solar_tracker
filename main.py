@@ -97,6 +97,7 @@ fast_move_mode = False
 
 
 def fast_mode_ct():
+    global fast_move_mode
     fast_move_mode = False
     pass
 
@@ -151,10 +152,7 @@ def rtc_tick():
             adc_s = s(*adc_vals)
             print(adc_vals)
 
-            cancel_cond = adc_avg > 3000
-
-            #cancel_cond = all([adc_val > 1000 for adc_val in adc_vals] + [
-            #    abs(adc_inner - adc_outer) < 100 for adc_inner in adc_vals for adc_outer in adc_vals])
+            cancel_cond = adc_avg > 3000 # and adc_s < 1000
 
             # 只要满足亮度的条件，就什么也不做
             if cancel_cond:
