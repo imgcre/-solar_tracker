@@ -114,11 +114,12 @@ stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
 ds3231 = I2C(1, I2C.MASTER)
 cur_sel = -1
 cur_time_disp = [1, 1, 0, 0, 0]
+adc_vals = [0, 0, 0, 0]
 
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_vals
     try:
         with Indicator():
 
@@ -223,14 +224,21 @@ def redraw():
                 console[2][1 + 3 * i] = cur_time_disp[i]
         console[4][1] = 'Pitch:'
         console[5][1] = 'Yaw:'
+        console[6][1] = 'Avg-R:'
         with console.padding(7):
             # servo_tween.cur_value
             # console[4][8] = str(servo_tween.cur_value)[:4]
             console[4][8] = '%.2f' % servo_tween.cur_value
             console[5][8] = '%.2f' % stepper_tween.cur_value
+            avg = 0
+            for val in adc_vals:
+                avg += val
+            avg / len(adc_vals)
+            console[6][8] = '%.2f' % avg
 
 
-# 调整当前时间
+
+        # 调整当前时间
 @key_handler('Y6')
 def key2():
     if cur_sel >= 0:
