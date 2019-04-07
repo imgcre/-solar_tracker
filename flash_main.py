@@ -2,8 +2,7 @@ from utilities import *
 from pyb import *
 from cmemgr import Mapper
 
-servo_tween = Tween(max_speed=0.01,
-                    on_updated=Servo(1).angle)
+servo_tween = Tween(on_updated=Servo(1).angle)
 
 
 @key_handler('Y6')
