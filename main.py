@@ -186,7 +186,7 @@ def rtc_tick():
 
                 is_region_changed = region != prev_region
                 if is_region_changed or fast_move_mode or not cancel_cond:
-
+                    print('here!')
                     time_diff_ms = 3000
                     none_fast_mode_time_diff = 1000 * (region[1]['time'] - region[0]['time'])
                     # 准备加载新的目标值
