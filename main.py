@@ -118,6 +118,7 @@ cur_time_disp = [1, 1, 0, 0, 0]
 adc_avg = 0
 adc_s = 0
 adc_vals = [0, 0, 0, 0]
+cancel_cond = False
 
 
 def avg(*args):
@@ -142,7 +143,7 @@ def s(*args):
 
 @map_to_thread(partial(ExtInt)(Pin('X11'), ExtInt.IRQ_RISING, pyb.Pin.PULL_NONE))
 def rtc_tick():
-    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s, adc_vals
+    global prev_region, servo_tween, stepper_tween, inited, cur_time_disp, fast_move_mode, adc_avg, adc_s, adc_vals, cancel_cond
     try:
         with Indicator():
 
@@ -152,7 +153,11 @@ def rtc_tick():
             adc_s = s(*adc_vals)
             print(adc_vals)
 
-            cancel_cond = adc_avg > 3000  # and adc_s < 1000
+            cancel_cond = False
+            if adc_avg > 3000:
+                cancel_cond = True
+            elif adc_s < 300:
+                    cancel_cond = True
 
             # 只要满足亮度的条件，就什么也不做
             if cancel_cond:
@@ -253,6 +258,7 @@ def redraw():
         console[4][1] = 'Yaw:'
         console[5][1] = 'Avg-R:'
         console[6][1] = 'S-R:'
+        console[7][1] = 'State:'
         with console.padding(7):
             # servo_tween.cur_value
             # console[4][8] = str(servo_tween.cur_value)[:4]
@@ -260,6 +266,7 @@ def redraw():
             console[4][8] = '%.2f' % stepper_tween.cur_value
             console[5][8] = '%.1f' % adc_avg
             console[6][8] = '%.1f' % adc_s
+            console[7][8] = 'Running' if not cancel_cond else 'Stopped'
         # 调整当前时间
 
 
