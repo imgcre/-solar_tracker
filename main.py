@@ -102,13 +102,9 @@ def fast_mode_ct():
     pass
 
 prev_region = []
-servo_tween = Tween(#refresh_rate=1,
-                    #auto_tick=False,
-                    on_updated=Servo(1).angle,
+servo_tween = Tween(on_updated=Servo(1).angle,
                     on_completed=fast_mode_ct)
 stepper_tween = Tween(unit=1.8,  # 电机步长 -> 1.8°
-                      #refresh_rate=1,
-                      #auto_tick=False,
                       update_with_diff=True,
                       on_updated=stepper.step)
 
